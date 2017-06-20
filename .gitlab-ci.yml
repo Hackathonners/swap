@@ -9,7 +9,7 @@ services:
   - postgres:latest
 
 variables:
-  POSTGRES_DB: safira
+  POSTGRES_DB: judite 
   POSTGRES_USER: homestead
   POSTGRES_PASSWORD: secret
 
