@@ -14,3 +14,5 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::match(['PUT', 'PATCH'], 'settings', 'SettingsController@update')->name('settings.update');
