@@ -43,9 +43,10 @@
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
             "php artisan optimize"
         ],
-        "test": "vendor/bin/phpunit --coverage-text --colors=never; if [ $? -ne 0 ]; then error=$?; grep -B 2 -A 1 '#0' storage/logs/laravel.log; exit $error; fi",
-        "test-lint": "vendor/bin/php-cs-fixer --config=.php_cs fix -vvv --dry-run",
-        "lint": "vendor/bin/php-cs-fixer --config=.php_cs fix -vvv"
+        "ci-test": "rm storage/logs/laravel.log 2>/dev/null; phpunit --coverage-text --colors=never; error=$?; if [ $error -ne 0 ]; then grep -B 2 -A 1 '#0' storage/logs/laravel.log 2>/dev/null; fi; exit $error",
+        "ci-lint": "php-cs-fixer --config=.php_cs fix -vvv --dry-run",
+        "test": "rm storage/logs/laravel.log 2>/dev/null; phpunit --coverage-text; error=$?; if [ $error -ne 0 ]; then grep -B 2 -A 1 '#0' storage/logs/laravel.log 2>/dev/null; fi; exit $error",
+        "lint": "php-cs-fixer --config=.php_cs fix -vvv"
     },
     "config": {
         "preferred-install": "dist",

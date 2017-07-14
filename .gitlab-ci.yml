@@ -9,7 +9,7 @@ services:
   - postgres:latest
 
 variables:
-  POSTGRES_DB: judite 
+  POSTGRES_DB: judite
   POSTGRES_USER: homestead
   POSTGRES_PASSWORD: secret
 
@@ -72,8 +72,8 @@ before_script:
 test:
   script:
   # run laravel tests
-  - php composer.phar test
-  - php composer.phar test-lint
+  - php composer.phar ci-test
+  - php composer.phar ci-lint
 
   # run frontend tests
   # if you have any task for testing frontend
