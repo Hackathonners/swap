@@ -17,7 +17,7 @@ class CreateEnrollmentsTable extends Migration
             $table->increments('id');
             $table->integer('student_id')->unsigned();
             $table->integer('course_id')->unsigned();
-            $table->integer('shift_id')->unsigned();
+            $table->integer('shift_id')->unsigned()->nullable();
             $table->timestamps();
 
             $table->foreign('student_id')->references('id')->on('students');

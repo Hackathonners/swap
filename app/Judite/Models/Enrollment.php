@@ -35,14 +35,4 @@ class Enrollment extends Model
     {
         return $this->belongsTo(Shift::class);
     }
-
-    /**
-     * Get academic year of this enrollment.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function academicYear()
-    {
-        return $this->belongsTo(AcademicYear::class);
-    }
 }
