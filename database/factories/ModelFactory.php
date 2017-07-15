@@ -47,3 +47,11 @@ $factory->define(App\Judite\Models\Enrollment::class, function (Faker\Generator 
         'course_id' => factory(App\Judite\Models\Course::class)->create()->id,
     ];
 });
+
+/* @var \Illuminate\Database\Eloquent\Factory $factory */
+$factory->define(App\Judite\Models\Shift::class, function (Faker\Generator $faker) {
+    return [
+        'course_id' => factory(App\Judite\Models\Course::class)->create()->id,
+        'tag' => $faker->word(),
+    ];
+});
