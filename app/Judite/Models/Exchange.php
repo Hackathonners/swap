@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Exchange extends Model
 {
     /**
-     * Get academic year of this exchange.
+     * Get shift of this exchange.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function academicYear()
+    public function shift()
     {
-        return $this->belongsTo(AcademicYear::class);
+        return $this->belongsTo(Shift::class);
     }
 }

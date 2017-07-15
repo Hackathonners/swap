@@ -18,3 +18,5 @@ Route::get('/', function () {
 Route::match(['PUT', 'PATCH'], 'settings', 'SettingsController@update')->name('settings.update');
 
 Route::post('/enrollments', 'EnrollmentController@store')->name('enrollments.create');
+
+Route::post('/exchanges', 'ExchangeController@store')->name('exchanges.create');
