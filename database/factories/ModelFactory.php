@@ -12,21 +12,9 @@
 */
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-$factory->define(App\Judite\Models\User::class, function (Faker\Generator $faker) {
-    static $password;
-
-    return [
-        'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
-        'password' => $password ?: $password = bcrypt('secret'),
-        'remember_token' => str_random(10),
-    ];
-});
-
-/* @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(App\Judite\Models\Student::class, function (Faker\Generator $faker) {
     return [
-        'user_id' => factory(App\Judite\Models\User::class)->create()->id,
+        'user_id' => factory(App\Judite\Models\User::class)->create(['is_admin' => false])->id,
         'student_number' => $faker->numerify('a#####'),
     ];
 });

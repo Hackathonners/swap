@@ -19,4 +19,6 @@ Route::match(['PUT', 'PATCH'], 'settings', 'SettingsController@update')->name('s
 
 Route::post('/enrollments', 'EnrollmentController@store')->name('enrollments.create');
 
+Route::get('/enrollments/export', 'EnrollmentController@export')->name('enrollments.export');
+
 Route::post('/exchanges', 'ExchangeController@store')->name('exchanges.create');
