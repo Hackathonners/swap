@@ -41,4 +41,17 @@ class EnrollmentTest extends TestCase
         $this->actingAs($student->user)
              ->post(route('enrollments.create'), ['course_id' => $course->id]);
     }
+
+    public function testStudentCannotExportEnrollments()
+    {
+        // Prepare
+        $student = factory(Student::class)->create();
+
+        // Execute
+        $response = $this->actingAs($student->user)
+                         ->get(route('enrollments.export'));
+
+        // Assert
+        $response->assertStatus(403);
+    }
 }

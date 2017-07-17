@@ -36,4 +36,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(Student::class);
     }
+
+    /**
+     * Check if the user is an Admin.
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->is_admin;
+    }
 }

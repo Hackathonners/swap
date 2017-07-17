@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
+use App\Judite\Models\User;
 use App\Judite\Models\Course;
 use App\Judite\Models\Student;
 use App\Judite\Models\Enrollment;
@@ -44,5 +45,23 @@ class EnrollmentTest extends TestCase
 
         // Execute
         $student->enroll($course);
+    }
+
+    public function testUserIsAdmin()
+    {
+        // Prepare
+        $user = factory(User::class)->states('admin')->create();
+
+        // Assert
+        $this->assertTrue($user->isAdmin());
+    }
+
+    public function testUserIsNotAdmin()
+    {
+        // Prepare
+        $student = factory(Student::class)->create();
+
+        // Assert
+        $this->assertFalse($student->user->isAdmin());
     }
 }

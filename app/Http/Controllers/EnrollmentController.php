@@ -6,6 +6,8 @@ use DB;
 use Auth;
 use Illuminate\Http\Request;
 use App\Judite\Models\Course;
+use App\Judite\Models\Enrollment;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EnrollmentController extends Controller
 {
@@ -95,5 +97,34 @@ class EnrollmentController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Exports the list of students enrolled in each course.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function export()
+    {
+        // Check for export authorization
+        $this->authorize('export', Enrollment::class);
+
+        // Get the list of students enrolled on each course
+        $enrollments = DB::transaction(function () {
+            $enrollments = Enrollment::with(['student', 'course'])
+                                     ->get()
+                                     ->sortByDesc('courses.name');
+
+            return $enrollments;
+        });
+
+        // Export to CSV
+        $result = Excel::create('enrollments', function ($excel) use ($enrollments) {
+            $excel->sheet('Enrollments', function ($sheet) use ($enrollments) {
+                $sheet->loadView('enrollments.export', compact('enrollments'));
+            });
+        });
+
+        return $result->export('csv');
     }
 }
