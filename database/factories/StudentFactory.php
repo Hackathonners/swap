@@ -1,10 +1,11 @@
 <?php
 
 use App\Judite\Models\User;
+use App\Judite\Models\Student;
 
 /*
 |--------------------------------------------------------------------------
-| User Model Factories
+| Student Model Factories
 |--------------------------------------------------------------------------
 |
 | Here you may define all of your model factories. Model factories give
@@ -14,20 +15,9 @@ use App\Judite\Models\User;
 */
 
 /* @var \Illuminate\Database\Eloquent\Factory $factory */
-$factory->define(User::class, function (Faker\Generator $faker) {
-    static $password;
-
+$factory->define(Student::class, function (Faker\Generator $faker) {
     return [
-        'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
-        'password' => $password ?: $password = bcrypt('secret'),
-        'remember_token' => str_random(10),
-    ];
-});
-
-/* @var \Illuminate\Database\Eloquent\Factory $factory */
-$factory->state(User::class, 'admin', function (Faker\Generator $faker) {
-    return [
-        'is_admin' => true,
+        'user_id' => factory(User::class)->create(['is_admin' => false])->id,
+        'student_number' => $faker->numerify('a#####'),
     ];
 });

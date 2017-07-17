@@ -3,7 +3,6 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
-use App\Judite\Models\User;
 use App\Judite\Models\Course;
 use App\Judite\Models\Student;
 use App\Judite\Models\Enrollment;
@@ -30,6 +29,26 @@ class EnrollmentTest extends TestCase
         $this->assertEquals($course->id, $enrollment->course_id);
     }
 
+    public function testEnrollmentsExchange()
+    {
+        // Prepare
+        $course = factory(Course::class)->create();
+        $fromEnrollment = factory(Enrollment::class)->create(['course_id' => $course->id]);
+        $toEnrollment = factory(Enrollment::class)->create(['course_id' => $course->id]);
+        $fromShiftId = $fromEnrollment->shift_id;
+        $toShiftId = $toEnrollment->shift_id;
+
+        // Execute
+        $actualReturn = $fromEnrollment->exchange($toEnrollment);
+
+        // Assert
+        $this->assertSame($actualReturn, $fromEnrollment);
+        $actualFromEnrollment = Enrollment::find($fromEnrollment->id);
+        $actualToEnrollment = Enrollment::find($toEnrollment->id);
+        $this->assertEquals($fromShiftId, $actualToEnrollment->shift_id);
+        $this->assertEquals($toShiftId, $actualFromEnrollment->shift_id);
+    }
+
     /**
      * @expectedException App\Exceptions\UserIsAlreadyEnrolledInCourseException
      */
@@ -45,23 +64,5 @@ class EnrollmentTest extends TestCase
 
         // Execute
         $student->enroll($course);
-    }
-
-    public function testUserIsAdmin()
-    {
-        // Prepare
-        $user = factory(User::class)->states('admin')->create();
-
-        // Assert
-        $this->assertTrue($user->isAdmin());
-    }
-
-    public function testUserIsNotAdmin()
-    {
-        // Prepare
-        $student = factory(Student::class)->create();
-
-        // Assert
-        $this->assertFalse($student->user->isAdmin());
     }
 }
