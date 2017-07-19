@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+use DB;
+use App\Judite\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -49,7 +50,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:users|student_email',
             'password' => 'required|string|min:6|confirmed',
         ]);
     }
@@ -62,10 +63,19 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
+        $studentNumber = explode('@', $data['email'])[0];
+        $user = DB::transaction(function () use ($data, $studentNumber) {
+            $user = User::create([
+                        'name' => $data['name'],
+                        'email' => $data['email'],
+                        'password' => bcrypt($data['password']),
+                        'is_admin' => false,
+            ]);
+            $user->student()->create(['student_number' => $studentNumber]);
+
+            return $user;
+        });
+
+        return $user;
     }
 }
