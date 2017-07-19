@@ -22,6 +22,7 @@ Route::post('/enrollments', 'EnrollmentController@store')->name('enrollments.cre
 Route::get('/enrollments/export', 'EnrollmentController@export')->name('enrollments.export');
 
 Route::post('/exchanges', 'ExchangeController@store')->name('exchanges.create');
+Route::post('/exchanges/{id}/confirm', 'ExchangeController@storeConfirmation')->name('exchanges.confirm');
 
 Auth::routes();
 

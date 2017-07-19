@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use DB;
-use App\Judite\Models\Shift;
-use Illuminate\Http\Request;
+use App\Judite\Models\Exchange;
 use App\Judite\Models\Enrollment;
+use App\Http\Requests\Exchange\CreateRequest;
 
 class ExchangeController extends Controller
 {
@@ -32,54 +32,58 @@ class ExchangeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Requests\Exchange\CreateRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateRequest $request)
     {
-        $exchanges = DB::transaction(function () use ($request) {
-            $enrollmentId = $request->input('enrollment_id');
-            $fromEnrollment = Enrollment::with(['shift', 'student'])->find($enrollmentId);
-            $toShifts = Shift::find($request->input('shifts'));
+        $exchange = DB::transaction(function () use ($request) {
+            $this->validate($request, [
+                'from_enrollment_id' => 'exists:enrollments,id',
+                'to_enrollment_id' => 'exists:enrollments,id',
+            ]);
 
-            return $fromEnrollment->setExchanges($toShifts);
+            $fromEnrollment = Enrollment::find($request->input('from_enrollment_id'));
+            $toEnrollment = Enrollment::find($request->input('to_enrollment_id'));
+            $this->authorize('exchange', $fromEnrollment);
+
+            // Firstly check if the inverse exchange for the same enrollments
+            // already exists. If the inverse record is found then we will
+            // exchange and update both enrollments of this exchange.
+            $exchange = Exchange::findMatchingExchange($fromEnrollment, $toEnrollment);
+            if (! is_null($exchange)) {
+                return $exchange->perform();
+            }
+
+            // Otherwise, we create a new exchange between both enrollments
+            // so the user that owns the target enrollment can confirm the
+            // exchange and allow the other user to enroll on the shift.
+            $exchange = Exchange::make();
+            $exchange->setExchangeEnrollments($fromEnrollment, $toEnrollment);
+            $exchange->save();
+
+            return $exchange;
         });
 
-        return $exchanges;
+        return $exchange;
     }
 
     /**
-     * Display the specified resource.
+     * Store a confirmation of an exchange in storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function storeConfirmation($id)
     {
-        //
-    }
+        $exchange = DB::transaction(function () use ($id) {
+            $exchange = Exchange::findOrFail($id);
+            $this->authorize('confirm', $exchange);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+            return $exchange->perform();
+        });
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+        return $exchange;
     }
 
     /**
