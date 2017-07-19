@@ -22,3 +22,7 @@ Route::post('/enrollments', 'EnrollmentController@store')->name('enrollments.cre
 Route::get('/enrollments/export', 'EnrollmentController@export')->name('enrollments.export');
 
 Route::post('/exchanges', 'ExchangeController@store')->name('exchanges.create');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

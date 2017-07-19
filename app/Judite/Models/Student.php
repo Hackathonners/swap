@@ -8,6 +8,13 @@ use App\Exceptions\UserIsAlreadyEnrolledInCourseException;
 class Student extends Model
 {
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['student_number'];
+
+    /**
      * Get user who owns this student.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
