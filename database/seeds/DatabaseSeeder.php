@@ -11,6 +11,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
+        // Only run the seeders registered here when we are in production,
+        // otherwise keep it clean or it would somehow intefer with the
+        // tests scenario preparation since data is stored in database.
+        if (! App::environment('testing')) {
+            $this->call(UsersTableSeeder::class);
+        }
     }
 }
