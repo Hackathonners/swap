@@ -15,4 +15,28 @@ class Course extends Model
     {
         return $this->hasMany(Shift::class);
     }
+
+    /**
+     * Add shift to this course.
+     *
+     * @param  \App\Judite\Models\Shift  $shift
+     * @return $this
+     */
+    public function addShift(Shift $shift)
+    {
+        $this->shifts()->save($shift);
+
+        return $this;
+    }
+
+    /**
+     * Get shift of this course by tag.
+     *
+     * @param string $tag
+     * @return \App\Judite\Models\Shift|null
+     */
+    public function getShiftByTag($tag)
+    {
+        return $this->shifts()->where('tag', $tag)->first();
+    }
 }
