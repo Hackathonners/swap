@@ -36,7 +36,9 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        &nbsp;
+                        @if (! Auth::guest())
+                            <li><a href="{{ route('courses.index') }}">Courses</a></li>
+                        @endif
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -48,7 +50,12 @@
                         @else
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                    {{ Auth::user()->name }}
+
+                                    @if (Auth::user()->isStudent())
+                                        ({{ Auth::user()->student->student_number }})
+                                    @endif
+                                    <span class="caret"></span>
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
@@ -70,6 +77,9 @@
                 </div>
             </div>
         </nav>
+        <div class="container">
+            @include('flash::message')
+        </div>
 
         @yield('content')
     </div>

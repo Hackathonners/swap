@@ -23,7 +23,7 @@ class EnrollmentTest extends TestCase
                          ->post(route('enrollments.create'), ['course_id' => $course->id]);
 
         // Assert
-        $response->assertStatus(200);
+        $response->assertRedirect(route('courses.index'));
         $this->assertEquals($course->id, $student->enrollments()->first()->course_id);
     }
 
@@ -53,5 +53,18 @@ class EnrollmentTest extends TestCase
 
         // Assert
         $response->assertStatus(403);
+    }
+
+    public function testRedirectToLoginWhenUnauthenticatedUsersEnrollInCourses()
+    {
+        // Prepare
+        $course = factory(Course::class)->create();
+
+        // Execute
+        $response = $this->post(route('enrollments.create'), ['course_id' => $course->id]);
+
+        // Assert
+        $response->assertRedirect(route('login'));
+        $this->assertEquals(0, Enrollment::count());
     }
 }

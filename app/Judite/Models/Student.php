@@ -42,8 +42,8 @@ class Student extends Model
      */
     public function enroll(Course $course)
     {
-        if ($this->enrollments()->where('course_id', $course->id)->exists()) {
-            throw new UserIsAlreadyEnrolledInCourseException();
+        if ($this->isEnrolledInCourse($course)) {
+            throw new UserIsAlreadyEnrolledInCourseException($course);
         }
 
         $enrollment = $this->enrollments()->make();
@@ -51,5 +51,16 @@ class Student extends Model
         $enrollment->save();
 
         return $enrollment;
+    }
+
+    /**
+     * Check if this student is enrolled in a course.
+     *
+     * @param  \App\Judite\Models\Course  $course
+     * @return bool
+     */
+    public function isEnrolledInCourse(Course $course)
+    {
+        return $this->enrollments()->where('course_id', $course->id)->exists();
     }
 }

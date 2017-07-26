@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use DB;
 use Illuminate\Http\Request;
 use App\Judite\Models\Settings;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\UpdateRequest;
 
 class SettingsController extends Controller
