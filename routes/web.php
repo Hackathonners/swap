@@ -11,19 +11,22 @@
 |
 */
 
+Auth::routes();
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::match(['PUT', 'PATCH'], 'settings', 'SettingsController@update')->name('settings.update');
-
-Route::post('/enrollments', 'EnrollmentController@store')->name('enrollments.create');
-
-Route::get('/enrollments/export', 'EnrollmentController@export')->name('enrollments.export');
-
-Route::post('/exchanges', 'ExchangeController@store')->name('exchanges.create');
-Route::post('/exchanges/{id}/confirm', 'ExchangeController@storeConfirmation')->name('exchanges.confirm');
-
-Auth::routes();
-
 Route::get('/home', 'HomeController@index')->name('home');
+
+// Student-only routes
+Route::middleware(['auth', 'can.student'])->group(function () {
+    Route::get('/courses', 'CourseController@index')->name('courses.index');
+    Route::post('/enrollments', 'EnrollmentController@store')->name('enrollments.create');
+    Route::post('/exchanges', 'ExchangeController@store')->name('exchanges.create');
+    Route::post('/exchanges/{id}/confirm', 'ExchangeController@storeConfirmation')->name('exchanges.confirm');
+});
+
+// Admin-only routes
+Route::middleware(['auth', 'can.admin'])->namespace('Admin')->group(function () {
+    Route::get('/enrollments/export', 'EnrollmentController@export')->name('enrollments.export');
+    Route::match(['PUT', 'PATCH'], 'settings', 'SettingsController@update')->name('settings.update');
+});

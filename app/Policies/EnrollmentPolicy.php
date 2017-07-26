@@ -11,17 +11,6 @@ class EnrollmentPolicy
     use HandlesAuthorization;
 
     /**
-     * Determine whether the user can export enrollments.
-     *
-     * @param  \App\Judite\Models\User  $user
-     * @return bool
-     */
-    public function export(User $user)
-    {
-        return $user->isAdmin();
-    }
-
-    /**
      * Determine whether the user can exchange an enrollment.
      *
      * @param  \App\Judite\Models\User  $user

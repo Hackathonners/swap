@@ -44,4 +44,34 @@ class CourseTest extends TestCase
         $this->assertEquals(Shift::class, get_class($actualReturn));
         $this->assertEquals($shift->id, $actualReturn->id);
     }
+
+    public function testGetOrderedListOfCourses()
+    {
+        // Prepare
+        factory(Course::class)->create([
+            'name' => 'C32',
+            'year' => 3,
+            'semester' => 2,
+        ]);
+        factory(Course::class)->create([
+            'name' => 'B32',
+            'year' => 3,
+            'semester' => 2,
+        ]);
+        factory(Course::class)->create([
+            'name' => 'A21',
+            'year' => 2,
+            'semester' => 1,
+        ]);
+
+        // Execute
+        $actualReturn = Course::orderedList()->get();
+
+        // Assert
+        $expectedOrderedCourses = Course::orderBy('year', 'asc')
+                                        ->orderBy('semester', 'asc')
+                                        ->orderBy('name', 'asc')
+                                        ->get();
+        $this->assertEquals($expectedOrderedCourses, $actualReturn);
+    }
 }

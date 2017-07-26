@@ -25,4 +25,23 @@ class UserTest extends TestCase
         // Assert
         $this->assertFalse($student->user->isAdmin());
     }
+
+    public function testUserIsStudent()
+    {
+        // Prepare
+        $user = factory(User::class)->create();
+        factory(Student::class)->create(['user_id' => $user->id]);
+
+        // Assert
+        $this->assertTrue($user->isStudent());
+    }
+
+    public function testUserIsNotStudent()
+    {
+        // Prepare
+        $user = factory(User::class)->create();
+
+        // Assert
+        $this->assertFalse($user->isStudent());
+    }
 }

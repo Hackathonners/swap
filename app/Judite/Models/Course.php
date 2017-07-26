@@ -3,9 +3,33 @@
 namespace App\Judite\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Laracasts\Presenter\PresentableTrait;
+use App\Judite\Presenters\CoursePresenter;
 
 class Course extends Model
 {
+    use PresentableTrait;
+
+    /**
+     * The presenter for this entity.
+     *
+     * @var string
+     */
+    protected $presenter = CoursePresenter::class;
+
+    /**
+     * Scope a query to order courses by year, semester and name.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOrderedList($query)
+    {
+        return $query->orderBy('year', 'asc')
+                     ->orderBy('semester', 'asc')
+                     ->orderBy('name', 'asc');
+    }
+
     /**
      * Get shifts of this course.
      *
