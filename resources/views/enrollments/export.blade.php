@@ -2,6 +2,7 @@
 <html>
 <table>
     <tr>
+        <th>Course ID</th>
         <th>Course</th>
         <th>Student ID</th>
         <th>Student Name</th>
