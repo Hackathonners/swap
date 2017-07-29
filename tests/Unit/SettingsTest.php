@@ -46,4 +46,61 @@ class SettingsTest extends TestCase
         // Assert
         $this->assertFalse($settings->withinExchangePeriod());
     }
+
+    public function testEnrollmentPeriodIsActive()
+    {
+        // Prepare
+        $settings = new Settings;
+
+        // Execute
+        $settings->enrollments_start_at = Carbon::yesterday();
+        $settings->enrollments_end_at = Carbon::tomorrow();
+
+        // Assert
+        $this->assertTrue($settings->withinEnrollmentPeriod());
+    }
+
+    public function testEnrollmentPeriodIsNotActive()
+    {
+        // Prepare
+        $settings = new Settings;
+
+        // Execute
+        $settings->enrollments_start_at = Carbon::tomorrow();
+        $settings->enrollments_end_at = Carbon::tomorrow()->addDays(2);
+
+        // Assert
+        $this->assertFalse($settings->withinEnrollmentPeriod());
+    }
+
+    public function testEnrollmentPeriodExpired()
+    {
+        // Prepare
+        $settings = new Settings;
+
+        // Execute
+        $settings->enrollments_start_at = Carbon::yesterday()->subDays(2);
+        $settings->enrollments_end_at = Carbon::yesterday();
+
+        // Assert
+        $this->assertFalse($settings->withinEnrollmentPeriod());
+    }
+
+    public function testEnrollmentPeriodIsNotActiveWhenDatesAreNotSpecified()
+    {
+        // Prepare
+        $settings = new Settings;
+
+        // Assert
+        $this->assertFalse($settings->withinEnrollmentPeriod());
+    }
+
+    public function testExchangePeriodIsNotActiveWhenDatesAreNotSpecified()
+    {
+        // Prepare
+        $settings = new Settings;
+
+        // Assert
+        $this->assertFalse($settings->withinExchangePeriod());
+    }
 }

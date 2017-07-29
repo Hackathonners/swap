@@ -12,7 +12,10 @@ class Settings extends Model
      * @var array
      */
     protected $fillable = [
-        'exchanges_start_at', 'exchanges_end_at',
+        'exchanges_start_at',
+        'exchanges_end_at',
+        'enrollments_start_at',
+        'enrollments_end_at',
     ];
 
     /**
@@ -21,7 +24,12 @@ class Settings extends Model
      * @var array
      */
     protected $dates = [
-        'created_at', 'updated_at', 'exchanges_start_at', 'exchanges_end_at',
+        'created_at',
+        'updated_at',
+        'exchanges_start_at',
+        'exchanges_end_at',
+        'enrollments_start_at',
+        'enrollments_end_at',
     ];
 
     /**
@@ -36,5 +44,19 @@ class Settings extends Model
         }
 
         return $this->exchanges_start_at->isPast() && ! $this->exchanges_end_at->isPast();
+    }
+
+    /**
+     * Checks whether today's date is within the course enrollment period.
+     *
+     * @return bool
+     */
+    public function withinEnrollmentPeriod()
+    {
+        if (is_null($this->enrollments_start_at) || is_null($this->enrollments_end_at)) {
+            return false;
+        }
+
+        return $this->enrollments_start_at->isPast() && ! $this->enrollments_end_at->isPast();
     }
 }

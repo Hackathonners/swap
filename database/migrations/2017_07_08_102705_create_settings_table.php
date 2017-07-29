@@ -17,6 +17,8 @@ class CreateSettingsTable extends Migration
             $table->increments('id');
             $table->timestamp('exchanges_start_at')->nullable();
             $table->timestamp('exchanges_end_at')->nullable();
+            $table->timestamp('enrollments_start_at')->nullable();
+            $table->timestamp('enrollments_end_at')->nullable();
             $table->timestamps();
         });
     }
