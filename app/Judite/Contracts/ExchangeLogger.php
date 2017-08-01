@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Judite\Contracts;
+
+use App\Judite\Models\Enrollment;
+
+interface ExchangeLogger
+{
+    /**
+     * Log an exchange of enrollments to the exchanges history.
+     *
+     * @param  \App\Judite\Models\Enrollment  $fromEnrollment
+     * @param  \App\Judite\Models\Enrollment  $toEnrollment
+     * @return void
+     */
+    public function log(Enrollment $fromEnrollment, Enrollment $toEnrollment);
+}

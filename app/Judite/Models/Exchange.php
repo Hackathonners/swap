@@ -3,11 +3,31 @@
 namespace App\Judite\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Judite\Contracts\ExchangeLogger;
 use App\Exceptions\CannotExchangeEnrollmentMultipleTimesException;
 use App\Exceptions\CannotExchangeToShiftsOnDifferentCoursesException;
 
 class Exchange extends Model
 {
+    /**
+     * The exchanges looger used to save exchanges in persistence.
+     *
+     * @var  \App\Judite\Contracts\ExchangeLogger
+     */
+    private $logger;
+
+    /**
+     * Create a new Exchange model instance.
+     *
+     * @param  array  $attributes
+     * @return void
+     */
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        $this->logger = resolve(ExchangeLogger::class);
+    }
+
     /**
      * Set the enrollments of this exchange.
      *
@@ -58,6 +78,8 @@ class Exchange extends Model
     {
         $fromEnrollment = $this->fromEnrollment;
         $toEnrollment = $this->toEnrollment;
+
+        $this->logger->log($fromEnrollment, $toEnrollment);
 
         $fromEnrollment->exchange($toEnrollment);
 
