@@ -2,15 +2,32 @@
 
 namespace Tests\Unit;
 
+use Mockery as m;
 use Tests\TestCase;
 use App\Judite\Models\Course;
 use App\Judite\Models\Exchange;
 use App\Judite\Models\Enrollment;
+use App\Judite\Contracts\ExchangeLogger;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ExchangeTest extends TestCase
 {
     use DatabaseTransactions;
+
+    private $loggerMock;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->loggerMock = m::mock(ExchangeLogger::class);
+        $this->app->instance(ExchangeLogger::class, $this->loggerMock);
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        m::close();
+    }
 
     public function testSetEnrollmentsToExchange()
     {
@@ -48,6 +65,8 @@ class ExchangeTest extends TestCase
         ]);
         $fromShiftId = $fromEnrollment->shift_id;
         $toShiftId = $toEnrollment->shift_id;
+        $this->loggerMock->shouldReceive('log')
+                         ->once();
 
         // Execute
         $actualReturn = $exchange->perform();

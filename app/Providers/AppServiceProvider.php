@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Judite\Contracts\ExchangeLogger;
 use Illuminate\Support\Facades\Validator;
+use App\Judite\Logger\EloquentExchangeLogger;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +28,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton(ExchangeLogger::class, function ($app) {
+            return new EloquentExchangeLogger;
+        });
     }
 }
