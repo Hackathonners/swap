@@ -40,7 +40,7 @@ class Exchange extends Model
         // Each enrollment can be requested to exchange once. The students
         // are allowed to create only a single exchange related to the
         // same enrollment, ensuring that each request exists once.
-        if ($fromEnrollment->exchanges()->where('confirmed', false)->exists()) {
+        if ($fromEnrollment->exchanges()->exists()) {
             throw new CannotExchangeEnrollmentMultipleTimesException;
         }
 
@@ -76,21 +76,13 @@ class Exchange extends Model
      */
     public function perform()
     {
-        $fromEnrollment = $this->fromEnrollment;
-        $toEnrollment = $this->toEnrollment;
+        $fromEnrollmentCopy = clone $this->fromEnrollment;
+        $toEnrollmentCopy = clone $this->toEnrollment;
 
-        $this->logger->log($fromEnrollment, $toEnrollment);
+        $this->fromEnrollment->exchange($this->toEnrollment);
+        $this->fromEnrollment->exchanges()->delete();
 
-        $fromEnrollment->exchange($toEnrollment);
-
-        // If the exchange is going to be performed, then we must update
-        // the confirmation status to confirmed so the history of the
-        // exchanges is kept and include this enrollment exchange.
-        $this->confirmed = true;
-        $this->save();
-
-        // Delete the unconfirmed exchanges related to the source enrollment.
-        $fromEnrollment->exchanges()->where('confirmed', false)->delete();
+        $this->logger->log($fromEnrollmentCopy, $toEnrollmentCopy);
 
         return $this;
     }

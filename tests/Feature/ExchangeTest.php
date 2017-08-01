@@ -73,7 +73,6 @@ class ExchangeTest extends TestCase
         $exchange = factory(Exchange::class)->create([
             'from_enrollment_id' => $fromEnrollment->id,
             'to_enrollment_id' => $toEnrollment->id,
-            'confirmed' => false,
         ]);
 
         // Execute
@@ -82,19 +81,17 @@ class ExchangeTest extends TestCase
 
         // Assert
         $response->assertStatus(200);
-        $actualExchange = Exchange::first();
-        $this->assertTrue($actualExchange->confirmed);
-        $this->assertEquals($exchange->from_enrollment_id, $actualExchange->from_enrollment_id);
-        $this->assertEquals($exchange->to_enrollment_id, $actualExchange->to_enrollment_id);
+        $actualFromEnrollment = Enrollment::find($fromEnrollment->id);
+        $actualToEnrollment = Enrollment::find($toEnrollment->id);
+        $this->assertEquals($fromEnrollment->shift->id, $actualToEnrollment->shift->id);
+        $this->assertEquals($toEnrollment->shift->id, $actualFromEnrollment->shift->id);
     }
 
     public function testExchangeCannotBeConfirmedByOtherStudentThanTheTargetStudent()
     {
         // Prepare
         $unauthorizedStudent = factory(Student::class)->create();
-        $exchange = factory(Exchange::class)->create([
-            'confirmed' => false,
-        ]);
+        $exchange = factory(Exchange::class)->create();
 
         // Execute
         $response = $this->actingAs($unauthorizedStudent->user)
@@ -102,6 +99,6 @@ class ExchangeTest extends TestCase
 
         // Assert
         $response->assertStatus(403);
-        $this->assertEquals(0, Exchange::where('confirmed', true)->count());
+        $this->assertEquals(1, Exchange::count());
     }
 }

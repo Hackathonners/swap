@@ -17,7 +17,6 @@ class CreateExchangesTable extends Migration
             $table->increments('id');
             $table->integer('from_enrollment_id')->unsigned();
             $table->integer('to_enrollment_id')->unsigned();
-            $table->boolean('confirmed')->default(false);
             $table->timestamps();
 
             $table->foreign('from_enrollment_id')->references('id')->on('enrollments');

@@ -59,10 +59,6 @@ class ExchangeTest extends TestCase
             'from_enrollment_id' => $fromEnrollment->id,
             'to_enrollment_id' => $toEnrollment->id,
         ]);
-        $notMatchingExchange = factory(Exchange::class)->create([
-            'from_enrollment_id' => $fromEnrollment->id,
-            'to_enrollment_id' => $otherToEnrollment->id,
-        ]);
         $fromShiftId = $fromEnrollment->shift_id;
         $toShiftId = $toEnrollment->shift_id;
         $this->loggerMock->shouldReceive('log')
@@ -73,12 +69,11 @@ class ExchangeTest extends TestCase
 
         // Assert
         $this->assertSame($exchange, $actualReturn);
+        $this->assertEquals(0, Exchange::count());
         $actualFromEnrollment = Enrollment::find($fromEnrollment->id);
         $actualToEnrollment = Enrollment::find($toEnrollment->id);
         $this->assertEquals($toShiftId, $actualFromEnrollment->shift_id);
         $this->assertEquals($fromShiftId, $actualToEnrollment->shift_id);
-        // Assert that the old unconfirmed exchange was deleted.
-        $this->assertNull(Exchange::find($notMatchingExchange->id));
     }
 
     public function testFindMatchingExchange()
@@ -130,7 +125,6 @@ class ExchangeTest extends TestCase
         $exchange = factory(Exchange::class)->create([
             'from_enrollment_id' => $fromEnrollment->id,
             'to_enrollment_id' => $toEnrollment->id,
-            'confirmed' => false,
         ]);
 
         // Execute
