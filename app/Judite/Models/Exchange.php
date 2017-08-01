@@ -10,7 +10,7 @@ use App\Exceptions\CannotExchangeToShiftsOnDifferentCoursesException;
 class Exchange extends Model
 {
     /**
-     * The exchanges looger used to save exchanges in persistence.
+     * The exchanges logger.
      *
      * @var  \App\Judite\Contracts\ExchangeLogger
      */
