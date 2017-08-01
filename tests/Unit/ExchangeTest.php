@@ -76,6 +76,38 @@ class ExchangeTest extends TestCase
         $this->assertEquals($fromShiftId, $actualToEnrollment->shift_id);
     }
 
+    public function testPerformExchangeDeletesNotMachingExchanges()
+    {
+        // Prepare
+        $course = factory(Course::class)->create();
+        $fromEnrollment = factory(Enrollment::class)->create(['course_id' => $course->id]);
+        $otherFromEnrollment = factory(Enrollment::class)->create(['course_id' => $course->id]);
+        $toEnrollment = factory(Enrollment::class)->create(['course_id' => $course->id]);
+        $exchange = factory(Exchange::class)->create([
+            'from_enrollment_id' => $fromEnrollment->id,
+            'to_enrollment_id' => $toEnrollment->id,
+        ]);
+        factory(Exchange::class)->create([
+            'from_enrollment_id' => $otherFromEnrollment->id,
+            'to_enrollment_id' => $fromEnrollment->id,
+        ]);
+        $fromShiftId = $fromEnrollment->shift_id;
+        $toShiftId = $toEnrollment->shift_id;
+        $this->loggerMock->shouldReceive('log')
+                         ->once();
+
+        // Execute
+        $actualReturn = $exchange->perform();
+
+        // Assert
+        $this->assertSame($exchange, $actualReturn);
+        $this->assertEquals(0, Exchange::count());
+        $actualFromEnrollment = Enrollment::find($fromEnrollment->id);
+        $actualToEnrollment = Enrollment::find($toEnrollment->id);
+        $this->assertEquals($toShiftId, $actualFromEnrollment->shift_id);
+        $this->assertEquals($fromShiftId, $actualToEnrollment->shift_id);
+    }
+
     public function testFindMatchingExchange()
     {
         // Prepare

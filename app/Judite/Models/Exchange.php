@@ -2,6 +2,7 @@
 
 namespace App\Judite\Models;
 
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use App\Judite\Contracts\ExchangeLogger;
 use App\Exceptions\CannotExchangeEnrollmentMultipleTimesException;
@@ -70,6 +71,20 @@ class Exchange extends Model
     }
 
     /**
+     * Deletes all exchanges involving the given enrollments.
+     *
+     * @param  \Illuminate\Support\Collection  $enrollments
+     */
+    public function deleteExchangesOfEnrollments(Collection $enrollments)
+    {
+        $enrollmentIds = $enrollments->pluck('id');
+
+        self::whereIn('from_enrollment_id', $enrollmentIds)
+            ->orWhereIn('to_enrollment_id', $enrollmentIds)
+            ->delete();
+    }
+
+    /**
      * Perform the exchange and update the enrollments of involved students.
      *
      * @return $this
@@ -80,7 +95,8 @@ class Exchange extends Model
         $toEnrollmentCopy = clone $this->toEnrollment;
 
         $this->fromEnrollment->exchange($this->toEnrollment);
-        $this->fromEnrollment->exchanges()->delete();
+        $exchangedEnrollments = collect([$this->fromEnrollment, $this->toEnrollment]);
+        $this->deleteExchangesOfEnrollments($exchangedEnrollments);
 
         $this->logger->log($fromEnrollmentCopy, $toEnrollmentCopy);
 
