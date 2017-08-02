@@ -53,8 +53,8 @@ class ExchangeTest extends TestCase
         // Prepare
         $course = factory(Course::class)->create();
         $fromEnrollment = factory(Enrollment::class)->create(['course_id' => $course->id]);
+        $otherFromEnrollment = factory(Enrollment::class)->create(['course_id' => $course->id]);
         $toEnrollment = factory(Enrollment::class)->create(['course_id' => $course->id]);
-        $otherToEnrollment = factory(Enrollment::class)->create(['course_id' => $course->id]);
         $exchange = factory(Exchange::class)->create([
             'from_enrollment_id' => $fromEnrollment->id,
             'to_enrollment_id' => $toEnrollment->id,
