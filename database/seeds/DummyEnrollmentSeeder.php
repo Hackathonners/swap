@@ -59,7 +59,6 @@ class DummyEnrollmentSeeder extends Seeder
         Exchange::create([
             'from_enrollment_id' => $enrollment->id,
             'to_enrollment_id' => $anotherEnrollment->id,
-            'confirmed' => false,
         ]);
     }
 }
