@@ -71,20 +71,6 @@ class Exchange extends Model
     }
 
     /**
-     * Deletes all exchanges involving the given enrollments.
-     *
-     * @param  \Illuminate\Support\Collection  $enrollments
-     */
-    public function deleteExchangesOfEnrollments(Collection $enrollments)
-    {
-        $enrollmentIds = $enrollments->pluck('id');
-
-        self::whereIn('from_enrollment_id', $enrollmentIds)
-            ->orWhereIn('to_enrollment_id', $enrollmentIds)
-            ->delete();
-    }
-
-    /**
      * Perform the exchange and update the enrollments of involved students.
      *
      * @return $this
@@ -121,5 +107,19 @@ class Exchange extends Model
     public function toEnrollment()
     {
         return $this->belongsTo(Enrollment::class, 'to_enrollment_id');
+    }
+
+    /**
+     * Deletes all exchanges involving the given enrollments.
+     *
+     * @param  \Illuminate\Support\Collection  $enrollments
+     */
+    private function deleteExchangesOfEnrollments(Collection $enrollments)
+    {
+        $enrollmentIds = $enrollments->pluck('id');
+
+        self::whereIn('from_enrollment_id', $enrollmentIds)
+            ->orWhereIn('to_enrollment_id', $enrollmentIds)
+            ->delete();
     }
 }
