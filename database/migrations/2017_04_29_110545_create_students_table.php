@@ -17,7 +17,6 @@ class CreateStudentsTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->string('student_number')->unique();
-            $table->boolean('verified')->default(false);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');

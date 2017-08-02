@@ -29,7 +29,7 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                        <img alt="Brand" height="22" src="{{ asset('images/logo.svg') }}">
                     </a>
                 </div>
 
