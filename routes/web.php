@@ -19,10 +19,18 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 // Student-only routes
 Route::middleware(['auth', 'can.student'])->group(function () {
-    Route::get('/courses', 'CourseController@index')->name('courses.index');
-    Route::post('/enrollments', 'EnrollmentController@store')->name('enrollments.create');
-    Route::post('/exchanges', 'ExchangeController@store')->name('exchanges.create');
-    Route::post('/exchanges/{id}/confirm', 'ExchangeController@storeConfirmation')->name('exchanges.confirm');
+    Route::get('/confirm/{token}', 'Auth\RegisterController@confirm')
+         ->name('register.confirm');
+    Route::post('/registrations/resend-confirmation', 'Auth\RegisterController@resendConfirmationEmail')
+         ->name('register.resend_confirmation');
+
+    // Allowed routes after confirmation
+    Route::middleware('confirmed')->group(function () {
+        Route::get('/courses', 'CourseController@index')->name('courses.index');
+        Route::post('/enrollments', 'EnrollmentController@store')->name('enrollments.create');
+        Route::post('/exchanges', 'ExchangeController@store')->name('exchanges.create');
+        Route::post('/exchanges/{id}/confirm', 'ExchangeController@storeConfirmation')->name('exchanges.confirm');
+    });
 });
 
 // Admin-only routes
