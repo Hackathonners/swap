@@ -8,6 +8,7 @@
         <th>Student Name</th>
         <th>Student E-mail</th>
         <th>Enrollment Date</th>
+        <th>Shift</th>
     </tr>
     @foreach($enrollments as $enrollment)
     <tr>
@@ -17,6 +18,7 @@
         <td>{{ $enrollment->student->user->name }}</td>
         <td>{{ $enrollment->student->user->email }}</td>
         <td>{{ $enrollment->student->created_at }}</td>
+        <td>{{-- Shift field --}}</td>
     </tr>
     @endforeach
 </table>
