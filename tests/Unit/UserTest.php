@@ -5,9 +5,12 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use App\Judite\Models\User;
 use App\Judite\Models\Student;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class UserTest extends TestCase
 {
+    use DatabaseTransactions;
+
     public function testUserIsAdmin()
     {
         // Prepare

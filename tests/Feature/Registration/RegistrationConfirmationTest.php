@@ -4,7 +4,6 @@ namespace Tests\Feature\Registration;
 
 use Mail;
 use Tests\TestCase;
-use App\Judite\Models\User;
 use App\Judite\Models\Student;
 use App\Mail\RegistrationConfirmation;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -13,35 +12,21 @@ class RegistrationConfirmationTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function testSendConfirmatioEmailOnRegistration()
+    public function setUp()
     {
-        // Prepare
+        parent::setUp();
         Mail::fake();
-        $requestData = [
-            'name' => 'John Doe',
-            'email' => 'pg12345@alunos.uminho.pt',
-            'password' => 'secret',
-            'password_confirmation' => 'secret',
-        ];
-
-        // Execute
-        $response = $this->post('/register', $requestData);
-
-        // Assert
-        Mail::assertSent(RegistrationConfirmation::class, function ($mail) use ($requestData) {
-            return $mail->hasTo($requestData['email']);
-        });
     }
 
-    public function testSendResendConfirmationEmail()
+    /** @test */
+    public function authenticated_users_can_request_the_resend_of_the_confirmation_email()
     {
         // Prepare
-        Mail::fake();
         $student = factory(Student::class)->states('unconfirmed')->create();
 
         // Execute
-        $response = $this->actingAs($student->user)
-                         ->post(route('register.resend_confirmation'));
+        $this->actingAs($student->user);
+        $response = $this->post(route('register.resend_confirmation'));
 
         // Assert
         $user = $student->user;
@@ -50,56 +35,50 @@ class RegistrationConfirmationTest extends TestCase
         });
     }
 
-    public function testDoNotSendResendConfirmationEmailToConfirmedUser()
+    /** @test */
+    public function a_confirmed_user_may_not_request_a_resend_of_the_confirmation_email()
     {
         // Prepare
-        Mail::fake();
         $student = factory(Student::class)->create();
 
         // Execute
-        $response = $this->actingAs($student->user)
-                         ->post(route('register.resend_confirmation'));
+        $this->actingAs($student->user);
+        $response = $this->post(route('register.resend_confirmation'));
 
         // Assert
         Mail::assertNotSent(RegistrationConfirmation::class);
     }
 
-    public function testConfirmStudentAccount()
+    /** @test */
+    public function a_student_can_confirm_the_account()
     {
         // Prepare
-        $user = factory(User::class)->create([
-            'verified' => false,
-            'verification_token' => 'secret',
-        ]);
-        factory(Student::class)->create(['user_id' => $user->id]);
-        $requestData = ['token' => 'secret'];
+        $student = factory(Student::class)->states('unconfirmed')->create();
+        $requestData = ['token' => $student->user->verification_token];
 
         // Execute
-        $response = $this->actingAs($user)
-                         ->get(route('register.confirm', $requestData));
+        $this->actingAs($student->user);
+        $response = $this->get(route('register.confirm', $requestData));
 
         // Assert
-        $user->fresh();
-        $this->assertTrue($user->verified);
-        $this->assertNull($user->verification_token);
+        $student = $student->fresh();
+        $this->assertTrue($student->user->verified);
+        $this->assertNull($student->user->verification_token);
     }
 
-    public function testDoNotConfirmStudentAccountOnInvalidToken()
+    /** @test */
+    public function an_account_may_not_be_confirmed_with_an_invalid_verification_token()
     {
         // Prepare
-        $user = factory(User::class)->create([
-            'verified' => false,
-            'verification_token' => 'secret',
-        ]);
-        factory(Student::class)->create(['user_id' => $user->id]);
-        $invalidRequestData = ['token' => 'invalid_secret'];
+        $student = factory(Student::class)->states('unconfirmed')->create();
+        $invalidRequestData = ['token' => 'invalid secret'];
 
         // Execute
-        $response = $this->actingAs($user)
-                         ->get(route('register.confirm', $invalidRequestData));
+        $this->actingAs($student->user);
+        $response = $this->get(route('register.confirm', $invalidRequestData));
 
         // Assert
-        $user->fresh();
-        $this->assertFalse($user->verified);
+        $student = $student->fresh();
+        $this->assertFalse($student->user->verified);
     }
 }

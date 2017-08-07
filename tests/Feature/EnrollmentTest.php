@@ -12,56 +12,62 @@ class EnrollmentTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function testStudentCanEnrollCourses()
-    {
-        // Prepare
-        $student = factory(Student::class)->create();
-        $course = factory(Course::class)->create();
+    protected $student;
+    protected $course;
 
+    public function setUp()
+    {
+        parent::setUp();
+        $this->student = factory(Student::class)->create();
+        $this->course = factory(Course::class)->create();
+    }
+
+    /** @test */
+    public function a_student_can_enroll_in_a_course()
+    {
         // Execute
-        $response = $this->actingAs($student->user)
-                         ->post(route('enrollments.create'), ['course_id' => $course->id]);
+        $this->actingAs($student->user);
+        $response = $this->post(route('enrollments.create'), ['course_id' => $course->id]);
 
         // Assert
         $response->assertRedirect(route('courses.index'));
         $this->assertEquals($course->id, $student->enrollments()->first()->course_id);
     }
 
-    public function testThrowsExceptionWhenStudentIsAlreadyEnrolledInCourse()
+    /** @test **/
+    public function a_student_may_not_enroll_in_a_course_multiple_times()
     {
         // Prepare
-        $student = factory(Student::class)->create();
-        $course = factory(Course::class)->create();
         factory(Enrollment::class)->create([
-            'student_id' => $student->id,
-            'course_id' => $course->id,
+            'student_id' => $this->student->id,
+            'course_id' => $this->course->id,
         ]);
 
         // Execute
-        $this->actingAs($student->user)
-             ->post(route('enrollments.create'), ['course_id' => $course->id]);
+        $this->actingAs($this->student->user);
+        $response = $this->post(route('enrollments.create'), ['course_id' => $this->course->id]);
+
+        // Assert
+        $response->assertRedirect(route('courses.index'));
+        $this->assertEquals(1, Enrollment::count());
     }
 
-    public function testStudentCannotExportEnrollments()
+    /** @test **/
+    public function students_may_not_export_enrollments()
     {
-        // Prepare
-        $student = factory(Student::class)->create();
-
         // Execute
-        $response = $this->actingAs($student->user)
-                         ->get(route('enrollments.export'));
+        $this->actingAs($this->student->user);
+        $response = $this->get(route('enrollments.export'));
 
         // Assert
         $response->assertStatus(403);
     }
 
-    public function testRedirectToLoginWhenUnauthenticatedUsersEnrollInCourses()
+    /** @test */
+    public function unauthenticated_users_may_not_enroll_in_courses()
     {
-        // Prepare
-        $course = factory(Course::class)->create();
-
         // Execute
-        $response = $this->post(route('enrollments.create'), ['course_id' => $course->id]);
+        $response = $this->post(route('enrollments.create'), ['course_id' => $this->course->id]);
 
         // Assert
         $response->assertRedirect(route('login'));

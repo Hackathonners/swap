@@ -13,12 +13,20 @@ class SettingsTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function testUpdateSettings()
+    protected $admin;
+    protected $settings;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->admin = factory(User::class)->states('admin')->create();
+        $this->settings = Settings::create();
+    }
+
+    /** @test */
+    public function an_admin_can_update_settings()
     {
         // Prepare
-        $admin = factory(User::class)->states('admin')->create();
-        $settings = Settings::create();
-
         $enrollmentsStart = Carbon::tomorrow();
         $enrollmentsEnd = Carbon::tomorrow()->addDays(1);
         $exchangesStart = Carbon::tomorrow()->addDays(2);
@@ -31,138 +39,127 @@ class SettingsTest extends TestCase
         ];
 
         // Execute
-        $response = $this->actingAs($admin)
-                         ->put(route('settings.update'), $requestData);
+        $this->actingAs($this->admin);
+        $response = $this->put(route('settings.update'), $requestData);
 
         // Assert
         $response->assertStatus(200);
-        $actualSettings = Settings::first();
+        $actualSettings = $this->settings->fresh();
         $this->assertEquals($exchangesStart, $actualSettings->exchanges_start_at);
         $this->assertEquals($exchangesEnd, $actualSettings->exchanges_end_at);
         $this->assertEquals($enrollmentsStart, $actualSettings->enrollments_start_at);
         $this->assertEquals($enrollmentsEnd, $actualSettings->enrollments_end_at);
     }
 
-    public function testUpdateSettingsWithInvalidEnrollemntPeriodRange()
+    /** @test */
+    public function settings_may_not_be_updated_with_an_invalid_exchanges_period()
     {
         // Prepare
-        $admin = factory(User::class)->states('admin')->create();
-        $settings = Settings::create();
-
-        $enrollmentsStart = Carbon::tomorrow()->addDays(3);
-        $enrollmentsEnd = Carbon::tomorrow();
-        $exchangesStart = Carbon::tomorrow();
-        $exchangesEnd = Carbon::tomorrow()->addDays(5);
         $requestData = [
-            'exchanges_start_at' => $exchangesStart,
-            'exchanges_end_at' => $exchangesEnd,
-            'enrollments_start_at' => $enrollmentsStart,
-            'enrollments_end_at' => $enrollmentsEnd,
+            'exchanges_start_at' => Carbon::tomorrow()->addDays(3),
+            'exchanges_end_at' => Carbon::tomorrow(),
+            'enrollments_start_at' => Carbon::tomorrow(),
+            'enrollments_end_at' => Carbon::tomorrow()->addDays(5),
         ];
 
         // Execute
-        $response = $this->actingAs($admin)
-                         ->put(route('settings.update'), $requestData);
+        $this->actingAs($this->admin);
+        $response = $this->put(route('settings.update'), $requestData);
 
         // Assert
-        $response->assertStatus(302);
-        $response->assertSessionHasErrors(['enrollments_end_at']);
-        $actualSettings = Settings::first();
-        $this->assertEquals($settings->exchanges_start_at, $actualSettings->exchanges_start_at);
-        $this->assertEquals($settings->exchanges_end_at, $actualSettings->exchanges_end_at);
-        $this->assertEquals($settings->enrollments_start_at, $actualSettings->enrollments_start_at);
-        $this->assertEquals($settings->enrollments_end_at, $actualSettings->enrollments_end_at);
-    }
-
-    public function testUpdateSettingsWithExchangePeriodBeforeEnrollmentPeriod()
-    {
-        // Prepare
-        $admin = factory(User::class)->states('admin')->create();
-        $settings = Settings::create();
-
-        $enrollmentsStart = Carbon::tomorrow();
-        $enrollmentsEnd = Carbon::tomorrow()->addDays(3);
-        $exchangesStart = Carbon::tomorrow();
-        $exchangesEnd = Carbon::tomorrow()->addDays(5);
-        $requestData = [
-            'exchanges_start_at' => $exchangesStart,
-            'exchanges_end_at' => $exchangesEnd,
-            'enrollments_start_at' => $enrollmentsStart,
-            'enrollments_end_at' => $enrollmentsEnd,
-        ];
-
-        // Execute
-        $response = $this->actingAs($admin)
-                         ->put(route('settings.update'), $requestData);
-        // Assert
-        $response->assertStatus(302);
-        $response->assertSessionHasErrors(['exchanges_start_at']);
-        $actualSettings = Settings::first();
-        $this->assertEquals($settings->exchanges_start_at, $actualSettings->exchanges_start_at);
-        $this->assertEquals($settings->exchanges_end_at, $actualSettings->exchanges_end_at);
-        $this->assertEquals($settings->enrollments_start_at, $actualSettings->enrollments_start_at);
-        $this->assertEquals($settings->enrollments_end_at, $actualSettings->enrollments_end_at);
-    }
-
-    public function testUpdateSettingsWithInvalidExchangePeriodRange()
-    {
-        // Prepare
-        $admin = factory(User::class)->states('admin')->create();
-        $settings = Settings::create();
-
-        $enrollmentsStart = Carbon::tomorrow()->addDays(2);
-        $enrollmentsEnd = Carbon::tomorrow()->addDays(3);
-        $exchangesStart = Carbon::today()->addDays(5);
-        $exchangesEnd = Carbon::tomorrow()->addDays(1);
-        $requestData = [
-            'exchanges_start_at' => $exchangesStart,
-            'exchanges_end_at' => $exchangesEnd,
-            'enrollments_start_at' => $enrollmentsStart,
-            'enrollments_end_at' => $enrollmentsEnd,
-        ];
-
-        // Execute
-        $response = $this->actingAs($admin)
-                         ->put(route('settings.update'), $requestData);
-
-        // Assert
-        $response->assertStatus(302);
+        $response->assertRedirect();
         $response->assertSessionHasErrors(['exchanges_end_at']);
-        $actualSettings = Settings::first();
-        $this->assertEquals($settings->exchanges_start_at, $actualSettings->exchanges_start_at);
-        $this->assertEquals($settings->exchanges_end_at, $actualSettings->exchanges_end_at);
-        $this->assertEquals($settings->enrollments_start_at, $actualSettings->enrollments_start_at);
-        $this->assertEquals($settings->enrollments_end_at, $actualSettings->enrollments_end_at);
+        $this->assertSettingsRemainUnchanged();
     }
 
-    public function testStudentCannotUpdateSettings()
+    /** @test */
+    public function settings_may_not_be_updated_with_an_exchanges_period_before_enrollments_period()
     {
         // Prepare
-        $user = factory(User::class)->create();
-        factory(Student::class)->create(['user_id' => $user->id]);
-        $settings = Settings::create();
-
-        $exchangesStart = Carbon::today();
-        $exchangesEnd = Carbon::tomorrow();
-        $enrollmentsStart = Carbon::tomorrow()->addDays(2);
-        $enrollmentsEnd = Carbon::tomorrow()->addDays(3);
         $requestData = [
-            'exchanges_start_at' => $exchangesStart,
-            'exchanges_end_at' => $exchangesEnd,
-            'enrollments_start_at' => $enrollmentsStart,
-            'enrollments_end_at' => $enrollmentsEnd,
+            'exchanges_start_at' => Carbon::tomorrow(),
+            'exchanges_end_at' => Carbon::tomorrow()->addDays(3),
+            'enrollments_start_at' => Carbon::tomorrow(),
+            'enrollments_end_at' => Carbon::tomorrow()->addDays(5),
         ];
 
         // Execute
-        $response = $this->actingAs($user)
-                         ->put(route('settings.update'), $requestData);
+        $this->actingAs($this->admin);
+        $response = $this->put(route('settings.update'), $requestData);
+
+        // Assert
+        $response->assertRedirect();
+        $response->assertSessionHasErrors(['exchanges_start_at']);
+        $this->assertSettingsRemainUnchanged();
+    }
+
+    /** @test */
+    public function settings_may_not_be_updated_with_an_invalid_enrollments_period()
+    {
+        // Prepare
+        $requestData = [
+            'exchanges_start_at' => Carbon::tomorrow()->addDays(2),
+            'exchanges_end_at' => Carbon::tomorrow()->addDays(3),
+            'enrollments_start_at' => Carbon::tomorrow()->addDays(5),
+            'enrollments_end_at' => Carbon::tomorrow()->addDays(1),
+        ];
+
+        // Execute
+        $this->actingAs($this->admin);
+        $response = $this->put(route('settings.update'), $requestData);
+
+        // Assert
+        $response->assertRedirect();
+        $response->assertSessionHasErrors(['enrollments_end_at']);
+        $this->assertSettingsRemainUnchanged();
+    }
+
+    /** @test */
+    public function students_may_not_update_settings()
+    {
+        // Prepare
+        $student = factory(Student::class)->create();
+        $requestData = [
+            'exchanges_start_at' => Carbon::today(),
+            'exchanges_end_at' => Carbon::tomorrow(),
+            'enrollments_start_at' => Carbon::tomorrow()->addDays(2),
+            'enrollments_end_at' => Carbon::tomorrow()->addDays(3),
+        ];
+
+        // Execute
+        $this->actingAs($student->user);
+        $response = $this->put(route('settings.update'), $requestData);
 
         // Assert
         $response->assertStatus(403);
-        $actualSettings = Settings::first();
-        $this->assertEquals($settings->exchanges_start_at, $actualSettings->exchanges_start_at);
-        $this->assertEquals($settings->exchanges_end_at, $actualSettings->exchanges_end_at);
-        $this->assertEquals($settings->enrollments_start_at, $actualSettings->enrollments_start_at);
-        $this->assertEquals($settings->enrollments_end_at, $actualSettings->enrollments_end_at);
+        $this->assertSettingsRemainUnchanged();
+    }
+
+    /** @test */
+    public function unauthenticated_users_may_not_update_settings()
+    {
+        // Prepare
+        $requestData = [
+            'exchanges_start_at' => Carbon::today(),
+            'exchanges_end_at' => Carbon::tomorrow(),
+            'enrollments_start_at' => Carbon::tomorrow()->addDays(2),
+            'enrollments_end_at' => Carbon::tomorrow()->addDays(3),
+        ];
+
+        // Execute
+        $response = $this->put(route('settings.update'), $requestData);
+
+        // Assert
+        $response->assertRedirect(route('login'));
+        $this->assertSettingsRemainUnchanged();
+    }
+
+    protected function assertSettingsRemainUnchanged()
+    {
+        $actualSettings = $this->settings->fresh();
+        $this->assertEquals($this->settings->exchanges_start_at, $actualSettings->exchanges_start_at);
+        $this->assertEquals($this->settings->exchanges_end_at, $actualSettings->exchanges_end_at);
+        $this->assertEquals($this->settings->enrollments_start_at, $actualSettings->enrollments_start_at);
+        $this->assertEquals($this->settings->enrollments_end_at, $actualSettings->enrollments_end_at);
     }
 }

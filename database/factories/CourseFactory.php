@@ -16,8 +16,8 @@ use App\Judite\Models\Course;
 /* @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(Course::class, function (Faker\Generator $faker) {
     return [
-        'year' => $faker->randomElement($array = [1, 2, 3, 4, 5]),
+        'year' => $faker->randomElement([1, 2, 3, 4, 5]),
         'name' => $faker->unique()->word(),
-        'semester' => $faker->randomElement($array = [1, 2]),
+        'semester' => $faker->randomElement([1, 2]),
     ];
 });

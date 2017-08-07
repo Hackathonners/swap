@@ -36,6 +36,7 @@ $factory->state(Student::class, 'unconfirmed', function (Faker\Generator $faker)
         'user_id' => factory(User::class)->create([
             'is_admin' => false,
             'verified' => false,
+            'verification_token' => str_random(32),
         ])->id,
     ];
 });
