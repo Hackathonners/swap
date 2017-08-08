@@ -16,4 +16,14 @@ class EnrollmentPresenter extends Presenter
     {
         return $this->entity->shift_id ? $this->entity->shift->tag : $placeholder;
     }
+
+    /**
+     * Get the formatted date of the last update of this enrollment.
+     *
+     * @return string
+     */
+    public function getUpdatedAt()
+    {
+        return $this->entity->updated_at->toDayDateTimeString();
+    }
 }

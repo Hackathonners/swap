@@ -6,7 +6,6 @@ use Tests\TestCase;
 use App\Judite\Models\User;
 use App\Judite\Models\Course;
 use App\Judite\Models\Student;
-use App\Judite\Models\Enrollment;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class CourseTest extends TestCase
@@ -45,12 +44,7 @@ class CourseTest extends TestCase
     {
         // Prepare
         $admin = factory(User::class)->states('admin')->create();
-        $student = factory(Student::class)->create();
         $course = factory(Course::class, 20)->create()->first();
-        $enrollment = factory(Enrollment::class)->create([
-            'student_id' => $student->id,
-            'course_id' => $course->id,
-        ]);
 
         // Execute
         $response = $this->actingAs($admin)
@@ -58,22 +52,14 @@ class CourseTest extends TestCase
 
         // Assert
         $response->assertStatus(200);
-        $enrollments = Enrollment::with('student.user')
-                         ->where('course_id', $course->id)
-                         ->paginate();
-        $response->assertViewHas('enrollments', $enrollments);
+        $response->assertViewHas('enrollments');
     }
 
     public function testStudentCannotListStudentsEnrolledInCourse()
     {
         // Prepare
         $user = factory(User::class)->create();
-        $student = factory(Student::class)->create(['user_id' => $user->id]);
         $course = factory(Course::class, 20)->create()->first();
-        $enrollment = factory(Enrollment::class)->create([
-            'student_id' => $student->id,
-            'course_id' => $course->id,
-        ]);
 
         // Execute
         $response = $this->actingAs($user)

@@ -57,6 +57,21 @@ class EnrollmentTest extends TestCase
         $this->assertEquals($expectedOrder->pluck('id'), $actualReturn->pluck('course.id'));
     }
 
+    public function testOrderByStudent()
+    {
+        // Prepare
+        $course = factory(Course::class)->create();
+        factory(Enrollment::class, 20)->create(['course_id' => $course->id]);
+
+        // Execute
+        $actualReturn = Enrollment::orderByStudent()->get();
+
+        // Assert
+        $expectedOrder = Student::orderBy('student_number')->get();
+
+        $this->assertEquals($expectedOrder->pluck('id'), $actualReturn->pluck('student.id'));
+    }
+
     /**
      * @expectedException App\Exceptions\UserIsAlreadyEnrolledInCourseException
      */

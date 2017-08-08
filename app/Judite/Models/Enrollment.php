@@ -39,6 +39,18 @@ class Enrollment extends Model
     }
 
     /**
+     * Scope a query to order enrollments by students.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOrderByStudent($query)
+    {
+        return $query->join('students', 'enrollments.student_id', '=', 'students.id')
+                     ->orderBy('students.student_number', 'asc');
+    }
+
+    /**
      * Exchange shifts with the given enrollment.
      *
      * @param  \App\Judite\Models\Enrollment  $enrollment
