@@ -24,10 +24,7 @@ class ConfirmExchangeTest extends TestCase
         $this->toEnrollment = $this->exchange->toEnrollment;
     }
 
-    /**
-     * @test
-     * @group failing
-     **/
+    /** @test **/
     public function a_student_can_confirm_a_proposed_exchange()
     {
         // Prepare
