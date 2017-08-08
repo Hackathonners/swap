@@ -1,9 +1,43 @@
 
 // Fonts
-@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
+@import url('https://fonts.googleapis.com/css?family=Roboto');
 
 // Variables
 @import "variables";
 
 // Bootstrap
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+
+// Application
+.navbar-brand {
+    padding: 10px 15px;
+}
+
+.table > tbody > tr > td {
+    vertical-align: middle;
+}
+
+.table > tbody > tr:first-child > td {
+    border: none;
+}
+
+.panel-table {
+    padding: 0;
+}
+
+.panel-table .table td,
+.panel-table .table th {
+    padding: 8px 15px;
+}
+
+.panel-warning .table td {
+    border-color: #faebcc;
+}
+
+.table:last-child {
+    margin-bottom: 0;
+}
+
+.dropdown-menu > li > a.text-danger {
+    color: #a94442;
+}

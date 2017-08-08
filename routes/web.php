@@ -12,13 +12,10 @@
 */
 
 Auth::routes();
-Route::get('/', function () {
-    return view('welcome');
-});
-Route::get('/home', 'HomeController@index')->name('home');
 
 // Student-only routes
 Route::middleware(['auth', 'can.student'])->group(function () {
+    Route::get('/', 'DashboardController@index')->name('home');
     Route::get('/confirm/{token}', 'Auth\RegisterController@confirm')
          ->name('register.confirm');
     Route::post('/registrations/resend-confirmation', 'Auth\RegisterController@resendConfirmationEmail')
@@ -29,7 +26,7 @@ Route::middleware(['auth', 'can.student'])->group(function () {
         Route::get('/courses', 'CourseController@index')->name('courses.index');
         Route::post('/enrollments', 'EnrollmentController@store')->name('enrollments.create');
         Route::post('/exchanges', 'ExchangeController@store')->name('exchanges.create');
-        Route::post('/exchanges/{id}/confirm', 'ExchangeController@storeConfirmation')->name('exchanges.confirm');
+        Route::post('/exchanges/confirm', 'ExchangeController@storeConfirmation')->name('exchanges.confirm');
     });
 });
 

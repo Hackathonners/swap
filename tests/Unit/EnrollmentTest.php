@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
+use App\Judite\Models\Shift;
 use App\Judite\Models\Course;
 use App\Judite\Models\Student;
 use App\Judite\Models\Enrollment;
@@ -30,6 +31,30 @@ class EnrollmentTest extends TestCase
         $actualToEnrollment = Enrollment::find($toEnrollment->id);
         $this->assertEquals($fromShiftId, $actualToEnrollment->shift_id);
         $this->assertEquals($toShiftId, $actualFromEnrollment->shift_id);
+    }
+
+    public function testOrderByCourse()
+    {
+        // Prepare
+        $courses = factory(Course::class, 10)->create();
+        $courses->each(function ($course) {
+            $shift = factory(Shift::class)->make(['course_id' => $course->id]);
+            factory(Enrollment::class)->create([
+                'course_id' => $course->id,
+                'shift_id' => $shift->id,
+            ]);
+        });
+
+        // Execute
+        $actualReturn = Enrollment::orderByCourse()->get();
+
+        // Assert
+        $expectedOrder = Course::orderBy('year', 'asc')
+                                ->orderBy('semester', 'asc')
+                                ->orderBy('name', 'asc')
+                                ->get();
+
+        $this->assertEquals($expectedOrder->pluck('id'), $actualReturn->pluck('course.id'));
     }
 
     /**

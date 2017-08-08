@@ -11,6 +11,13 @@ use App\Exceptions\CannotExchangeToShiftsOnDifferentCoursesException;
 class Exchange extends Model
 {
     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['fromEnrollment', 'toEnrollment'];
+
+    /**
      * The exchanges logger.
      *
      * @var  \App\Judite\Contracts\ExchangeLogger
@@ -41,7 +48,7 @@ class Exchange extends Model
         // Each enrollment can be requested to exchange once. The students
         // are allowed to create only a single exchange related to the
         // same enrollment, ensuring that each request exists once.
-        if ($fromEnrollment->exchanges()->exists()) {
+        if ($fromEnrollment->exchangesAsSource()->exists()) {
             throw new CannotExchangeEnrollmentMultipleTimesException;
         }
 
@@ -71,7 +78,31 @@ class Exchange extends Model
     }
 
     /**
-     * Perform the exchange and update the enrollments of involved students.
+     * Scope a query to only filter exchanges which source enrollment is in a set of values.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  mixed  $values
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWhereFromEnrollmentIn($query, $values)
+    {
+        return $query->whereIn('from_enrollment_id', $values);
+    }
+
+    /**
+     * Scope a query to only filter exchanges which target enrollment is in a set of values.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  mixed  $values
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWhereToEnrollmentIn($query, $values)
+    {
+        return $query->whereIn('to_enrollment_id', $values);
+    }
+
+    /**
+     * Perform the exchange and update the associated enrollments.
      *
      * @return $this
      */
@@ -121,5 +152,55 @@ class Exchange extends Model
         self::whereIn('from_enrollment_id', $enrollmentIds)
             ->orWhereIn('to_enrollment_id', $enrollmentIds)
             ->delete();
+    }
+
+    /**
+     * Get the course of this exchange.
+     *
+     * @return \App\Judite\Models\Course
+     */
+    public function course()
+    {
+        return $this->fromEnrollment->course;
+    }
+
+    /**
+     * Get the source shift of this exchange.
+     *
+     * @return \App\Judite\Models\Shift
+     */
+    public function fromShift()
+    {
+        return $this->fromEnrollment->shift;
+    }
+
+    /**
+     * Get the target shift of this exchange.
+     *
+     * @return \App\Judite\Models\Shift
+     */
+    public function toShift()
+    {
+        return $this->toEnrollment->shift;
+    }
+
+    /**
+     * Get the source student of this exchange.
+     *
+     * @return \App\Judite\Models\Student
+     */
+    public function fromStudent()
+    {
+        return $this->fromEnrollment->student;
+    }
+
+    /**
+     * Get the target student of this exchange.
+     *
+     * @return \App\Judite\Models\Student
+     */
+    public function toStudent()
+    {
+        return $this->toEnrollment->student;
     }
 }

@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use App\Judite\Models\Course;
 use App\Judite\Models\Student;
+use App\Judite\Models\Exchange;
 use App\Judite\Models\Enrollment;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
@@ -44,5 +45,41 @@ class StudentTest extends TestCase
 
         // Assert
         $this->assertTrue($actualReturn);
+    }
+
+    public function testGetExchangesRequestedByStudent()
+    {
+        // Prepare
+        $student = factory(Student::class)->create();
+        $enrollments = factory(Enrollment::class, 2)->create(['student_id' => $student->id]);
+        $enrollments->each(function ($enrollment) {
+            factory(Exchange::class)->create(['from_enrollment_id' => $enrollment->id]);
+            factory(Exchange::class)->create(['to_enrollment_id' => $enrollment->id]);
+        });
+
+        // Execute
+        $actualReturn = $student->requestedExchanges();
+
+        // Assert
+        $expectedExchanges = Exchange::whereIn('from_enrollment_id', $student->enrollments->pluck('id'))->get();
+        $this->assertEquals($expectedExchanges->pluck('id'), $actualReturn->pluck('id'));
+    }
+
+    public function testGetWaitingConfirmationExchangesFromStudent()
+    {
+        // Prepare
+        $student = factory(Student::class)->create();
+        $enrollments = factory(Enrollment::class, 2)->create(['student_id' => $student->id]);
+        $enrollments->each(function ($enrollment) {
+            factory(Exchange::class)->create(['from_enrollment_id' => $enrollment->id]);
+            factory(Exchange::class)->create(['to_enrollment_id' => $enrollment->id]);
+        });
+
+        // Execute
+        $actualReturn = $student->proposedExchanges();
+
+        // Assert
+        $expectedExchanges = Exchange::whereIn('to_enrollment_id', $student->enrollments->pluck('id'))->get();
+        $this->assertEquals($expectedExchanges->pluck('id'), $actualReturn->pluck('id'));
     }
 }

@@ -5,9 +5,12 @@ namespace Tests\Unit;
 use Carbon\Carbon;
 use Tests\TestCase;
 use App\Judite\Models\Settings;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class SettingsTest extends TestCase
 {
+    use DatabaseTransactions;
+
     public function testExchangePeriodIsActive()
     {
         // Prepare

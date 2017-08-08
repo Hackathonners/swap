@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Illuminate\Http\Request;
 use App\Judite\Models\Exchange;
 use App\Judite\Models\Enrollment;
 use App\Http\Requests\Exchange\CreateRequest;
@@ -71,19 +72,25 @@ class ExchangeController extends Controller
     /**
      * Store a confirmation of an exchange in storage.
      *
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function storeConfirmation($id)
+    public function storeConfirmation(Request $request)
     {
-        $exchange = DB::transaction(function () use ($id) {
-            $exchange = Exchange::findOrFail($id);
+        $exchange = DB::transaction(function () use ($request) {
+            $this->validate($request, [
+                'exchange_id' => 'exists:exchanges,id',
+            ]);
+
+            $exchange = Exchange::find($request->input('exchange_id'));
             $this->authorize('confirm', $exchange);
 
             return $exchange->perform();
         });
 
-        return $exchange;
+        flash('The shift exchange request has been confirmed.')->success();
+
+        return redirect()->back();
     }
 
     /**

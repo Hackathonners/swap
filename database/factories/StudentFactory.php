@@ -16,12 +16,17 @@ use App\Judite\Models\Student;
 
 /* @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(Student::class, function (Faker\Generator $faker) {
+    $studentNumber = $faker->unique()->numerify('a#####');
+
     return [
-        'user_id' => factory(User::class)->create([
-            'is_admin' => false,
-            'verified' => true,
-        ])->id,
-        'student_number' => $faker->numerify('a#####'),
+        'user_id' => function () use ($studentNumber) {
+            return factory(User::class)->create([
+                'email' => "${studentNumber}@alunos.uminho.pt",
+                'is_admin' => false,
+                'verified' => true,
+            ])->id;
+        },
+        'student_number' => $studentNumber,
     ];
 });
 

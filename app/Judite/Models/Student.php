@@ -25,6 +25,38 @@ class Student extends Model
     }
 
     /**
+     * Get exchanges requested by this student.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function requestedExchanges()
+    {
+        $enrollmentsRelationship = $this->enrollments();
+        $enrollmentsKeyName = $enrollmentsRelationship->getRelated()->getKeyName();
+        $enrollmentsIdsQuery = $enrollmentsRelationship
+            ->select($enrollmentsKeyName)
+            ->getBaseQuery();
+
+        return Exchange::whereFromEnrollmentIn($enrollmentsIdsQuery);
+    }
+
+    /**
+     * Get exchanges proposed to this student.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function proposedExchanges()
+    {
+        $enrollmentsRelationship = $this->enrollments();
+        $enrollmentsKeyName = $enrollmentsRelationship->getRelated()->getKeyName();
+        $enrollmentsIdsQuery = $enrollmentsRelationship
+            ->select($enrollmentsKeyName)
+            ->getBaseQuery();
+
+        return Exchange::whereToEnrollmentIn($enrollmentsIdsQuery);
+    }
+
+    /**
      * Get enrollments of this student.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

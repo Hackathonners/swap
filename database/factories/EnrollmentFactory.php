@@ -19,8 +19,14 @@ use App\Judite\Models\Enrollment;
 /* @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(Enrollment::class, function (Faker\Generator $faker) {
     return [
-        'student_id' => factory(Student::class)->create()->id,
-        'course_id' => factory(Course::class)->create()->id,
-        'shift_id' => factory(Shift::class)->create()->id,
+        'student_id' => function () {
+            return factory(Student::class)->create()->id;
+        },
+        'course_id' => function () {
+            return factory(Course::class)->create()->id;
+        },
+        'shift_id' => function () {
+            return factory(Shift::class)->create()->id;
+        },
     ];
 });

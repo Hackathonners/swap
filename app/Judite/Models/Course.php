@@ -41,6 +41,16 @@ class Course extends Model
     }
 
     /**
+     * Get enrollments on this course.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
+    /**
      * Add shift to this course.
      *
      * @param  \App\Judite\Models\Shift  $shift
