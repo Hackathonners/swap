@@ -19,4 +19,16 @@ class CoursePresenter extends Presenter
 
         return ucfirst($formatter->format($this->entity->year));
     }
+
+    /**
+     * The semester of this course in ordinal format.
+     *
+     * @return string
+     */
+    public function getOrdinalSemester()
+    {
+        $formatter = new NumberFormatter(app()->getLocale(), NumberFormatter::ORDINAL);
+
+        return ucfirst($formatter->format($this->entity->semester));
+    }
 }

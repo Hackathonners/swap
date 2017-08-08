@@ -102,6 +102,102 @@ class ExchangeTest extends TestCase
         $this->assertEquals($existingExchange->id, $actualReturn->id);
     }
 
+    public function testFilterFromEnrollment()
+    {
+        // Prepare
+        $fromEnrollment = factory(Enrollment::class)->create();
+        $otherFromEnrollment = factory(Enrollment::class)->create();
+        $fromEnrollmentExchanges = factory(Exchange::class, 2)->create([
+            'from_enrollment_id' => $fromEnrollment->id,
+        ]);
+        $otherFromEnrollmentExchanges = factory(Exchange::class, 2)->create([
+            'from_enrollment_id' => $otherFromEnrollment->id,
+        ]);
+        factory(Exchange::class)->create(['to_enrollment_id' => $fromEnrollment->id]);
+        factory(Exchange::class)->create(['to_enrollment_id' => $otherFromEnrollment->id]);
+
+        // Execute
+        $enrollments = collect([$fromEnrollment, $otherFromEnrollment]);
+        $actualReturn = Exchange::whereFromEnrollmentIn($enrollments->pluck('id'))->get();
+
+        // Assert
+        $expectedExchanges = $fromEnrollmentExchanges->merge($otherFromEnrollmentExchanges);
+        $this->assertEquals($expectedExchanges->pluck('id'), $actualReturn->pluck('id'));
+    }
+
+    public function testFilterToEnrollment()
+    {
+        // Prepare
+        $toEnrollment = factory(Enrollment::class)->create();
+        $otherToEnrollment = factory(Enrollment::class)->create();
+        $toEnrollmentExchanges = factory(Exchange::class, 2)->create([
+            'to_enrollment_id' => $toEnrollment->id,
+        ]);
+        $otherToEnrollmentExchanges = factory(Exchange::class, 2)->create([
+            'to_enrollment_id' => $otherToEnrollment->id,
+        ]);
+        factory(Exchange::class)->create(['from_enrollment_id' => $toEnrollment->id]);
+        factory(Exchange::class)->create(['from_enrollment_id' => $otherToEnrollment->id]);
+
+        // Execute
+        $enrollments = collect([$toEnrollment, $otherToEnrollment]);
+        $actualReturn = Exchange::whereToEnrollmentIn($enrollments->pluck('id'))->get();
+
+        // Assert
+        $expectedExchanges = $toEnrollmentExchanges->merge($otherToEnrollmentExchanges);
+        $this->assertEquals($expectedExchanges->pluck('id'), $actualReturn->pluck('id'));
+    }
+
+    public function testGetCourse()
+    {
+        // Prepare
+        $exchange = factory(Exchange::class)->create();
+
+        // Assert
+        $fromEnrollment = $exchange->fromEnrollment()->first();
+        $this->assertEquals($fromEnrollment->course->id, $exchange->course()->id);
+    }
+
+    public function testGetFromShift()
+    {
+        // Prepare
+        $exchange = factory(Exchange::class)->create();
+
+        // Assert
+        $fromEnrollment = $exchange->fromEnrollment()->first();
+        $this->assertEquals($fromEnrollment->shift->id, $exchange->fromShift()->id);
+    }
+
+    public function testGetToShift()
+    {
+        // Prepare
+        $exchange = factory(Exchange::class)->create();
+
+        // Assert
+        $toEnrollment = $exchange->toEnrollment()->first();
+        $this->assertEquals($toEnrollment->shift->id, $exchange->toShift()->id);
+    }
+
+    public function testGetFromStudent()
+    {
+        // Prepare
+        $exchange = factory(Exchange::class)->create();
+
+        // Assert
+        $fromEnrollment = $exchange->fromEnrollment()->first();
+        $this->assertEquals($fromEnrollment->student->id, $exchange->fromStudent()->id);
+    }
+
+    public function testGetToStudent()
+    {
+        // Prepare
+        $exchange = factory(Exchange::class)->create();
+
+        // Assert
+        $toEnrollment = $exchange->toEnrollment()->first();
+        $this->assertEquals($toEnrollment->student->id, $exchange->toStudent()->id);
+    }
+
     /**
      * @expectedException App\Exceptions\CannotExchangeToShiftsOnDifferentCoursesException
      */

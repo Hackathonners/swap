@@ -1,6 +1,7 @@
 <?php
 
 use App\Judite\Models\Shift;
+use App\Judite\Models\Course;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +17,9 @@ use App\Judite\Models\Shift;
 /* @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(Shift::class, function (Faker\Generator $faker) {
     return [
-        'course_id' => factory(App\Judite\Models\Course::class)->create()->id,
-        'tag' => $faker->word(),
+        'tag' => $faker->numerify('TP#'),
+        'course_id' => function () {
+            return factory(Course::class)->create()->id;
+        },
     ];
 });

@@ -74,13 +74,14 @@ class ExchangeTest extends TestCase
             'from_enrollment_id' => $fromEnrollment->id,
             'to_enrollment_id' => $toEnrollment->id,
         ]);
+        $requestData = ['exchange_id' => $exchange->id];
 
         // Execute
         $response = $this->actingAs($student->user)
-                         ->post(route('exchanges.confirm', $exchange->id));
+                         ->post(route('exchanges.confirm'), $requestData);
 
         // Assert
-        $response->assertStatus(200);
+        $response->assertRedirect(route('home'));
         $actualFromEnrollment = Enrollment::find($fromEnrollment->id);
         $actualToEnrollment = Enrollment::find($toEnrollment->id);
         $this->assertEquals($fromEnrollment->shift->id, $actualToEnrollment->shift->id);

@@ -10,6 +10,13 @@ class User extends Authenticatable
     use Notifiable;
 
     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['student'];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -54,6 +61,6 @@ class User extends Authenticatable
      */
     public function isStudent()
     {
-        return $this->student()->exists();
+        return ! is_null($this->student);
     }
 }

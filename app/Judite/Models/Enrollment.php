@@ -3,15 +3,40 @@
 namespace App\Judite\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Laracasts\Presenter\PresentableTrait;
+use App\Judite\Presenters\EnrollmentPresenter;
 
 class Enrollment extends Model
 {
+    use PresentableTrait;
+
     /**
      * The relations to eager load on every query.
      *
      * @var array
      */
-    protected $with = ['student', 'shift'];
+    protected $with = ['student', 'shift', 'course'];
+
+    /**
+     * The presenter for this entity.
+     *
+     * @var string
+     */
+    protected $presenter = EnrollmentPresenter::class;
+
+    /**
+     * Scope a query to order enrollments by course.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOrderByCourse($query)
+    {
+        return $query->join('courses', 'enrollments.course_id', '=', 'courses.id')
+                     ->orderBy('courses.year', 'asc')
+                     ->orderBy('courses.semester', 'asc')
+                     ->orderBy('courses.name', 'asc');
+    }
 
     /**
      * Exchange shifts with the given enrollment.
@@ -32,13 +57,23 @@ class Enrollment extends Model
     }
 
     /**
-     * Get exchanges of this enrollment.
+     * Get exchanges of this enrollment as source.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function exchanges()
+    public function exchangesAsSource()
     {
         return $this->hasMany(Exchange::class, 'from_enrollment_id');
+    }
+
+    /**
+     * Get exchanges of this enrollment as target.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function exchangesAsTarget()
+    {
+        return $this->hasMany(Exchange::class, 'to_enrollment_id');
     }
 
     /**
