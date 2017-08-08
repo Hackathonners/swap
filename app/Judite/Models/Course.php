@@ -73,14 +73,4 @@ class Course extends Model
     {
         return $this->shifts()->where('tag', $tag)->first();
     }
-
-    /**
-     * Get enrollments of this course.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function enrollments()
-    {
-        return $this->hasMany(Enrollment::class);
-    }
 }
