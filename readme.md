@@ -9,7 +9,7 @@
 
 ## About Swap
 
-Swap is project to ease the control of enrollments and shifts exchangesand for both students and teachers. The project is developed with considering the following features:
+Swap is project that aims to ease the control of enrollments and shifts exchanges for both students and teachers. The project is developed with considering the following features:
 
 - Enroll in the available courses;
 - Assign shifts to enrollments;
