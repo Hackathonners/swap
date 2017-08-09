@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             if (! App::environment('testing')) {
                 $this->call(UsersTableSeeder::class);
                 $this->call(CoursesTableSeeder::class);
+                $this->call(SettingsTableSeeder::class);
             }
         });
     }

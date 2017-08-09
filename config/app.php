@@ -177,6 +177,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\ComposerServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Laracasts\Flash\FlashServiceProvider::class,
 
