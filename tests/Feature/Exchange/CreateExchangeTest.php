@@ -45,7 +45,7 @@ class CreateExchangeTest extends TestCase
         $this->assertEquals($this->toEnrollment->id, $actualExchange->to_enrollment_id);
     }
 
-    /** @test **/
+    /** @test */
     public function a_student_may_not_propose_a_shift_exchange_of_a_third_party_enrollment()
     {
         // Prepare
@@ -64,7 +64,7 @@ class CreateExchangeTest extends TestCase
         $this->assertEquals(0, Exchange::count());
     }
 
-    /** @test **/
+    /** @test */
     public function unauthenticated_users_may_not_create_exchanges()
     {
         // Prepare

@@ -22,7 +22,6 @@ class RegistrationConfirmation extends Mailable
      * Create a new message instance.
      *
      * @param  \App\Safira\Models\User  $user
-     * @param  string  token
      * @return void
      */
     public function __construct(User $user)

@@ -34,7 +34,7 @@ class EnrollmentTest extends TestCase
         $this->assertEquals($course->id, $student->enrollments()->first()->course_id);
     }
 
-    /** @test **/
+    /** @test */
     public function a_student_may_not_enroll_in_a_course_multiple_times()
     {
         // Prepare
@@ -52,7 +52,7 @@ class EnrollmentTest extends TestCase
         $this->assertEquals(1, Enrollment::count());
     }
 
-    /** @test **/
+    /** @test */
     public function students_may_not_export_enrollments()
     {
         // Execute

@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Mail;
 use Illuminate\Http\Request;
 use App\Judite\Models\Exchange;
 use App\Judite\Models\Enrollment;
+use App\Mail\DeclinedExchangeNotification;
+use App\Mail\ConfirmedExchangeNotification;
 use App\Http\Requests\Exchange\CreateRequest;
 
 class ExchangeController extends Controller
@@ -83,12 +86,42 @@ class ExchangeController extends Controller
             ]);
 
             $exchange = Exchange::find($request->input('exchange_id'));
-            $this->authorize('confirm', $exchange);
+            $this->authorize('decide', $exchange);
 
             return $exchange->perform();
         });
 
-        flash('The shift exchange request has been confirmed.')->success();
+        flash('The shift exchange request has been confirmed. A notification will be sent to the student that proposed this exchange.')->success();
+        Mail::to($exchange->fromStudent()->user)
+            ->send(new ConfirmedExchangeNotification($exchange));
+
+        return redirect()->back();
+    }
+
+    /**
+     * Store a decline of an exchange in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeDecline(Request $request)
+    {
+        $exchange = DB::transaction(function () use ($request) {
+            $this->validate($request, [
+                'exchange_id' => 'exists:exchanges,id',
+            ]);
+
+            $exchange = Exchange::find($request->input('exchange_id'));
+            $this->authorize('decide', $exchange);
+
+            $exchange->delete();
+
+            return $exchange;
+        });
+
+        flash('The shift exchange request has been declined. A notification will be sent to the student that proposed this exchange.')->success();
+        Mail::to($exchange->fromStudent()->user)
+            ->send(new DeclinedExchangeNotification($exchange));
 
         return redirect()->back();
     }
@@ -96,11 +129,24 @@ class ExchangeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        $exchange = DB::transaction(function () use ($request) {
+            $this->validate($request, [
+                'exchange_id' => 'exists:exchanges,id',
+            ]);
+
+            $exchange = Exchange::find($request->input('exchange_id'));
+            $this->authorize('delete', $exchange);
+
+            $exchange->delete();
+
+            return $exchange;
+        });
+
+        return ['status' => 'The exchange has been deleted.'];
     }
 }
