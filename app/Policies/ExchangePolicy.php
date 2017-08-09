@@ -11,14 +11,26 @@ class ExchangePolicy
     use HandlesAuthorization;
 
     /**
-     * Determine whether the user can confirm an enrollment.
+     * Determine whether the user can make a decision on the given exchange.
      *
      * @param  \App\Judite\Models\User  $user
      * @param  \App\Judite\Models\Exchange  $exchange
      * @return bool
      */
-    public function confirm(User $user, Exchange $exchange)
+    public function decide(User $user, Exchange $exchange)
     {
         return $user->id === $exchange->toEnrollment->student->user_id;
+    }
+
+    /**
+     * Determine whether the user can delete or not the given exchange.
+     *
+     * @param  \App\Judite\Models\User  $user
+     * @param  \App\Judite\Models\Exchange  $exchange
+     * @return bool
+     */
+    public function delete(User $user, Exchange $exchange)
+    {
+        return $user->id === $exchange->fromEnrollment->student->user_id;
     }
 }
