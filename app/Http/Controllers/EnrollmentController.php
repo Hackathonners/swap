@@ -43,11 +43,25 @@ class EnrollmentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        $course = DB::transaction(function () use ($request) {
+            $this->validate($request, [
+                'course_id' => 'exists:courses,id',
+            ]);
+
+            $student = Auth::user()->student;
+            $course = Course::find($request->input('course_id'));
+            $student->removeEnrollmentInCourse($course);
+
+            return $course;
+        });
+
+        flash("You have successfully deleted the enrollment in {$course->name}.")->success();
+
+        return redirect()->route('courses.index');
     }
 }

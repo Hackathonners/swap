@@ -12,15 +12,16 @@ class CourseTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function testListCourses()
+    /** @test */
+    public function a_student_can_access_to_the_courses_list()
     {
         // Prepare
         $student = factory(Student::class)->create();
         factory(Course::class, 20)->create();
 
         // Execute
-        $response = $this->actingAs($student->user)
-                         ->get(route('courses.index'));
+        $this->actingAs($student->user);
+        $response = $this->get(route('courses.index'));
 
         // Assert
         $response->assertStatus(200);
@@ -31,7 +32,8 @@ class CourseTest extends TestCase
         $response->assertViewHas('courses', $expectedOrderedCourses);
     }
 
-    public function testRedirectToLoginWhenUnauthenticatedUsersAccessToCoursesList()
+    /** @test */
+    public function unauthenticated_users_may_not_access_to_courses_list()
     {
         // Execute
         $response = $this->get(route('courses.index'));
@@ -40,30 +42,32 @@ class CourseTest extends TestCase
         $response->assertRedirect(route('login'));
     }
 
-    public function testListStudentsEnrolledInCourse()
+    /** @test */
+    public function an_admin_can_see_students_enrolled_in_a_course()
     {
         // Prepare
         $admin = factory(User::class)->states('admin')->create();
         $course = factory(Course::class, 20)->create()->first();
 
         // Execute
-        $response = $this->actingAs($admin)
-                         ->get(route('students.index', $course->id));
+        $this->actingAs($admin);
+        $response = $this->get(route('students.index', $course->id));
 
         // Assert
         $response->assertStatus(200);
         $response->assertViewHas('enrollments');
     }
 
-    public function testStudentCannotListStudentsEnrolledInCourse()
+    /** @test */
+    public function students_may_not_see_students_enrolled_in_a_course()
     {
         // Prepare
-        $user = factory(User::class)->create();
+        $student = factory(Student::class)->create();
         $course = factory(Course::class, 20)->create()->first();
 
         // Execute
-        $response = $this->actingAs($user)
-                         ->get(route('students.index', $course->id));
+        $this->actingAs($student->user);
+        $response = $this->get(route('students.index', $course->id));
 
         // Assert
         $response->assertStatus(403);
