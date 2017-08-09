@@ -24,7 +24,7 @@
                                 <td>{{ $course->present()->getOrdinalSemester() }}</td>
                                 <td>{{ $course->name }}</td>
                                 <td>
-                                    @include('enrollments.shared.action', compact('course'))
+                                    @include('courses.action', compact('course'))
                                 </td>
                             </tr>
                             @endforeach

@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Judite\Models\Settings;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -16,7 +15,7 @@ class ComposerServiceProvider extends ServiceProvider
     public function boot()
     {
         View::composer('*', function ($view) {
-            $view->with('settings', Settings::first());
+            $view->with('settings', app('settings'));
         });
     }
 

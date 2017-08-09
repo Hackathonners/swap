@@ -9,6 +9,6 @@
         {{ $enrollment->present()->getShiftTag() }}
     </td>
     <td class="text-right">
-        @include('enrollments.shared.action', ['course' => $enrollment->course])
+        @include('enrollments.shared.table.action', compact('enrollment'))
     </td>
 </tr>
