@@ -8,6 +8,13 @@ use App\Exceptions\UserIsAlreadyEnrolledInCourseException;
 class Student extends Model
 {
     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['user'];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
