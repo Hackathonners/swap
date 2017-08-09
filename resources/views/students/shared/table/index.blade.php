@@ -1,13 +1,11 @@
-<table class="table">
-    <thead>
-        <tr>
-            <th>Student ID</th>
-            <th>Name</th>
-            <th>Shift</th>
-            <th>Enrolled at</th>
-        </tr>
-    </thead>
+<table class="card-table table">
     <tbody>
+        <tr>
+            <td><strong>Student ID</strong></td>
+            <td><strong>Name</strong></td>
+            <td><strong>Shift</strong></td>
+            <td><strong>Enrolled at</strong></td>
+        </tr>
         @each('students.shared.table.show', $enrollments, 'enrollment')
     </tbody>
 </table>

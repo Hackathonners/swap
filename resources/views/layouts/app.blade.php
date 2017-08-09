@@ -32,41 +32,34 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-default navbar-static-top">
-            <div class="container">
-                <div class="navbar-header">
+        <div class="container">
+            <nav class="navbar navbar-toggleable-md navbar-light pt-4 pb-4 mb-2">
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <a class="navbar-brand" href="{{ url('/') }}">
+                    <img alt="Brand" height="28" src="{{ asset('images/logo.svg') }}">
+                </a>
 
-                    <!-- Collapsed Hamburger -->
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                        <span class="sr-only">Toggle Navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-
-                    <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                        <img alt="Brand" height="28" src="{{ asset('images/logo.svg') }}">
-                    </a>
-                </div>
-
-                <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="nav navbar-nav">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
                         @if (! Auth::guest())
-                            <li><a href="{{ route('courses.index') }}">Courses</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('courses.index') }}">Courses</a>
+                            </li>
                         @endif
                     </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="nav navbar-nav navbar-right">
-                        <!-- Authentication Links -->
+                    <ul class="navbar-nav">
                         @if (Auth::guest())
-                            <li><a href="{{ route('login') }}">Login</a></li>
-                            <li><a href="{{ route('register') }}">Register</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('login') }}">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('register') }}">Register</a>
+                            </li>
                         @else
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     {{ Auth::user()->name }}
 
                                     @if (Auth::user()->isStudent())
@@ -75,16 +68,12 @@
                                     <span class="caret"></span>
                                 </a>
 
-                                <ul class="dropdown-menu" role="menu">
-                                    <li>
-                                        <a href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                            Logout
-                                        </a>
-
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                <div class="dropdown-menu dropdown-menu-right" role="menu">
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST">
                                             {{ csrf_field() }}
+                                            <button class="dropdown-item" type="submit">
+                                                Logout
+                                            </button>
                                         </form>
                                     </li>
                                 </ul>
@@ -94,6 +83,7 @@
                 </div>
             </div>
         </nav>
+
         <div class="container">
             @include('flash::message')
         </div>

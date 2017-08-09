@@ -6,48 +6,10 @@
 @import "variables";
 
 // Bootstrap
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "node_modules/bootstrap/scss/bootstrap";
 
 // Application
-.navbar-brand {
-    padding: 10px 15px;
-}
-
-.table > tbody > tr > td {
-    vertical-align: middle;
-}
-
-.table > tbody > tr:first-child > td {
-    border: none;
-}
-
-.panel-table {
-    padding: 0;
-}
-
-.panel-table .table td,
-.panel-table .table th {
-    padding: 8px 15px;
-}
-
-.panel-warning .table td {
-    border-color: #faebcc;
-}
-
-.table:last-child {
-    margin-bottom: 0;
-}
-
-.dropdown-menu > li > a.text-danger {
-    color: #a94442;
-}
-
-.panel .pagination {
-    padding: 12px;
-    padding-left: 0;
-    margin: 0;
-}
-
-.panel .pagination-summary {
-    padding: 18px;
-}
+@import "table";
+@import "form";
+@import "pagination";
+@import "navbar";

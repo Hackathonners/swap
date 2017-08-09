@@ -14,13 +14,12 @@
             <input type="hidden" name="exchange_id" value="{{ $exchange->id }}">
             <div class="btn-group">
                 <button type="submit" class="btn btn-success btn-sm">Confirm change</button>
-                <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
                     <span class="caret"></span>
-                    <span class="sr-only">Toggle Dropdown</span>
                 </button>
-                <ul class="dropdown-menu dropdown-menu-right">
-                    <li><a href="#" class="text-danger">Decline change</a></li>
-                </ul>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <button type="submit" class="dropdown-item btn btn-sm text-danger">Decline change</button>
+                </div>
             </div>
         </form>
     </td>

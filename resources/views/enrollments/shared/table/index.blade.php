@@ -1,7 +1,7 @@
-<table class="table">
+<table class="card-table table">
     <tbody>
         @foreach ($enrollments as $year => $enrollments)
-            <th colspan="4" class="active">
+            <th colspan="4" class="table-active">
                 {{ $year }} year
             </th>
             <tr>
