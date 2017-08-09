@@ -34,7 +34,7 @@ class DeleteExchangeTest extends TestCase
         $response = $this->delete(route('exchanges.destroy'), $requestData);
 
         // Assert
-        $response->assertStatus(200);
+        $response->assertRedirect();
         $this->assertEquals(0, Exchange::count());
     }
 

@@ -1,7 +1,6 @@
-
 /**
  * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
+ * include Vue and Vue Resource. This gives a great starting point for
  * building robust, powerful web applications using Vue and Laravel.
  */
 
@@ -10,8 +9,8 @@ import Vue from 'vue';
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
+ * the body of the page. From here, you may begin adding components to
+ * the application, or feel free to tweak this setup for your needs.
  */
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import CsrfField from './components/CsrfField';
@@ -32,9 +31,18 @@ Vue.component('delete-exchange-modal', DeleteExchangeModal);
 Vue.directive('confirm-exchange', ConfirmExchange);
 Vue.directive('decline-exchange', DeclineExchange);
 Vue.directive('delete-exchange', DeleteExchange);
+import ElementUI from 'element-ui';
+import CalendarEnrollments from './components/CalendarEnrollments.vue';
+import CalendarExchanges from './components/CalendarExchanges.vue';
+import 'element-ui/lib/theme-default/index.css';
+import locale from 'element-ui/lib/locale/lang/en'
+
+Vue.use(ElementUI, { locale });
+Vue.component('calendar-enrollments', CalendarEnrollments);
+Vue.component('calendar-exchanges', CalendarExchanges);
 
 const app = new Vue({
-    el: '#app'
+  el: '#app'
 });
 
 require('./file-input');

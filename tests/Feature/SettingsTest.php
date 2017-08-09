@@ -43,7 +43,7 @@ class SettingsTest extends TestCase
         $response = $this->put(route('settings.update'), $requestData);
 
         // Assert
-        $response->assertStatus(200);
+        $response->assertRedirect();
         $actualSettings = $this->settings->fresh();
         $this->assertEquals($exchangesStart, $actualSettings->exchanges_start_at);
         $this->assertEquals($exchangesEnd, $actualSettings->exchanges_end_at);

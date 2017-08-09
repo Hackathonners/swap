@@ -12,12 +12,11 @@ class SettingsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit()
     {
-        //
+        return view('settings.edit');
     }
 
     /**
@@ -28,13 +27,12 @@ class SettingsController extends Controller
      */
     public function update(UpdateRequest $request)
     {
-        $settings = DB::transaction(function () use ($request) {
+        DB::transaction(function () use ($request) {
             $settings = Settings::first();
             $settings->update($request->input());
-
-            return $settings;
         });
+        flash('Settings were successfully updated.')->success();
 
-        return $settings;
+        return redirect()->route('settings.edit');
     }
 }
