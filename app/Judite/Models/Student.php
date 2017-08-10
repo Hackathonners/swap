@@ -102,4 +102,15 @@ class Student extends Model
     {
         return $this->enrollments()->where('course_id', $course->id)->exists();
     }
+
+    /**
+     * Remove enrollment in the given course.
+     *
+     * @param  \App\Judite\Models\Course  $course
+     * @return bool
+     */
+    public function removeEnrollmentInCourse(Course $course)
+    {
+        return $this->enrollments()->where('course_id', $course->id)->delete();
+    }
 }

@@ -22,16 +22,53 @@ class EnrollmentTest extends TestCase
         $this->course = factory(Course::class)->create();
     }
 
-    /** @test */
+    /** @test */
     public function a_student_can_enroll_in_a_course()
     {
         // Execute
-        $this->actingAs($student->user);
-        $response = $this->post(route('enrollments.create'), ['course_id' => $course->id]);
+        $this->actingAs($this->student->user);
+        $response = $this->post(route('enrollments.create'), ['course_id' => $this->course->id]);
 
         // Assert
         $response->assertRedirect(route('courses.index'));
-        $this->assertEquals($course->id, $student->enrollments()->first()->course_id);
+        $this->assertEquals($this->course->id, $this->student->enrollments()->first()->course_id);
+    }
+
+    /** @test */
+    public function a_student_can_delete_an_enrollment_in_a_course()
+    {
+        // Prepare
+        factory(Enrollment::class)->create([
+            'student_id' => $this->student->id,
+            'course_id' => $this->course->id,
+        ]);
+        $requestData = ['course_id' => $this->course->id];
+
+        // Execute
+        $this->actingAs($this->student->user);
+        $response = $this->delete(route('enrollments.destroy'), $requestData);
+
+        // Assert
+        $response->assertRedirect();
+        $this->assertEquals(0, Enrollment::count());
+    }
+
+    /** @test */
+    public function a_student_may_not_delete_an_enrollment_in_a_course_of_another_student()
+    {
+        // Prepare
+        $enrollment = factory(Enrollment::class)->create([
+            'course_id' => $this->course->id,
+        ]);
+        $requestData = ['course_id' => $this->course->id];
+
+        // Execute
+        $this->actingAs($this->student->user);
+        $response = $this->delete(route('enrollments.destroy'), $requestData);
+
+        // Assert
+        $response->assertRedirect();
+        $this->assertTrue($enrollment->is(Enrollment::first()));
     }
 
     /** @test */
@@ -72,5 +109,23 @@ class EnrollmentTest extends TestCase
         // Assert
         $response->assertRedirect(route('login'));
         $this->assertEquals(0, Enrollment::count());
+    }
+
+    /** @test */
+    public function unauthenticated_users_may_not_delete_an_enrollment_in_a_course()
+    {
+        // Prepare
+        $enrollment = factory(Enrollment::class)->create([
+            'student_id' => $this->student->id,
+            'course_id' => $this->course->id,
+        ]);
+        $requestData = ['course_id' => $this->course->id];
+
+        // Execute
+        $response = $this->post(route('enrollments.destroy'), $requestData);
+
+        // Assert
+        $response->assertRedirect(route('login'));
+        $this->assertTrue($enrollment->is(Enrollment::first()));
     }
 }
