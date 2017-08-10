@@ -44,7 +44,7 @@
                             <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
                         </div>
 
-                        <button type="submit" class="btn btn-primary btn-block">
+                        <button type="submit" class="btn btn-primary">
                             Create account
                         </button>
                     </form>
