@@ -4,7 +4,7 @@
 <div class="container">
         @if(!$proposedExchanges->isEmpty() && $settings->withinExchangePeriod())
             <div class="card mb-4">
-                <div class="card-header card-warning"><strong>Exchanges waiting for your confirmation</strong></div>
+                <div class="card-header highlight-warning"><strong>Exchanges waiting for your confirmation</strong></div>
                 @include('exchanges.shared.requested.index', ['exchanges' => $proposedExchanges])
             </div>
         @endif
@@ -16,14 +16,14 @@
                 </div>
             </div>
         @endif
-        <div class="card">
-            <div class="card-header"><strong>Current enrollments</strong></div>
-            @if ($enrollments->isEmpty())
-                @include('enrollments.shared.table.empty')
-            @else
-                @include('enrollments.shared.table.index')
-            @endif
-        </div>
+        @if ($enrollments->isEmpty())
+            @include('enrollments.shared.table.empty')
+        @else
+            <div class="card">
+                <div class="card-header"><strong>Current enrollments</strong></div>
+                    @include('enrollments.shared.table.index')
+            </div>
+        @endif
     </div>
 </div>
 @endsection
