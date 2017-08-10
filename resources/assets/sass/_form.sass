@@ -1,3 +1,9 @@
-.email-suffix-input
-    color: #636c72
+.has-group-addon-muted
+    border-right: 0
+
+    &:focus + .input-group-addon-muted
+        border-color: #5cb3fd
+
+.input-group-addon-muted
     background: transparent
+    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s

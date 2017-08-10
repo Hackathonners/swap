@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-12 col-md-8 offset-md-2">
+        <div class="col-12 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
             <div class="card">
                 <div class="card-header"><strong>Register</strong></div>
                 <div class="card-block">
@@ -21,7 +21,10 @@
 
                         <div class="form-group{{ $errors->has('email') ? ' has-danger' : '' }}">
                             <label for="email">E-mail address</label>
-                            <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}">
+                            <div class="input-group">
+                                <input id="email" type="text" class="form-control has-group-addon-muted" name="email" value="{{ old('email') }}">
+                                <span class="input-group-addon input-group-addon-muted">@alunos.uminho.pt</span>
+                            </div>
 
                             @if ($errors->has('email'))
                                 <div class="form-control-feedback"><small>{{ $errors->first('email') }}</small></div>

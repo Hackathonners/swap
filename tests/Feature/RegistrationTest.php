@@ -24,7 +24,7 @@ class RegistrationTest extends TestCase
         // Prepare
         $requestData = [
             'name' => 'John Doe',
-            'email' => 'pg12345@alunos.uminho.pt',
+            'email' => 'pg12345',
             'password' => 'secret',
             'password_confirmation' => 'secret',
         ];
@@ -33,10 +33,11 @@ class RegistrationTest extends TestCase
         $response = $this->post('/register', $requestData);
 
         // Assert
-        Mail::assertSent(RegistrationConfirmation::class, function ($mail) use ($requestData) {
-            return $mail->hasTo($requestData['email']);
+        $email = $requestData['email'].'@alunos.uminho.pt';
+        Mail::assertSent(RegistrationConfirmation::class, function ($mail) use ($email) {
+            return $mail->hasTo($email);
         });
-        $this->assertEquals(1, User::where('email', $requestData['email'])->count());
+        $this->assertEquals(1, User::where('email', $email)->count());
     }
 
     /** @test */
