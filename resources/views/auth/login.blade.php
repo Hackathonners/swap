@@ -36,15 +36,13 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary">
-                                Login
-                            </button>
+                        <button type="submit" class="btn btn-primary">
+                            Login
+                        </button>
 
-                            <a class="btn btn-link" href="{{ route('password.request') }}">
-                                Forgot Your Password?
-                            </a>
-                        </div>
+                        <a class="btn btn-link" href="{{ route('password.request') }}">
+                            Forgot your password?
+                        </a>
                     </form>
                 </div>
             </div>
