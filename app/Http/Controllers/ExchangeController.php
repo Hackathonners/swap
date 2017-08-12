@@ -91,7 +91,7 @@ class ExchangeController extends Controller
             return $exchange->perform();
         });
 
-        flash('The shift exchange request has been confirmed. A notification will be sent to the student that proposed this exchange.')->success();
+        flash('The shift exchange request was successfully confirmed.')->success();
         Mail::to($exchange->fromStudent()->user)
             ->send(new ConfirmedExchangeNotification($exchange));
 
@@ -119,7 +119,7 @@ class ExchangeController extends Controller
             return $exchange;
         });
 
-        flash('The shift exchange request has been declined. A notification will be sent to the student that proposed this exchange.')->success();
+        flash('The shift exchange request was successfully declined.')->success();
         Mail::to($exchange->fromStudent()->user)
             ->send(new DeclinedExchangeNotification($exchange));
 
@@ -147,6 +147,8 @@ class ExchangeController extends Controller
             return $exchange;
         });
 
-        return ['status' => 'The exchange has been deleted.'];
+        flash('The shift exchange request was successfully deleted.')->success();
+
+        return redirect()->back();
     }
 }

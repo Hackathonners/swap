@@ -9,10 +9,6 @@
         </small>
     </td>
     <td class="text-right">
-        <form action="{{ route('exchanges.confirm') }}" method="post">
-            {{ csrf_field() }}
-            <input type="hidden" name="exchange_id" value="{{ $exchange->id }}">
-            <button type="submit" class="btn btn-link btn-sm"><span class="text-muted">Delete request</span></button>
-        </form>
+        <button v-delete-exchange="{{ $exchange }}" type="button" class="btn btn-link btn-sm"><span class="text-muted">Delete request</span></button>
     </td>
 </tr>

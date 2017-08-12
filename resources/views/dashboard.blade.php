@@ -25,5 +25,8 @@
             </div>
         @endif
     </div>
-</div>
+
+    <confirm-exchange-modal></confirm-exchange-modal>
+    <decline-exchange-modal></decline-exchange-modal>
+    <delete-exchange-modal></delete-exchange-modal>
 @endsection

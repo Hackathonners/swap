@@ -7,12 +7,12 @@ window._ = require('lodash');
  * code may be modified to fit the specific needs of your application.
  */
 
-// try {
+try {
     window.$ = window.jQuery = require('jquery');
 
     window.Popper = require('popper.js/dist/umd/popper.js');
     require('bootstrap');
-// } catch (e) {}
+} catch (e) {}
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -52,3 +52,5 @@ if (token) {
 //     broadcaster: 'pusher',
 //     key: 'your-pusher-key'
 // });
+
+export default token.content;

@@ -36,7 +36,7 @@ class CoursesTableSeeder extends Seeder
         Course::create(['name' => 'Laboratórios de Informática III', 'semester' => 2, 'year' => 2]);
         Course::create(['name' => 'Programação Orientada aos Objetos', 'semester' => 2, 'year' => 2]);
         Course::create(['name' => 'Sistemas Operativos', 'semester' => 2, 'year' => 2]);
-        Course::create(['name' => 'Opção UMinho', 'semester' => 2, 'year' => 2]);
+        // Course::create(['name' => 'Opção UMinho', 'semester' => 2, 'year' => 2]);
 
         Course::create(['name' => 'Bases de Dados', 'semester' => 1, 'year' => 3]);
         Course::create(['name' => 'Desenvolvimento de Sistemas de Software', 'semester' => 1, 'year' => 3]);

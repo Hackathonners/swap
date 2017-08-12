@@ -54,29 +54,20 @@ class FakeScenarioSeeder extends Seeder
             $students->each(function ($student) use ($numberOfRequestedExchangesPerStudent) {
                 $enrollments = $student->enrollments()->with('course')->get()->shuffle();
 
-                $matchingEnrollments = collect();
-                for ($i = $numberOfRequestedExchangesPerStudent; $i > 0 && ! $enrollments->isEmpty();) {
+                for ($i = $numberOfRequestedExchangesPerStudent; $i > 0 && ! $enrollments->isEmpty(); $i--) {
                     $enrollment = $enrollments->shift();
 
-                    if ($matchingEnrollments->isEmpty()) {
-                        $matchingEnrollments = Enrollment::where(['course_id' => $enrollment->course->id])
-                                                         ->where('shift_id', '!=', $enrollment->shift->id)
-                                                         ->where('id', '!=', $enrollment->id)
-                                                         ->get()
-                                                         ->shuffle();
+                    $matchingEnrollment = Enrollment::where('course_id', $enrollment->course->id)
+                        ->where('shift_id', '!=', $enrollment->shift->id)
+                        ->where('id', '!=', $enrollment->id)
+                        ->first();
+
+                    if (! is_null($matchingEnrollment)) {
+                        Exchange::create([
+                            'from_enrollment_id' => $enrollment->id,
+                            'to_enrollment_id' => $matchingEnrollment->id,
+                        ]);
                     }
-
-                    $enrolmentToExchange = $matchingEnrollments->shift();
-                    if (is_null($enrolmentToExchange)) {
-                        break;
-                    }
-
-                    Exchange::create([
-                        'from_enrollment_id' => $enrollment->id,
-                        'to_enrollment_id' => $enrolmentToExchange->id,
-                    ]);
-
-                    $i--;
                 }
             });
         });
