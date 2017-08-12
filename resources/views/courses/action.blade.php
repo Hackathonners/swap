@@ -1,6 +1,6 @@
 <div class="btn-group">
     @if (Auth::user()->student->isEnrolledInCourse($course))
-        <button type="button" class="btn btn-secondary btn-sm disabled">Enrolled</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm disabled">Enrolled</button>
 
         @if ($settings->withinEnrollmentPeriod())
             {{-- Show dropdown to remove enrollment in course. --}}

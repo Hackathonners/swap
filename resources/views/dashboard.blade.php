@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+    <div class="container">
         @if(!$proposedExchanges->isEmpty() && $settings->withinExchangePeriod())
             <div class="card mb-4">
                 <div class="card-header highlight-warning"><strong>Exchanges waiting for your confirmation</strong></div>
@@ -21,7 +21,7 @@
         @else
             <div class="card">
                 <div class="card-header"><strong>Current enrollments</strong></div>
-                    @include('enrollments.shared.table.index')
+                @include('enrollments.shared.table.index')
             </div>
         @endif
     </div>

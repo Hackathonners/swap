@@ -33,15 +33,16 @@
 <body>
     <div id="app">
         <div class="container">
-            <nav class="navbar navbar-toggleable-md navbar-light pt-4 pb-4 mb-2">
-                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+            <nav class="navbar navbar-expand-lg navbar-light pt-4 pb-4 mb-2">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     <img alt="Brand" height="28" src="{{ asset('images/logo.svg') }}">
                 </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                <div class="collapse navbar-collapse" id="navbarContent">
                     <ul class="navbar-nav mr-auto">
                         @if (! Auth::guest())
                             <li class="nav-item">
@@ -69,29 +70,29 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" role="menu">
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST">
-                                            {{ csrf_field() }}
-                                            <button class="dropdown-item" type="submit">
-                                                Logout
-                                            </button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </li>
-                        @endif
-                    </ul>
-                </div>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                                        {{ csrf_field() }}
+                                        <button class="dropdown-item" type="submit">
+                                            Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    @endif
+                </ul>
             </div>
-        </nav>
-
-        <div class="container">
-            @include('flash::message')
         </div>
+    </nav>
 
-        @yield('content')
+    <div class="container">
+        @include('flash::message')
     </div>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
+    @yield('content')
+</div>
+
+<!-- Scripts -->
+<script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

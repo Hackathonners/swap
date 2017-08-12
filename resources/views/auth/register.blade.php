@@ -1,59 +1,55 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-12 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
-            <div class="card">
-                <div class="card-header"><strong>Register</strong></div>
-                <div class="card-block">
-                    <form role="form" method="POST" action="{{ route('register') }}">
-                        {{ csrf_field() }}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card">
+                    <div class="card-header"><strong>Register</strong></div>
+                    <div class="card-body">
+                        <form role="form" method="POST" action="{{ route('register') }}">
+                            {{ csrf_field() }}
 
-                        <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">
-                            <label for="name">Name</label>
-                            <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" required autofocus>
-
-                            @if ($errors->has('name'))
-                                <div class="form-control-feedback"><small>{{ $errors->first('name') }}</small></div>
-                            @endif
-                        </div>
-
-                        <div class="form-group{{ $errors->has('email') ? ' has-danger' : '' }}">
-                            <label for="email">E-mail address</label>
-                            <div class="input-group">
-                                <input id="email" type="text" class="form-control has-group-addon-muted" name="email" value="{{ old('email') }}">
-                                <span class="input-group-addon input-group-addon-muted">@alunos.uminho.pt</span>
+                            {{-- Name --}}
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input id="name" type="text" class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" name="name" value="{{ old('name') }}" required>
+                                <div class="invalid-feedback">{{ $errors->first('name') }}</div>
                             </div>
 
-                            @if ($errors->has('email'))
-                                <div class="form-control-feedback"><small>{{ $errors->first('email') }}</small></div>
-                            @else
-                                <small class="form-text text-muted">Notifications will be sent to your academic e-mail address.</small>
-                            @endif
-                        </div>
+                            {{-- E-mail address --}}
+                            <div class="form-group">
+                                <label for="email">E-mail address</label>
+                                <div class="input-group {{ $errors->has('email') ? 'is-invalid' : '' }}">
+                                    <input id="email" type="text" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" name="email" value="{{ old('email') }}" required>
+                                    <span class="input-group-addon">@alunos.uminho.pt</span>
+                                </div>
+                                @if ($errors->has('email'))
+                                    <div class="invalid-feedback">{{ $errors->first('email') }}</div>
+                                @else
+                                    <small class="form-text text-muted">Notifications will be sent to your academic e-mail address.</small>
+                                @endif
+                            </div>
 
-                        <div class="form-group{{ $errors->has('password') ? ' has-danger' : '' }}">
-                            <label for="password">Password</label>
-                            <input id="password" type="password" class="form-control" name="password" required>
+                            {{-- Password --}}
+                            <div class="form-group{{ $errors->has('password') ? ' has-danger' : '' }}">
+                                <label for="password">Password</label>
+                                <input id="password" type="password" class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}" name="password" required>
+                                <div class="invalid-feedback">{{ $errors->first('password') }}</div>
+                            </div>
 
-                            @if ($errors->has('password'))
-                                <div class="form-control-feedback"><small>{{ $errors->first('password') }}</small></div>
-                            @endif
-                        </div>
+                            {{-- Password confirmation --}}
+                            <div class="form-group">
+                                <label for="password-confirm">Confirm Password</label>
+                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                            </div>
 
-                        <div class="form-group">
-                            <label for="password-confirm">Confirm Password</label>
-                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">
-                            Create account
-                        </button>
-                    </form>
+                            {{-- Submit --}}
+                            <button type="submit" class="btn btn-primary">Create account</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 @endsection
