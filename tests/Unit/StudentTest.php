@@ -82,4 +82,16 @@ class StudentTest extends TestCase
         $expectedExchanges = Exchange::whereIn('to_enrollment_id', $student->enrollments->pluck('id'))->get();
         $this->assertEquals($expectedExchanges->pluck('id'), $actualReturn->pluck('id'));
     }
+
+    public function testStudentWhereNumber()
+    {
+        // Prepare
+        $student = factory(Student::class)->create();
+
+        // Execute
+        $actualReturn = Student::whereNumber($student->student_number)->first();
+
+        // Assert
+        $this->assertEquals($student->id, $actualReturn->id);
+    }
 }
