@@ -113,4 +113,16 @@ class Student extends Model
     {
         return $this->enrollments()->where('course_id', $course->id)->delete();
     }
+
+    /**
+     * Scope a query to only include users with the given student number.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  string  $studentNumber
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWhereNumber($query, $studentNumber)
+    {
+        return $query->where('student_number', $studentNumber);
+    }
 }

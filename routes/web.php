@@ -36,6 +36,8 @@ Route::middleware(['auth', 'can.student'])->group(function () {
 // Admin-only routes
 Route::middleware(['auth', 'can.admin'])->namespace('Admin')->group(function () {
     Route::get('/enrollments/export', 'EnrollmentController@export')->name('enrollments.export');
+    Route::get('/enrollments/import', 'EnrollmentController@import')->name('enrollments.import');
+    Route::post('/enrollments/import', 'EnrollmentController@storeImport')->name('enrollments.storeImport');
     Route::match(['PUT', 'PATCH'], 'settings', 'SettingsController@update')->name('settings.update');
     Route::get('/courses/{id}/students', 'CourseController@show')->name('students.index');
 });
