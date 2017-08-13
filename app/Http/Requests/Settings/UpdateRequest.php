@@ -24,10 +24,25 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'exchanges_start_at' => 'required|date|after:enrollments_end_at',
-            'exchanges_end_at' => 'required|date|after:exchanges_start_at',
             'enrollments_start_at' => 'required|date|after_or_equal:today',
             'enrollments_end_at' => 'required|date|after:enrollments_start_at',
+            'exchanges_start_at' => 'required|date|after:enrollments_end_at',
+            'exchanges_end_at' => 'required|date|after:exchanges_start_at',
+        ];
+    }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'enrollments_start_at' => 'begin date of the enrollments period',
+            'enrollments_end_at' => 'end date of the enrollments period',
+            'exchanges_start_at' => 'begin date of the exchanges period',
+            'exchanges_end_at' => 'end date of the exchanges period',
         ];
     }
 }
