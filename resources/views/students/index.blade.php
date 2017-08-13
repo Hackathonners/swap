@@ -12,10 +12,10 @@
             @if (! $enrollments->isEmpty())
                 <div class="card-footer">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col">
                             {{ $enrollments->links() }}
                         </div>
-                        <div class="col-md-6 text-right pagination-summary">
+                        <div class="col-auto align-self-center">
                             Page {{ $enrollments->currentPage() }} of {{ $enrollments->lastPage() }}
                         </div>
                     </div>

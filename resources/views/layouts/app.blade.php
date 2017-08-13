@@ -45,9 +45,15 @@
                 <div class="collapse navbar-collapse" id="navbarContent">
                     <ul class="navbar-nav mr-auto">
                         @if (! Auth::guest())
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('courses.index') }}">Courses</a>
-                            </li>
+                            @if (Auth::user()->isAdmin())
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('settings.edit') }}">Settings</a>
+                                </li>
+                            @else
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('courses.index') }}">Courses</a>
+                                </li>
+                            @endif
                         @endif
                     </ul>
                     <ul class="navbar-nav">

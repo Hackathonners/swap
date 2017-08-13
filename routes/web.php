@@ -12,10 +12,10 @@
 */
 
 Auth::routes();
+Route::get('/', 'DashboardController@index')->name('home');
 
 // Student-only routes
 Route::middleware(['auth', 'can.student'])->group(function () {
-    Route::get('/', 'DashboardController@index')->name('home');
     Route::get('/confirm/{token}', 'Auth\RegisterController@confirm')
          ->name('register.confirm');
     Route::post('/registrations/resend-confirmation', 'Auth\RegisterController@resendConfirmationEmail')
@@ -35,6 +35,7 @@ Route::middleware(['auth', 'can.student'])->group(function () {
 
 // Admin-only routes
 Route::middleware(['auth', 'can.admin'])->namespace('Admin')->group(function () {
+    Route::get('/dashboard', 'DashboardController@index')->name('admin.home');
     Route::get('/enrollments/export', 'EnrollmentController@export')->name('enrollments.export');
     Route::get('/enrollments/import', 'EnrollmentController@import')->name('enrollments.import');
     Route::post('/enrollments/import', 'EnrollmentController@storeImport')->name('enrollments.storeImport');

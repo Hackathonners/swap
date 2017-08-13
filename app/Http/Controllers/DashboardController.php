@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use DB;
 use Auth;
+use App\Judite\Models\Course;
 
 class DashboardController extends Controller
 {
@@ -18,11 +19,43 @@ class DashboardController extends Controller
     }
 
     /**
-     * Show the student dashboard.
+     * Show the dashboard.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
+    {
+        return auth()->user()->isAdmin()
+            ? $this->adminDashboard()
+            : $this->studentDashboard();
+    }
+
+    /**
+     * Get the admin's dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    protected function adminDashboard()
+    {
+        $courses = DB::transaction(function () {
+            return Course::withCount('enrollments')
+                ->orderedList()
+                ->get();
+        });
+
+        $courses = $courses->groupBy(function ($course) {
+            return $course->present()->getOrdinalYear();
+        });
+
+        return view('admin.dashboard', compact('courses'));
+    }
+
+    /**
+     * Get the student's dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    protected function studentDashboard()
     {
         $data = DB::transaction(function () {
             $student = Auth::user()->student;
