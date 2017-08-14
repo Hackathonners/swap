@@ -32,10 +32,11 @@ class Enrollment extends Model
      */
     public function scopeOrderByCourse($query)
     {
-        return $query->join('courses', 'enrollments.course_id', '=', 'courses.id')
-                     ->orderBy('courses.year', 'asc')
-                     ->orderBy('courses.semester', 'asc')
-                     ->orderBy('courses.name', 'asc');
+        return $query->select('enrollments.*')
+            ->join('courses', 'enrollments.course_id', '=', 'courses.id')
+            ->orderBy('courses.year', 'asc')
+            ->orderBy('courses.semester', 'asc')
+            ->orderBy('courses.name', 'asc');
     }
 
     /**
