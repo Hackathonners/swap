@@ -14,14 +14,12 @@
     "bootstrap": "^4.0.0-beta",
     "bootstrap-vue": "^0.20.2",
     "cross-env": "^3.2.3",
+    "element-ui": "^1.4.2",
     "jquery": "^3.1.1",
     "laravel-mix": "^1.0",
     "lodash": "^4.17.4",
+    "moment": "^2.18.1",
     "popper.js": "^1.11.1",
     "vue": "^2.1.10"
-  },
-  "dependencies": {
-    "dateformat": "^2.0.0",
-    "element-ui": "^1.4.2"
   }
 }

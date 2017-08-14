@@ -13,7 +13,7 @@
 
                         <div class="form-group">
                             <label>Period of enrollments</label>
-                            <calendar-enrollments></calendar-enrollments>
+                            <calendar-enrollments :date="['{{ old('enrollments_start_at') ?: $settings->enrollments_start_at }}', '{{ old('enrollments_end_at') ?: $settings->enrollments_end_at }}']"></calendar-enrollments>
                             @if (str_contains($errors->first('enrollments_end_at'), 'required'))
                                 <div class="form-text text-danger">The enrollments period field is required.</div>
                             @else
@@ -22,9 +22,9 @@
                             @endif
                         </div>
 
-                        <div class="form-group{{ ( $errors->has('exchanges_start_at') || $errors->has('exchanges_end_at') ) ? ' has-danger' : '' }}">
+                        <div class="form-group">
                             <label>Period of exchanges</label>
-                            <calendar-exchanges></calendar-exchanges>
+                            <calendar-exchanges :date="['{{ old('exchanges_start_at') ?: $settings->exchanges_start_at }}', '{{ old('exchanges_start_at') ?: $settings->exchanges_end_at }}']"></calendar-exchanges>
                             @if (str_contains($errors->first('exchanges_end_at'), 'required'))
                                 <div class="form-text text-danger">The exchanges period field is required.</div>
                             @else

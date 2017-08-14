@@ -2,10 +2,9 @@
     <div class="form-calendar">
         <div class="block datepicker">
             <el-date-picker
-            v-model="date"
+            v-model="dates"
             type="datetimerange"
             @change="formatDates"
-            :disabled="disabled"
             :placeholder="placeholder"
             :editable="false"
             :clearable='true'
@@ -20,44 +19,38 @@
 
 <script>
 import { eventBus } from '../app.js';
-import dateFormat from 'dateformat';
+import moment from 'moment';
 
 export default {
-    created() {
-        eventBus.$on('set-exchanges-end', value => {
-            if(value === undefined) {
-                this.disabled = true;
-                this.minDate = '';
-            } else {
-                this.disabled = false;
-                this.minDate = new Date(value)
-                this.minDate.setTime(this.minDate.getTime() + 3600 * 1000 * 24);
-            }
-        });
+    props: {
+        date: {
+            type: Array,
+            required: true
+        }
     },
     data() {
         return {
-            date: [],
-            error: false,
-            disabled: true,
+            dates: [],
             exchangesStart: '',
             exchangesEnd: '',
             minDate: '',
             placeholder: "Select date and time range for exchanges period",
         }
     },
+    created() {
+        this.dates = this.date;
+        this.formatDates();
+        eventBus.$on('set-exchanges-end', (value) => {
+            this.minDate = value ? moment.utc(value).add(1, 'days') : '';
+        });
+    },
     methods: {
         disabledDate(date) {
             return date < this.minDate;
         },
         formatDates() {
-            if(this.date !== undefined) {
-                this.exchangesStart = dateFormat(this.date[0], "yyyy-mm-dd hh:MM:ss");
-                this.exchangesEnd = dateFormat(this.date[1], "yyyy-mm-dd hh:MM:ss");
-            } else {
-                this.exchangesStart = '';
-                this.exchangesEnd = '';
-            }
+            this.exchangesStart = this.dates[0] ? moment.utc(this.dates[0]).format('YYYY-MM-DD HH:mm:ss') : null;
+            this.exchangesEnd = this.dates[1] ? moment.utc(this.dates[1]).format('YYYY-MM-DD HH:mm:ss') : null;
         }
     }
 }
