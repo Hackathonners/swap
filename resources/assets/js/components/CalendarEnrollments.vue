@@ -34,7 +34,7 @@ export default {
             dates: [],
             enrollmentsStart: '',
             enrollmentsEnd: '',
-            minDate: moment.utc(),
+            minDate: '',
             placeholder: "Select date and time range for enrollments period"
         }
     },
