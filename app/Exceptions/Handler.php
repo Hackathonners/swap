@@ -44,6 +44,16 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof \Illuminate\Auth\Access\AuthorizationException) {
+            flash('You do not have permissions to perform this action.')->error();
+
+            return redirect()->back();
+        } elseif ($exception instanceof \Illuminate\Session\TokenMismatchException) {
+            flash('Your session has expired and is now restored. Please, try again.')->error();
+
+            return redirect()->back();
+        }
+
         return parent::render($request, $exception);
     }
 
