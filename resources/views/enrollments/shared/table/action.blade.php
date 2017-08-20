@@ -1,6 +1,6 @@
 <div class="btn-group">
     {{-- Show button to exchange shift, if exchanges period is active --}}
-    @if ($settings->withinExchangePeriod() && $enrollment->exchanges_as_source_count < 1)
+    @if ($settings->withinExchangePeriod() && $enrollment->exchanges_as_source_count < 1 && !is_null($enrollment->shift))
         <a href="{{ route('exchanges.create', $enrollment->id )}}" class="btn btn-secondary btn-sm">Exchange shift</a>
     @endif
 

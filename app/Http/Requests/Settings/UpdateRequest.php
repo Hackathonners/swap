@@ -24,7 +24,7 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'enrollments_start_at' => 'required|date|after_or_equal:today',
+            'enrollments_start_at' => 'required|date',
             'enrollments_end_at' => 'required|date|after:enrollments_start_at',
             'exchanges_start_at' => 'required|date|after:enrollments_end_at',
             'exchanges_end_at' => 'required|date|after:exchanges_start_at',

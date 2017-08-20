@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Judite\Contracts\ExchangeLogger;
 use App\Exceptions\CannotExchangeEnrollmentMultipleTimesException;
 use App\Exceptions\CannotExchangeToShiftsOnDifferentCoursesException;
+use App\Exceptions\CannotExchangeEnrollmentWithoutAssociatedShiftException;
 
 class Exchange extends Model
 {
@@ -54,6 +55,10 @@ class Exchange extends Model
 
         if ($fromEnrollment->course_id !== $toEnrollment->course_id) {
             throw new CannotExchangeToShiftsOnDifferentCoursesException;
+        }
+
+        if (is_null($fromEnrollment->shift_id) || is_null($fromEnrollment->shift_id)) {
+            throw new CannotExchangeEnrollmentWithoutAssociatedShiftException;
         }
 
         $this->fromEnrollment()->associate($fromEnrollment);

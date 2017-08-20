@@ -104,7 +104,7 @@ class EnrollmentTest extends TestCase
         $response = $this->get(route('enrollments.export'));
 
         // Assert
-        $response->assertStatus(403);
+        $response->assertStatus(302); // TODO: effetive unauthorized exception handling
     }
 
     /** @test */

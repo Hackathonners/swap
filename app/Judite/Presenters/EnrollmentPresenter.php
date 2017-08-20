@@ -36,7 +36,7 @@ class EnrollmentPresenter extends Presenter
     {
         return $this->entity->student->user->name
             .' ('.$this->entity->student->student_number.')'
-            .' - '.$this->entity->shift->tag
+            .' - '.$this->getShiftTag()
             .' on '.$this->entity->course->name;
     }
 }

@@ -33,25 +33,36 @@ class ExchangeController extends Controller
      */
     public function create($enrollmentId)
     {
-        $data = DB::transaction(function () use ($enrollmentId) {
-            $enrollment = Enrollment::findOrFail($enrollmentId);
-            is_null($enrollment) ?: $this->authorize('exchange', $enrollment);
-            $matchingEnrollments = Enrollment::similarEnrollments($enrollment)
-                ->orderByStudent()
-                ->get();
+        try {
+            $data = DB::transaction(function () use ($enrollmentId) {
+                $enrollment = Enrollment::findOrFail($enrollmentId);
+                $this->authorize('exchange', $enrollment);
 
-            return compact('enrollment', 'matchingEnrollments');
-        });
+                if (is_null($enrollment->shift)) {
+                    throw new \LogicException('Enrollments without associated shifts cannot be exchanged.');
+                }
 
-        $data['matchingEnrollments'] = $data['matchingEnrollments']->map(function ($item) {
-            $newItem = [];
-            $newItem['id'] = $item->id;
-            $newItem['_toString'] = $item->present()->inlineToString();
+                $matchingEnrollments = Enrollment::similarEnrollments($enrollment)
+                    ->orderByStudent()
+                    ->get();
 
-            return $newItem;
-        });
+                return compact('enrollment', 'matchingEnrollments');
+            });
 
-        return view('exchanges.create', $data);
+            $data['matchingEnrollments'] = $data['matchingEnrollments']->map(function ($item) {
+                $newItem = [];
+                $newItem['id'] = $item->id;
+                $newItem['_toString'] = $item->present()->inlineToString();
+
+                return $newItem;
+            });
+
+            return view('exchanges.create', $data);
+        } catch (\LogicException $e) {
+            flash($e->getMessage())->error();
+
+            return redirect()->route('home');
+        }
     }
 
     /**
@@ -93,7 +104,8 @@ class ExchangeController extends Controller
 
             flash('The exchange was successfully proposed.')->success();
         } catch (CannotExchangeEnrollmentMultipleTimesException
-            | CannotExchangeToShiftsOnDifferentCoursesException $e) {
+            | CannotExchangeToShiftsOnDifferentCoursesException
+            | CannotExchangeEnrollmentWithoutAssociatedShift $e) {
             flash($e->getMessage())->error();
         }
 
