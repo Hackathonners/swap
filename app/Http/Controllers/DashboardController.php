@@ -59,7 +59,11 @@ class DashboardController extends Controller
     {
         $data = DB::transaction(function () {
             $student = Auth::user()->student;
-            $data['enrollments'] = $student->enrollments()->orderByCourse()->get();
+            $data['enrollments'] = $student
+                ->enrollments()
+                ->orderByCourse()
+                ->withCount('exchangesAsSource')
+                ->get();
             $data['requestedExchanges'] = $student->requestedExchanges()->get();
             $data['proposedExchanges'] = $student->proposedExchanges()->get();
 

@@ -38,10 +38,9 @@ class EnrollmentTest extends TestCase
         // Prepare
         $courses = factory(Course::class, 10)->create();
         $courses->each(function ($course) {
-            $shift = factory(Shift::class)->make(['course_id' => $course->id]);
             factory(Enrollment::class)->create([
                 'course_id' => $course->id,
-                'shift_id' => $shift->id,
+                'shift_id' => null,
             ]);
         });
 
@@ -55,6 +54,34 @@ class EnrollmentTest extends TestCase
                                 ->get();
 
         $this->assertEquals($expectedOrder->pluck('id'), $actualReturn->pluck('course.id'));
+    }
+
+    public function testSimilarEnrollments()
+    {
+        // Prepare
+        factory(Course::class, 2)->create()->each(function ($course) {
+            $shift = factory(Shift::class)->create(['course_id' => $course->id]);
+            factory(Enrollment::class)->create([
+                'course_id' => $course->id,
+                'shift_id' => $shift->id,
+            ]);
+        });
+        $course = Course::first();
+        $enrollment = factory(Enrollment::class)->create([
+            'course_id' => $course->id,
+            'shift_id' => $course->shifts()->first()->id,
+        ]);
+
+        // Execute
+        $actualReturn = Enrollment::similarEnrollments($enrollment)->get();
+
+        // Assert
+        $expectedEnrollments = Enrollment::where('course_id', $course->id)
+            ->where('shift_id', '!=', $course->shifts()->first()->id)
+            ->where('id', '!=', $enrollment->id)
+            ->get();
+
+        $this->assertEquals($expectedEnrollments->pluck('id'), $actualReturn->pluck('id'));
     }
 
     public function testOrderByStudent()

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Carbon\Carbon;
 use Tests\TestCase;
 use App\Judite\Models\Course;
 use App\Judite\Models\Student;
@@ -20,6 +21,12 @@ class EnrollmentTest extends TestCase
         parent::setUp();
         $this->student = factory(Student::class)->create();
         $this->course = factory(Course::class)->create();
+
+        // Enable enrollments period
+        $settings = app('settings');
+        $settings->enrollments_start_at = Carbon::yesterday();
+        $settings->enrollments_end_at = Carbon::tomorrow();
+        $settings->save();
     }
 
     /** @test */

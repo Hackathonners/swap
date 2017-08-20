@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Carbon\Carbon;
 use Tests\TestCase;
 use App\Judite\Models\Student;
 use App\Judite\Models\Exchange;
@@ -22,6 +23,12 @@ class CreateExchangeTest extends TestCase
         $this->toEnrollment = factory(Enrollment::class)->create([
             'course_id' => $this->fromEnrollment->course->id,
         ]);
+
+        // Enable exchanges period
+        $settings = app('settings');
+        $settings->exchanges_start_at = Carbon::yesterday();
+        $settings->exchanges_end_at = Carbon::tomorrow();
+        $settings->save();
     }
 
     /** @test */
@@ -35,10 +42,10 @@ class CreateExchangeTest extends TestCase
 
         // Execute
         $this->actingAs($this->fromEnrollment->student->user);
-        $response = $this->post(route('exchanges.create'), $requestData);
+        $response = $this->post(route('exchanges.store'), $requestData);
 
         // Assert
-        $response->assertStatus(200);
+        $response->assertRedirect();
         $this->assertEquals(1, Exchange::count());
         $actualExchange = Exchange::first();
         $this->assertEquals($this->fromEnrollment->id, $actualExchange->from_enrollment_id);
@@ -57,7 +64,7 @@ class CreateExchangeTest extends TestCase
 
         // Execute
         $this->actingAs($unauthorizedStudent->user);
-        $response = $this->post(route('exchanges.create'), $requestData);
+        $response = $this->post(route('exchanges.store'), $requestData);
 
         // Assert
         $response->assertStatus(403);
@@ -74,7 +81,7 @@ class CreateExchangeTest extends TestCase
         ];
 
         // Execute
-        $response = $this->post(route('exchanges.create', $requestData));
+        $response = $this->post(route('exchanges.store', $requestData));
 
         // Assert
         $response->assertRedirect(route('login'));

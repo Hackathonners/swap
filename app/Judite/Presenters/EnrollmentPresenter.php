@@ -26,4 +26,17 @@ class EnrollmentPresenter extends Presenter
     {
         return $this->entity->updated_at->toDayDateTimeString();
     }
+
+    /**
+     * Get the string representation of the enrollment.
+     *
+     * @return string
+     */
+    public function inlineToString()
+    {
+        return $this->entity->student->user->name
+            .' ('.$this->entity->student->student_number.')'
+            .' - '.$this->entity->shift->tag
+            .' on '.$this->entity->course->name;
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Carbon\Carbon;
 use Tests\TestCase;
 use App\Judite\Models\Student;
 use App\Judite\Models\Exchange;
@@ -21,6 +22,12 @@ class DeleteExchangeTest extends TestCase
         $this->exchange = factory(Exchange::class)->create();
         $this->fromEnrollment = $this->exchange->fromEnrollment;
         $this->toEnrollment = $this->exchange->toEnrollment;
+
+        // Enable exchanges period
+        $settings = app('settings');
+        $settings->exchanges_start_at = Carbon::yesterday();
+        $settings->exchanges_end_at = Carbon::tomorrow();
+        $settings->save();
     }
 
     /** @test */

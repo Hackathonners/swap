@@ -7,12 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Shift extends Model
 {
     /**
-     * Get course of this shift.
+     * The attributes that are mass assignable.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @var array
      */
-    public function course()
-    {
-        return $this->belongsTo(Course::class);
-    }
+    protected $fillable = ['tag'];
 }

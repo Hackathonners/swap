@@ -10,27 +10,48 @@ use App\Judite\Models\Enrollment;
 use App\Mail\DeclinedExchangeNotification;
 use App\Mail\ConfirmedExchangeNotification;
 use App\Http\Requests\Exchange\CreateRequest;
+use App\Exceptions\CannotExchangeEnrollmentMultipleTimesException;
+use App\Exceptions\CannotExchangeToShiftsOnDifferentCoursesException;
 
 class ExchangeController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Create a new controller instance.
      *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
-    public function index()
+    public function __construct()
     {
-        //
+        $this->middleware('can.exchange');
     }
 
     /**
      * Show the form for creating a new resource.
      *
+     * @param  int  $enrollmentId
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($enrollmentId)
     {
-        //
+        $data = DB::transaction(function () use ($enrollmentId) {
+            $enrollment = Enrollment::findOrFail($enrollmentId);
+            is_null($enrollment) ?: $this->authorize('exchange', $enrollment);
+            $matchingEnrollments = Enrollment::similarEnrollments($enrollment)
+                ->orderByStudent()
+                ->get();
+
+            return compact('enrollment', 'matchingEnrollments');
+        });
+
+        $data['matchingEnrollments'] = $data['matchingEnrollments']->map(function ($item) {
+            $newItem = [];
+            $newItem['id'] = $item->id;
+            $newItem['_toString'] = $item->present()->inlineToString();
+
+            return $newItem;
+        });
+
+        return view('exchanges.create', $data);
     }
 
     /**
@@ -41,35 +62,42 @@ class ExchangeController extends Controller
      */
     public function store(CreateRequest $request)
     {
-        $exchange = DB::transaction(function () use ($request) {
-            $this->validate($request, [
+        try {
+            $exchange = DB::transaction(function () use ($request) {
+                $this->validate($request, [
                 'from_enrollment_id' => 'exists:enrollments,id',
                 'to_enrollment_id' => 'exists:enrollments,id',
             ]);
 
-            $fromEnrollment = Enrollment::find($request->input('from_enrollment_id'));
-            $toEnrollment = Enrollment::find($request->input('to_enrollment_id'));
-            $this->authorize('exchange', $fromEnrollment);
+                $fromEnrollment = Enrollment::find($request->input('from_enrollment_id'));
+                $toEnrollment = Enrollment::find($request->input('to_enrollment_id'));
+                $this->authorize('exchange', $fromEnrollment);
 
             // Firstly check if the inverse exchange for the same enrollments
             // already exists. If the inverse record is found then we will
             // exchange and update both enrollments of this exchange.
             $exchange = Exchange::findMatchingExchange($fromEnrollment, $toEnrollment);
-            if (! is_null($exchange)) {
-                return $exchange->perform();
-            }
+                if (! is_null($exchange)) {
+                    return $exchange->perform();
+                }
 
             // Otherwise, we create a new exchange between both enrollments
             // so the user that owns the target enrollment can confirm the
             // exchange and allow the other user to enroll on the shift.
             $exchange = Exchange::make();
-            $exchange->setExchangeEnrollments($fromEnrollment, $toEnrollment);
-            $exchange->save();
+                $exchange->setExchangeEnrollments($fromEnrollment, $toEnrollment);
+                $exchange->save();
 
-            return $exchange;
-        });
+                return $exchange;
+            });
 
-        return $exchange;
+            flash('The exchange was successfully proposed.')->success();
+        } catch (CannotExchangeEnrollmentMultipleTimesException
+            | CannotExchangeToShiftsOnDifferentCoursesException $e) {
+            flash($e->getMessage())->error();
+        }
+
+        return redirect()->route('home');
     }
 
     /**

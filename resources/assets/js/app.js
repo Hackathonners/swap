@@ -17,6 +17,7 @@ import CsrfField from './components/CsrfField';
 import ConfirmExchangeModal from './components/modals/ConfirmExchangeModal';
 import DeclineExchangeModal from './components/modals/DeclineExchangeModal';
 import DeleteExchangeModal from './components/modals/DeleteExchangeModal';
+import EnrollmentSelect from './components/EnrollmentSelect';
 import ConfirmExchange from './directives/ConfirmExchange';
 import DeclineExchange from './directives/DeclineExchange';
 import DeleteExchange from './directives/DeleteExchange';
@@ -28,6 +29,7 @@ Vue.component('csrfField', CsrfField);
 Vue.component('confirm-exchange-modal', ConfirmExchangeModal);
 Vue.component('decline-exchange-modal', DeclineExchangeModal);
 Vue.component('delete-exchange-modal', DeleteExchangeModal);
+Vue.component('enrollment-select', EnrollmentSelect);
 Vue.directive('confirm-exchange', ConfirmExchange);
 Vue.directive('decline-exchange', DeclineExchange);
 Vue.directive('delete-exchange', DeleteExchange);
@@ -42,7 +44,7 @@ Vue.component('calendar-enrollments', CalendarEnrollments);
 Vue.component('calendar-exchanges', CalendarExchanges);
 
 const app = new Vue({
-  el: '#app'
+  el: '#app',
 });
 
 require('./file-input');

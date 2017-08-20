@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Mail;
+use Carbon\Carbon;
 use Tests\TestCase;
 use App\Judite\Models\User;
 use App\Judite\Models\Student;
@@ -25,6 +26,12 @@ class DeclineExchangeTest extends TestCase
         $this->exchange = factory(Exchange::class)->create();
         $this->fromEnrollment = $this->exchange->fromEnrollment;
         $this->toEnrollment = $this->exchange->toEnrollment;
+
+        // Enable exchanges period
+        $settings = app('settings');
+        $settings->exchanges_start_at = Carbon::yesterday();
+        $settings->exchanges_end_at = Carbon::tomorrow();
+        $settings->save();
     }
 
     /** @test */

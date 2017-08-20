@@ -40,6 +40,19 @@ class Enrollment extends Model
     }
 
     /**
+     * Scope a query to filter similar enrollments.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSimilarEnrollments($query, Enrollment $enrollment)
+    {
+        return $query->where('enrollments.id', '!=', $enrollment->id)
+            ->where('course_id', $enrollment->course->id)
+            ->where('shift_id', '!=', $enrollment->shift->id);
+    }
+
+    /**
      * Scope a query to order enrollments by students.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
@@ -47,8 +60,9 @@ class Enrollment extends Model
      */
     public function scopeOrderByStudent($query)
     {
-        return $query->join('students', 'enrollments.student_id', '=', 'students.id')
-                     ->orderBy('students.student_number', 'asc');
+        return $query->select('enrollments.*')
+            ->join('students', 'enrollments.student_id', '=', 'students.id')
+            ->orderBy('students.student_number', 'asc');
     }
 
     /**
@@ -77,16 +91,6 @@ class Enrollment extends Model
     public function exchangesAsSource()
     {
         return $this->hasMany(Exchange::class, 'from_enrollment_id');
-    }
-
-    /**
-     * Get exchanges of this enrollment as target.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function exchangesAsTarget()
-    {
-        return $this->hasMany(Exchange::class, 'to_enrollment_id');
     }
 
     /**
