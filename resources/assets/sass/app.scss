@@ -1,6 +1,6 @@
 
 // Fonts
-@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
 
 // Variables
 @import "variables";
@@ -14,3 +14,17 @@
 @import "card";
 @import "navbar";
 @import "element";
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+}
+
+.main-footer {
+    background-color: #eef1f6;
+}

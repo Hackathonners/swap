@@ -4,6 +4,7 @@
             <el-date-picker
             v-model="dates"
             type="datetimerange"
+            range-separator=" to "
             @change="formatDates"
             :placeholder="placeholder"
             :editable="false"

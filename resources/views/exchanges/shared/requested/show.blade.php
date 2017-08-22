@@ -1,6 +1,6 @@
 <tr>
     <td>
-        <strong>{{ $exchange->course()->name }}</strong>
+        {{ $exchange->course()->name }}
         <br>
         <small class="text-muted">
             From <strong>{{ $exchange->toShift()->tag }}</strong>

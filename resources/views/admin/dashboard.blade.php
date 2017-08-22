@@ -1,36 +1,40 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header"><strong>List of courses</strong></div>
-                    <table class="card-table table">
-                        <tbody>
-                            @foreach ($courses as $year => $courses)
-                                <tr>
-                                    <th colspan="3" class="table-active">
-                                        {{ $year }} year
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <th>Semester</th>
-                                    <th>Course</th>
-                                    <th>Enrollments</th>
-                                </tr>
-                                @foreach ($courses as $course)
-                                    <tr>
-                                        <td>{{ $course->present()->getOrdinalSemester() }}</td>
-                                        <td><a href="{{ route('students.index', $course->id) }}">{{ $course->name }}</a></td>
-                                        <td>{{ $course->enrollments_count }}</td>
-                                    </tr>
-                                @endforeach
-                            @endforeach
-                        </tbody>
-                    </table>
+    <div class="card card--section">
+        <div class="card-header">
+            <div class="row">
+                <div class="col">
+                  Enrollments summary
                 </div>
+                <div class="col text-right">
+                    <a href="{{ route('enrollments.export') }}" class="btn btn-primary btn-sm">Export enrollments</a>
+                </div>
+
             </div>
         </div>
+        <table class="card-table table">
+            <tbody>
+                @foreach ($courses as $year => $courses)
+                    <tr>
+                        <th colspan="3" class="table-active">
+                            {{ $year }} year
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>Semester</th>
+                        <th>Course</th>
+                        <th>Enrollments</th>
+                    </tr>
+                    @foreach ($courses as $course)
+                        <tr>
+                            <td>{{ $course->present()->getOrdinalSemester() }}</td>
+                            <td><a href="{{ route('students.index', $course->id) }}">{{ $course->name }}</a></td>
+                            <td>{{ $course->enrollments_count }}</td>
+                        </tr>
+                    @endforeach
+                @endforeach
+            </tbody>
+        </table>
     </div>
 @endsection

@@ -31,72 +31,97 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-    <div id="app">
-        <div class="container">
-            <nav class="navbar navbar-expand-lg navbar-light pt-4 pb-4 mb-2">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    <img alt="Brand" height="28" src="{{ asset('images/logo.svg') }}">
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+    <div id="app" class="main-content">
+        <div class="navbar-wrapper">
 
+            <div class="container">
+                <nav class="navbar navbar-expand-lg navbar-dark pt-4 pb-4 mb-5">
+                    <a class="navbar-brand" href="{{ url('/') }}">
+                        <img alt="Brand" height="28" src="{{ asset('images/logo.svg') }}">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
 
-                <div class="collapse navbar-collapse" id="navbarContent">
-                    <ul class="navbar-nav mr-auto">
-                        @if (! Auth::guest())
-                            @if (Auth::user()->isAdmin())
+                    <div class="collapse navbar-collapse" id="navbarContent">
+                        <ul class="navbar-nav mr-auto">
+                            @if (! Auth::guest())
+                                @if (Auth::user()->isAdmin())
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('settings.edit') }}">Settings</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('enrollments.import') }}">Import</a>
+                                    </li>
+                                @else
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('courses.index') }}">Courses</a>
+                                    </li>
+                                @endif
+                            @endif
+                        </ul>
+                        <ul class="navbar-nav">
+                            @if (Auth::guest())
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('settings.edit') }}">Settings</a>
+                                    <a class="nav-link" href="{{ route('login') }}">Login</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('register') }}">Register</a>
                                 </li>
                             @else
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('courses.index') }}">Courses</a>
+                                <li class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                        {{ Auth::user()->name }}
+                                        <span class="caret"></span>
+                                    </a>
+
+                                    <div class="dropdown-menu dropdown-menu-right" role="menu">
+                                        @if (Auth::user()->isStudent())
+                                            <a class="dropdown-item disabled" href="#">Student number: {{ Auth::user()->student->student_number }}</a>
+                                            <div class="dropdown-divider"></div>
+                                        @endif
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                                            {{ csrf_field() }}
+                                            <button class="dropdown-item" type="submit">
+                                                Logout
+                                            </button>
+                                        </form>
+                                    </li>
                                 </li>
                             @endif
-                        @endif
-                    </ul>
-                    <ul class="navbar-nav">
-                        @if (Auth::guest())
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('register') }}">Register</a>
-                            </li>
-                        @else
-                            <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    {{ Auth::user()->name }}
-
-                                    @if (Auth::user()->isStudent())
-                                        ({{ Auth::user()->student->student_number }})
-                                    @endif
-                                    <span class="caret"></span>
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-right" role="menu">
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST">
-                                        {{ csrf_field() }}
-                                        <button class="dropdown-item" type="submit">
-                                            Logout
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </li>
-                    @endif
-                </ul>
-            </div>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
         </div>
-    </nav>
 
-    <div class="container">
-        @include('flash::message')
+        <div class="container">
+            @include('flash::message')
+        </div>
+
+        <div class="container mb-5">
+            @yield('content')
+        </div>
     </div>
 
-    @yield('content')
-</div>
+    <footer class="main-footer">
+        <div class="container">
+            <div class="row align-items-center p-4 text-muted small">
+                <div class="col">
+                    Designed and developed with all the love by <a target="_blank" href="//hackathonners.org">Hackathonners</a>.
+                    <br>
+                    Follow us on <a target="_blank" href="//twitter.com/Hackathonners">Twitter</a> / <a target="_blank" href="//github.com/Hackathonners">Github</a> / <a target="_blank" href="//blog.hackathonners.org">Medium</a>.
+                </div>
+                <div class="col-2 text-center">
+                    <img alt="Brand" height="28" src="{{ asset('images/logo-icon.svg') }}">
+                </div>
+                <div class="col text-right">
+                    The source code of Swap project is available on <a target="_blank" href="//github.com/Hackathonners/swap">Github</a>.
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
 
 <!-- Scripts -->
 <script src="{{ asset('js/app.js') }}"></script>

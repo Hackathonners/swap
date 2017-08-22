@@ -7,7 +7,7 @@
         <form slot="modal-footer" action="/exchanges/decline" method="post">
             <csrf-field></csrf-field>
             <input type="hidden" name="exchange_id" :value="id">
-            <button type="button" name="button" class="btn btn-secondary" @click="close">Close</button>
+            <button type="button" name="button" class="btn btn-outline-secondary" @click="close">Close</button>
             <button type="submit" name="button" class="btn btn-danger">Decline exchange</button>
         </form>
     </b-modal>

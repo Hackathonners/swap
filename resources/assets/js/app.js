@@ -46,5 +46,3 @@ Vue.component('calendar-exchanges', CalendarExchanges);
 const app = new Vue({
   el: '#app',
 });
-
-require('./file-input');
