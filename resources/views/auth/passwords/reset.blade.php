@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="card card--section">
-        <div class="card-header"><strong>Reset password</strong></div>
+        <div class="card-header">Reset password</div>
         <div class="card-body">
             @if (session('status'))
                 <div class="alert alert-success">
