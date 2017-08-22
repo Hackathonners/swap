@@ -58,9 +58,10 @@ class EnrollmentController extends Controller
                 DB::transaction(function () use ($filename, $reader) {
                     // Loop for all the rows of the table
                     $readerArray = $reader->toArray();
-                    $reader->each(function ($row) use ($filename, $reader, $readerArray) {
+                    $index = 1;
+                    $reader->each(function ($row) use ($filename, $reader, $readerArray, &$index) {
                         // Calculate the row index
-                        $index = array_search($row->toArray(), $readerArray);
+                        $index++;
 
                         // Get the models of the given ids
                         // Check if the given student number exists
@@ -80,6 +81,12 @@ class EnrollmentController extends Controller
                         }
 
                         // Check if the given shift tag exists in the associated course
+                        if ($row->shift === null) {
+                            $exception = new InvalidFieldValueException;
+                            $exception->setField('Shift', $row->shift, "The shift field is required on imported enrollments. (at line {$index})");
+                            throw $exception;
+                        }
+
                         $shift = $course->getShiftByTag($row->shift);
                         if ($shift === null) {
                             $shift = Shift::make(['tag' => $row->shift]);
