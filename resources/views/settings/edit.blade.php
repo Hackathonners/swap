@@ -21,7 +21,7 @@
 
                 <div class="form-group">
                     <label>Period of exchanges</label>
-                    <calendar-exchanges :date="['{{ old('exchanges_start_at') ?: $settings->exchanges_start_at }}', '{{ old('exchanges_start_at') ?: $settings->exchanges_end_at }}']"></calendar-exchanges>
+                    <calendar-exchanges :date="['{{ old('exchanges_start_at') ?: $settings->exchanges_start_at }}', '{{ old('exchanges_end_at') ?: $settings->exchanges_end_at }}']"></calendar-exchanges>
                     @if (str_contains($errors->first('exchanges_end_at'), 'required'))
                         <div class="form-text text-danger">The exchanges period field is required.</div>
                     @else

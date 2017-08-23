@@ -39,7 +39,10 @@ export default {
         }
     },
     created() {
-        this.dates = this.date;
+        this.dates = [
+            this.date[0] ? moment.utc(this.date[0]).format() : null,
+            this.date[1] ? moment.utc(this.date[1]).format() : null
+        ];
         this.formatDates();
         eventBus.$on('set-exchanges-end', (value) => {
             this.minDate = value ? moment.utc(value).add(1, 'days') : '';

@@ -40,8 +40,8 @@ export default {
     },
     mounted() {
         this.dates = [
-            moment.utc(this.date[0]).format(),
-            moment.utc(this.date[1]).format()
+            this.date[0] ? moment.utc(this.date[0]).format() : null,
+            this.date[1] ? moment.utc(this.date[1]).format() : null
         ];
         this.formatDates();
     },
