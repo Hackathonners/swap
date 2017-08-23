@@ -44,17 +44,18 @@ export default {
             this.date[1] ? moment.utc(this.date[1]).format() : null
         ];
         this.formatDates();
-        eventBus.$on('set-exchanges-end', (value) => {
-            this.minDate = value ? moment.utc(value).add(1, 'days') : '';
+        eventBus.$on('set-enrollments-end', (value) => {
+            this.minDate = value ? moment.utc(value).add(1, 'days') : null;
         });
     },
     methods: {
-        disabledDate(date) {
-            return date < this.minDate;
+        disabledDate (date) {
+            return this.minDate ? date < this.minDate : false;
         },
         formatDates() {
             this.exchangesStart = this.dates[0] ? moment.utc(this.dates[0]).format('YYYY-MM-DD HH:mm:ss') : null;
             this.exchangesEnd = this.dates[1] ? moment.utc(this.dates[1]).format('YYYY-MM-DD HH:mm:ss') : null;
+            eventBus.$emit('set-exchanges-start', this.dates[0]);
         }
     }
 }

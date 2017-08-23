@@ -5,7 +5,7 @@
             v-model="dates"
             type="datetimerange"
             range-separator=" to "
-            @change="emit"
+            @change="formatDates"
             :placeholder="placeholder"
             :editable="false"
             :clearable='true'
@@ -34,28 +34,28 @@ export default {
             dates: [],
             enrollmentsStart: '',
             enrollmentsEnd: '',
-            minDate: '',
+            maxDate: '',
             placeholder: "Select date and time range for enrollments period"
         }
     },
-    mounted() {
+    created() {
         this.dates = [
             this.date[0] ? moment.utc(this.date[0]).format() : null,
             this.date[1] ? moment.utc(this.date[1]).format() : null
         ];
         this.formatDates();
+        eventBus.$on('set-exchanges-start', (value) => {
+            this.maxDate = value ? moment.utc(value).subtract(1, 'days') : null;
+        });
     },
     methods: {
         disabledDate (date) {
-            return date < this.minDate;
-        },
-        emit(dates) {
-            this.formatDates();
+            return this.maxDate ? date > this.maxDate : false;
         },
         formatDates() {
             this.enrollmentsStart = this.dates[0] ? moment.utc(this.dates[0]).format('YYYY-MM-DD HH:mm:ss') : null;
             this.enrollmentsEnd = this.dates[1] ? moment.utc(this.dates[1]).format('YYYY-MM-DD HH:mm:ss') : null;
-            eventBus.$emit('set-exchanges-end', this.dates[1]);
+            eventBus.$emit('set-enrollments-end', this.dates[1]);
         }
     }
 }
