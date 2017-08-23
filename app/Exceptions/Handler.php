@@ -47,7 +47,7 @@ class Handler extends ExceptionHandler
         if ($exception instanceof \Illuminate\Auth\Access\AuthorizationException) {
             flash('You do not have permissions to perform this action.')->error();
 
-            return redirect()->back();
+            return redirect()->route('home');
         } elseif ($exception instanceof \Illuminate\Session\TokenMismatchException) {
             flash('Your session has expired and is now restored. Please, try again.')->error();
 
