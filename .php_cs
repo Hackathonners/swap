@@ -70,6 +70,7 @@ $rules = [
     'phpdoc_to_comment' => true,
     'phpdoc_trim' => true,
     'phpdoc_no_alias_tag' => ['type' => 'var'],
+    'phpdoc_no_empty_return' => true,
     'phpdoc_types' => true,
     'phpdoc_var_without_name' => true,
     'psr4' => true,

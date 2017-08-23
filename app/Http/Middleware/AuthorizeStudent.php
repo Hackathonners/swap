@@ -24,7 +24,6 @@ class AuthorizeStudent
 
     /**
      * Determine if the user is a student.
-     * @return void
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     protected function checkStudent()

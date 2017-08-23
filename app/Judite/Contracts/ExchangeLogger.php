@@ -11,7 +11,6 @@ interface ExchangeLogger
      *
      * @param  \App\Judite\Models\Enrollment  $fromEnrollment
      * @param  \App\Judite\Models\Enrollment  $toEnrollment
-     * @return void
      */
     public function log(Enrollment $fromEnrollment, Enrollment $toEnrollment);
 }

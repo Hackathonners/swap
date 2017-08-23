@@ -24,7 +24,6 @@ class AuthorizeAdministrator
 
     /**
      * Determine if the user is an admin.
-     * @return void
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     protected function checkAdmin()

@@ -132,7 +132,6 @@ class RegisterController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  mixed  $user
-     * @return void
      */
     protected function registered(Request $request, $user)
     {
@@ -143,7 +142,6 @@ class RegisterController extends Controller
      * Send the confirmation e-mail to the given user.
      *
      * @param  mixed  $user
-     * @return void
      */
     protected function sendConfirmationEmail($user)
     {
