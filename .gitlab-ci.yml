@@ -51,7 +51,6 @@ before_script:
   # DB_DATABASE=project_name
   # DB_USERNAME=root
   # DB_PASSWORD=secret
-  - cp .env.gitlabci .env
 
   # Run npm build
   # comment this out if you don't have a frontend build
