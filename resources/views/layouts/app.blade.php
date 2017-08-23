@@ -77,13 +77,13 @@
 
                                     <div class="dropdown-menu dropdown-menu-right" role="menu">
                                         @if (Auth::user()->isStudent())
-                                            <a class="dropdown-item disabled" href="#">Student number: {{ Auth::user()->student->student_number }}</a>
+                                            <a class="dropdown-item disabled" href="#">Logged in as {{ Auth::user()->student->student_number }}</a>
                                             <div class="dropdown-divider"></div>
                                         @endif
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST">
                                             {{ csrf_field() }}
                                             <button class="dropdown-item" type="submit">
-                                                Logout
+                                                Sign out
                                             </button>
                                         </form>
                                     </li>
