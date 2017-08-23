@@ -3,8 +3,9 @@
 </p>
 
 <p align="center">
-    <a href="https://travis-ci.org/Hackathonners/swap"><img src="https://travis-ci.org/Hackathonners/swap.svg" alt="Build Status"></a>
+    <a href="https://travis-ci.org/Hackathonners/swap"><img src="https://travis-ci.org/Hackathonners/swap.svg" alt="TravisCI Status"></a>
     <a href="https://styleci.io/repos/7548986/"><img src="https://styleci.io/repos/7548986/shield?style=flat" alt="StyleCI Status"></a>
+    <a href="https://scrutinizer-ci.com/g/Hackathonners/swap/"><img src="https://scrutinizer-ci.com/g/Hackathonners/swap/badges/quality-score.png" alt="ScrutinizerCI Status"></a>
 </p>
 
 ## About Swap
