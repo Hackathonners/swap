@@ -84,18 +84,18 @@ class ExchangeController extends Controller
                 $toEnrollment = Enrollment::find($request->input('to_enrollment_id'));
                 $this->authorize('exchange', $fromEnrollment);
 
-            // Firstly check if the inverse exchange for the same enrollments
-            // already exists. If the inverse record is found then we will
-            // exchange and update both enrollments of this exchange.
-            $exchange = Exchange::findMatchingExchange($fromEnrollment, $toEnrollment);
+                // Firstly check if the inverse exchange for the same enrollments
+                // already exists. If the inverse record is found then we will
+                // exchange and update both enrollments of this exchange.
+                $exchange = Exchange::findMatchingExchange($fromEnrollment, $toEnrollment);
                 if (! is_null($exchange)) {
                     return $exchange->perform();
                 }
 
-            // Otherwise, we create a new exchange between both enrollments
-            // so the user that owns the target enrollment can confirm the
-            // exchange and allow the other user to enroll on the shift.
-            $exchange = Exchange::make();
+                // Otherwise, we create a new exchange between both enrollments
+                // so the user that owns the target enrollment can confirm the
+                // exchange and allow the other user to enroll on the shift.
+                $exchange = Exchange::make();
                 $exchange->setExchangeEnrollments($fromEnrollment, $toEnrollment);
                 $exchange->save();
 
