@@ -21,7 +21,7 @@ class FakeScenarioSeeder extends Seeder
             $numberOfStudents = 20;
             $numberOfShiftsPerCourse = 5;
             $numberOfRequestedExchangesPerStudent = 4;
-            $numberOfEnrollmentsPerStudent = $numberOfRequestedExchangesPerStudent + 7;
+            $numberOfEnrollmentsPerStudent = $numberOfRequestedExchangesPerStudent + 2;
 
             // Create students and shifts on courses.
             $courses = Course::all();
@@ -38,7 +38,7 @@ class FakeScenarioSeeder extends Seeder
 
             // Create enrollments on random chosen courses.
             $students->each(function ($student) use ($courses, $numberOfEnrollmentsPerStudent) {
-                $courses->shuffle();
+                $courses = $courses->shuffle();
                 $enrollments = Collection::times($numberOfEnrollmentsPerStudent, function ($number) use ($courses) {
                     $course = $courses->get($number);
 
@@ -60,6 +60,7 @@ class FakeScenarioSeeder extends Seeder
                     $matchingEnrollment = Enrollment::where('course_id', $enrollment->course->id)
                         ->where('shift_id', '!=', $enrollment->shift->id)
                         ->where('id', '!=', $enrollment->id)
+                        ->inRandomOrder()
                         ->first();
 
                     if (! is_null($matchingEnrollment)) {
