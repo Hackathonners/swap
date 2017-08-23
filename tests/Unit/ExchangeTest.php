@@ -37,7 +37,7 @@ class ExchangeTest extends TestCase
         $toEnrollment = factory(Enrollment::class)->make(['course_id' => $course->id]);
 
         // Execute
-        $exchange = new Exchange;
+        $exchange = new Exchange();
         $actualReturn = $exchange->setExchangeEnrollments($fromEnrollment, $toEnrollment);
 
         // Assert
@@ -206,7 +206,7 @@ class ExchangeTest extends TestCase
         $toEnrollment = factory(Enrollment::class)->make();
 
         // Execute
-        $exchange = new Exchange;
+        $exchange = new Exchange();
         $exchange->setExchangeEnrollments($fromEnrollment, $toEnrollment);
     }
 

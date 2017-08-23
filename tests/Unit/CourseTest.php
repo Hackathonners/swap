@@ -15,7 +15,7 @@ class CourseTest extends TestCase
     {
         // Prepare
         $course = factory(Course::class)->create();
-        $shift = new Shift;
+        $shift = new Shift();
         $shift->tag = 'test';
 
         // Execute

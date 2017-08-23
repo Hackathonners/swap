@@ -54,15 +54,15 @@ class Exchange extends Model
         // are allowed to create only a single exchange related to the
         // same enrollment, ensuring that each request exists once.
         if ($fromEnrollment->exchangesAsSource()->exists()) {
-            throw new CannotExchangeEnrollmentMultipleTimesException;
+            throw new CannotExchangeEnrollmentMultipleTimesException();
         }
 
         if ($fromEnrollment->course_id !== $toEnrollment->course_id) {
-            throw new CannotExchangeToShiftsOnDifferentCoursesException;
+            throw new CannotExchangeToShiftsOnDifferentCoursesException();
         }
 
         if (is_null($fromEnrollment->shift_id) || is_null($fromEnrollment->shift_id)) {
-            throw new CannotExchangeEnrollmentWithoutAssociatedShiftException;
+            throw new CannotExchangeEnrollmentWithoutAssociatedShiftException();
         }
 
         $this->fromEnrollment()->associate($fromEnrollment);

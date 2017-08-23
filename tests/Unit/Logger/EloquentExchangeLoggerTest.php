@@ -19,7 +19,7 @@ class EloquentExchangeLoggerTest extends TestCase
         $course = factory(Course::class)->create();
         $fromEnrollment = factory(Enrollment::class)->make(['course_id' => $course->id]);
         $toEnrollment = factory(Enrollment::class)->make(['course_id' => $course->id]);
-        $exchangeLogger = new EloquentExchangeLogger;
+        $exchangeLogger = new EloquentExchangeLogger();
 
         // Execute
         $exchangeLogger->log($fromEnrollment, $toEnrollment);

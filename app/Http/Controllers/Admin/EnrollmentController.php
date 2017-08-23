@@ -67,7 +67,7 @@ class EnrollmentController extends Controller
                         // Check if the given student number exists
                         $student = Student::whereNumber($row->student_id)->first();
                         if ($student === null) {
-                            $exception = new InvalidFieldValueException;
+                            $exception = new InvalidFieldValueException();
                             $exception->setField('Student ID', $row->student_id, "The student {$row->student_id} does not exist. (at line {$index})");
                             throw $exception;
                         }
@@ -75,14 +75,14 @@ class EnrollmentController extends Controller
                         // Check if the given course id exists
                         $course = Course::find($row->course_id);
                         if ($course === null) {
-                            $exception = new InvalidFieldValueException;
+                            $exception = new InvalidFieldValueException();
                             $exception->setField('Course ID', $row->course_id, "The course {$row->course_id} does not exist. (at line {$index})");
                             throw $exception;
                         }
 
                         // Check if the given shift tag exists in the associated course
                         if ($row->shift === null) {
-                            $exception = new InvalidFieldValueException;
+                            $exception = new InvalidFieldValueException();
                             $exception->setField('Shift', $row->shift, "The shift field is required on imported enrollments. (at line {$index})");
                             throw $exception;
                         }

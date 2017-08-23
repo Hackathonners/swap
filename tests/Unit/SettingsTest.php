@@ -14,7 +14,7 @@ class SettingsTest extends TestCase
     public function testExchangePeriodIsActive()
     {
         // Prepare
-        $settings = new Settings;
+        $settings = new Settings();
 
         // Execute
         $settings->exchanges_start_at = Carbon::yesterday();
@@ -27,7 +27,7 @@ class SettingsTest extends TestCase
     public function testExchangePeriodIsNotActive()
     {
         // Prepare
-        $settings = new Settings;
+        $settings = new Settings();
 
         // Execute
         $settings->exchanges_start_at = Carbon::tomorrow();
@@ -40,7 +40,7 @@ class SettingsTest extends TestCase
     public function testExchangePeriodExpired()
     {
         // Prepare
-        $settings = new Settings;
+        $settings = new Settings();
 
         // Execute
         $settings->exchanges_start_at = Carbon::yesterday()->subDays(2);
@@ -53,7 +53,7 @@ class SettingsTest extends TestCase
     public function testEnrollmentPeriodIsActive()
     {
         // Prepare
-        $settings = new Settings;
+        $settings = new Settings();
 
         // Execute
         $settings->enrollments_start_at = Carbon::yesterday();
@@ -66,7 +66,7 @@ class SettingsTest extends TestCase
     public function testEnrollmentPeriodIsNotActive()
     {
         // Prepare
-        $settings = new Settings;
+        $settings = new Settings();
 
         // Execute
         $settings->enrollments_start_at = Carbon::tomorrow();
@@ -79,7 +79,7 @@ class SettingsTest extends TestCase
     public function testEnrollmentPeriodExpired()
     {
         // Prepare
-        $settings = new Settings;
+        $settings = new Settings();
 
         // Execute
         $settings->enrollments_start_at = Carbon::yesterday()->subDays(2);
@@ -92,7 +92,7 @@ class SettingsTest extends TestCase
     public function testEnrollmentPeriodIsNotActiveWhenDatesAreNotSpecified()
     {
         // Prepare
-        $settings = new Settings;
+        $settings = new Settings();
 
         // Assert
         $this->assertFalse($settings->withinEnrollmentPeriod());
@@ -101,7 +101,7 @@ class SettingsTest extends TestCase
     public function testExchangePeriodIsNotActiveWhenDatesAreNotSpecified()
     {
         // Prepare
-        $settings = new Settings;
+        $settings = new Settings();
 
         // Assert
         $this->assertFalse($settings->withinExchangePeriod());

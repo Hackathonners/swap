@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(ExchangeLogger::class, function ($app) {
-            return new EloquentExchangeLogger;
+            return new EloquentExchangeLogger();
         });
 
         $this->app->singleton('settings', function ($app) {
