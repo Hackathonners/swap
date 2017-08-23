@@ -38,7 +38,7 @@ export default {
             placeholder: "Select date and time range for enrollments period"
         }
     },
-    created() {
+    mounted() {
         this.dates = [
             this.date[0] ? moment.utc(this.date[0]).format() : null,
             this.date[1] ? moment.utc(this.date[1]).format() : null
