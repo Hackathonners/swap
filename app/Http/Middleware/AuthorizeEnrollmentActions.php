@@ -16,26 +16,12 @@ class AuthorizeEnrollmentActions
      */
     public function handle($request, Closure $next)
     {
-        $redirect = $this->checkEnrollmentPeriod();
+        if (! app('settings')->withinEnrollmentPeriod()) {
+            flash('The enrollments period is closed. You are not allowed to perform this action.')->error();
 
-        return $redirect ?? $next($request);
-    }
-
-    /**
-     * Determine if the enrollments period is active.
-     *
-     * @throws \Illuminate\Auth\AuthenticationException
-     *
-     * @return mixed
-     */
-    protected function checkEnrollmentPeriod()
-    {
-        if (app('settings')->withinEnrollmentPeriod()) {
-            return;
+            return redirect()->route('home');
         }
 
-        flash('The enrollments period is closed. You are not allowed to perform this action.')->error();
-
-        return redirect()->route('home');
+        return $next($request);
     }
 }

@@ -39,8 +39,8 @@ class Exchange extends Model
     /**
      * Set the enrollments of this exchange.
      *
-     * @param \App\Judite\Models\Enrollment $fromEnrollment
-     * @param \App\Judite\Models\Enrollment $toEnrollment
+     * @param \App\Judite\Models\Enrollment $from
+     * @param \App\Judite\Models\Enrollment $to
      *
      * @throws \App\Exceptions\CannotExchangeEnrollmentMultipleTimesException
      * @throws \App\Exceptions\CannotExchangeEnrollmentWithoutAssociatedShiftException
@@ -48,25 +48,25 @@ class Exchange extends Model
      *
      * @return $this
      */
-    public function setExchangeEnrollments(Enrollment $fromEnrollment, Enrollment $toEnrollment)
+    public function setExchangeEnrollments(Enrollment $from, Enrollment $to)
     {
         // Each enrollment can be requested to exchange once. The students
         // are allowed to create only a single exchange related to the
         // same enrollment, ensuring that each request exists once.
-        if ($fromEnrollment->exchangesAsSource()->exists()) {
+        if ($from->exchangesAsSource()->exists()) {
             throw new CannotExchangeEnrollmentMultipleTimesException();
         }
 
-        if ($fromEnrollment->course_id !== $toEnrollment->course_id) {
+        if ($from->course_id !== $to->course_id) {
             throw new CannotExchangeToShiftsOnDifferentCoursesException();
         }
 
-        if (is_null($fromEnrollment->shift_id) || is_null($fromEnrollment->shift_id)) {
+        if (is_null($from->shift_id) || is_null($from->shift_id)) {
             throw new CannotExchangeEnrollmentWithoutAssociatedShiftException();
         }
 
-        $this->fromEnrollment()->associate($fromEnrollment);
-        $this->toEnrollment()->associate($toEnrollment);
+        $this->fromEnrollment()->associate($from);
+        $this->toEnrollment()->associate($to);
 
         return $this;
     }
@@ -74,16 +74,16 @@ class Exchange extends Model
     /**
      * Check if an inverse exchange exists.
      *
-     * @param \App\Judite\Models\Enrollment $fromEnrollment
-     * @param \App\Judite\Models\Enrollment $toEnrollment
+     * @param \App\Judite\Models\Enrollment $from
+     * @param \App\Judite\Models\Enrollment $to
      *
-     * @return \App\Judite\Models\Exchange
+     * @return \App\Judite\Models\Exchange|null
      */
-    public static function findMatchingExchange(Enrollment $fromEnrollment, Enrollment $toEnrollment)
+    public static function findMatchingExchange(Enrollment $from, Enrollment $to)
     {
         $inverseMatch = [
-            'from_enrollment_id' => $toEnrollment->id,
-            'to_enrollment_id' => $fromEnrollment->id,
+            'from_enrollment_id' => $to->id,
+            'to_enrollment_id' => $from->id,
         ];
 
         return self::where($inverseMatch)->first();

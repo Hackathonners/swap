@@ -16,26 +16,12 @@ class AuthorizeExchangeActions
      */
     public function handle($request, Closure $next)
     {
-        $redirect = $this->checkEnrollmentPeriod();
+        if (! app('settings')->withinExchangePeriod()) {
+            flash('The exchanges period is closed. You are not allowed to perform this action.')->error();
 
-        return $redirect ?? $next($request);
-    }
-
-    /**
-     * Determine if the enrollments period is active.
-     *
-     * @throws \Illuminate\Auth\AuthenticationException
-     *
-     * @return null|\Illuminate\Http\RedirectResponse
-     */
-    protected function checkEnrollmentPeriod()
-    {
-        if (app('settings')->withinExchangePeriod()) {
-            return;
+            return redirect()->route('home');
         }
 
-        flash('The exchanges period is closed. You are not allowed to perform this action.')->error();
-
-        return redirect()->route('home');
+        return $next($request);
     }
 }

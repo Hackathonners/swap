@@ -13,24 +13,16 @@ class AuthorizeStudent
      * @param \Illuminate\Http\Request $request
      * @param \Closure                 $next
      *
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     *
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
-        $this->checkStudent();
-
-        return $next($request);
-    }
-
-    /**
-     * Determine if the user is a student.
-     *
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     */
-    protected function checkStudent()
-    {
         if (! auth()->check() || ! auth()->user()->isStudent()) {
             throw new AuthorizationException('Unauthorized.');
         }
+
+        return $next($request);
     }
 }

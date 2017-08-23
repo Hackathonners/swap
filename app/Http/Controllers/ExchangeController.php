@@ -75,11 +75,11 @@ class ExchangeController extends Controller
     public function store(CreateRequest $request)
     {
         try {
-            $exchange = DB::transaction(function () use ($request) {
+            DB::transaction(function () use ($request) {
                 $this->validate($request, [
-                'from_enrollment_id' => 'exists:enrollments,id',
-                'to_enrollment_id' => 'exists:enrollments,id',
-            ]);
+                    'from_enrollment_id' => 'exists:enrollments,id',
+                    'to_enrollment_id' => 'exists:enrollments,id',
+                ]);
 
                 $fromEnrollment = Enrollment::find($request->input('from_enrollment_id'));
                 $toEnrollment = Enrollment::find($request->input('to_enrollment_id'));
@@ -178,7 +178,7 @@ class ExchangeController extends Controller
      */
     public function destroy(Request $request)
     {
-        $exchange = DB::transaction(function () use ($request) {
+        DB::transaction(function () use ($request) {
             $this->validate($request, [
                 'exchange_id' => 'exists:exchanges,id',
             ]);
