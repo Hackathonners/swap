@@ -28,6 +28,7 @@ class ExchangeController extends Controller
      * Show the form for creating a new resource.
      *
      * @param  int  $enrollmentId
+     *
      * @return \Illuminate\Http\Response
      */
     public function create($enrollmentId)
@@ -68,6 +69,7 @@ class ExchangeController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \App\Http\Requests\Exchange\CreateRequest|\App\Requests\Exchange\CreateRequest $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(CreateRequest $request)
@@ -115,6 +117,7 @@ class ExchangeController extends Controller
      * Store a confirmation of an exchange in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function storeConfirmation(Request $request)
@@ -141,6 +144,7 @@ class ExchangeController extends Controller
      * Store a decline of an exchange in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function storeDecline(Request $request)
@@ -169,6 +173,7 @@ class ExchangeController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request)

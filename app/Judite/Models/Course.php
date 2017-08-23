@@ -21,6 +21,7 @@ class Course extends Model
      * Scope a query to order courses by year, semester and name.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeOrderedList($query)
@@ -54,6 +55,7 @@ class Course extends Model
      * Add shift to this course.
      *
      * @param  \App\Judite\Models\Shift  $shift
+     *
      * @return $this
      */
     public function addShift(Shift $shift)
@@ -67,6 +69,7 @@ class Course extends Model
      * Get shift of this course by tag.
      *
      * @param string $tag
+     *
      * @return \App\Judite\Models\Shift|null
      */
     public function getShiftByTag($tag)

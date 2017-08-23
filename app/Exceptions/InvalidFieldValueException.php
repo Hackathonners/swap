@@ -44,6 +44,7 @@ class InvalidFieldValueException extends InvalidImportFileException
      * @param  string  $field
      * @param  int|string  $value
      * @param  string  $message
+     *
      * @return $this
      */
     public function setField($field, $value, $message = null)

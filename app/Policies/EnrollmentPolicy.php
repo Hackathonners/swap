@@ -15,6 +15,7 @@ class EnrollmentPolicy
      *
      * @param  \App\Judite\Models\User  $user
      * @param  \App\Judite\Models\Enrollment  $enrollment
+     *
      * @return bool
      */
     public function exchange(User $user, Enrollment $enrollment)

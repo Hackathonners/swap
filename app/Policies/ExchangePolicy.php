@@ -15,6 +15,7 @@ class ExchangePolicy
      *
      * @param  \App\Judite\Models\User  $user
      * @param  \App\Judite\Models\Exchange  $exchange
+     *
      * @return bool
      */
     public function decide(User $user, Exchange $exchange)
@@ -27,6 +28,7 @@ class ExchangePolicy
      *
      * @param  \App\Judite\Models\User  $user
      * @param  \App\Judite\Models\Exchange  $exchange
+     *
      * @return bool
      */
     public function delete(User $user, Exchange $exchange)

@@ -13,6 +13,7 @@ class AuthorizeAdministrator
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
+     *
      * @return mixed
      */
     public function handle($request, Closure $next)
@@ -24,6 +25,7 @@ class AuthorizeAdministrator
 
     /**
      * Determine if the user is an admin.
+     *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     protected function checkAdmin()

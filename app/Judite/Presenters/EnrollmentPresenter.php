@@ -10,6 +10,7 @@ class EnrollmentPresenter extends Presenter
      * Get the shift tag of this enrollment.
      *
      * @param  string  $placeholder
+     *
      * @return string
      */
     public function getShiftTag($placeholder = '---')

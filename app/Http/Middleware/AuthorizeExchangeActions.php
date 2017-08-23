@@ -11,6 +11,7 @@ class AuthorizeExchangeActions
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
+     *
      * @return mixed
      */
     public function handle($request, Closure $next)
@@ -23,9 +24,9 @@ class AuthorizeExchangeActions
     /**
      * Determine if the enrollments period is active.
      *
-     * @return null|\Illuminate\Http\RedirectResponse
-     *
      * @throws \Illuminate\Auth\AuthenticationException
+     *
+     * @return null|\Illuminate\Http\RedirectResponse
      */
     protected function checkEnrollmentPeriod()
     {

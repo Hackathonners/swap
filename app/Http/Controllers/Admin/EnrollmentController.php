@@ -45,6 +45,7 @@ class EnrollmentController extends Controller
      * Store the enrollments imported in the request.
      *
      * @param  \App\Http\Requests\Enrollment\ImportRequest  $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function storeImport(ImportRequest $request)

@@ -23,6 +23,7 @@ class SettingsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\Settings\UpdateRequest  $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(UpdateRequest $request)

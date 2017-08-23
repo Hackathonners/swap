@@ -77,8 +77,10 @@ class Student extends Model
      * Enroll this student with a given course.
      *
      * @param  \App\Judite\Models\Course $course
-     * @return \App\Judite\Models\Enrollment
+     *
      * @throws \App\Exceptions\UserIsAlreadyEnrolledInCourseException
+     *
+     * @return \App\Judite\Models\Enrollment
      */
     public function enroll(Course $course)
     {
@@ -97,6 +99,7 @@ class Student extends Model
      * Check if this student is enrolled in a course.
      *
      * @param  \App\Judite\Models\Course  $course
+     *
      * @return bool
      */
     public function isEnrolledInCourse(Course $course)
@@ -108,6 +111,7 @@ class Student extends Model
      * Remove enrollment in the given course.
      *
      * @param  \App\Judite\Models\Course  $course
+     *
      * @return bool
      */
     public function removeEnrollmentInCourse(Course $course)
@@ -120,6 +124,7 @@ class Student extends Model
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @param  string  $studentNumber
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeWhereNumber($query, $studentNumber)

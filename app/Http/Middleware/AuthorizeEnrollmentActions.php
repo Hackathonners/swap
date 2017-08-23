@@ -11,6 +11,7 @@ class AuthorizeEnrollmentActions
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
+     *
      * @return mixed
      */
     public function handle($request, Closure $next)
@@ -23,9 +24,9 @@ class AuthorizeEnrollmentActions
     /**
      * Determine if the enrollments period is active.
      *
-     * @return mixed
-     *
      * @throws \Illuminate\Auth\AuthenticationException
+     *
+     * @return mixed
      */
     protected function checkEnrollmentPeriod()
     {
