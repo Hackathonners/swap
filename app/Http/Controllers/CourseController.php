@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use DB;
 use App\Judite\Models\Course;
+use Illuminate\Support\Facades\DB;
 
 class CourseController extends Controller
 {

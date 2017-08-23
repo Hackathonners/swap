@@ -42,7 +42,8 @@ class Enrollment extends Model
     /**
      * Scope a query to filter similar enrollments.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @param \App\Judite\Models\Enrollment $enrollment
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeSimilarEnrollments($query, Enrollment $enrollment)

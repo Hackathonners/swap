@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use Mail;
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use Tests\TestCase;
 use App\Judite\Models\User;

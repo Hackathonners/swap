@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use DB;
 use App\Judite\Models\Shift;
 use App\Judite\Models\Course;
 use App\Judite\Models\Student;
 use App\Judite\Models\Enrollment;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exceptions\InvalidFieldValueException;
@@ -44,8 +44,8 @@ class EnrollmentController extends Controller
     /**
      * Store the enrollments imported in the request.
      *
-     * @param  \App\Http\Requests\Enrollment\ImportRequest  request
-     * @return \Illuminate\Http\Response
+     * @param  \App\Http\Requests\Enrollment\ImportRequest  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function storeImport(ImportRequest $request)
     {
@@ -57,9 +57,8 @@ class EnrollmentController extends Controller
             Excel::load($path, function ($reader) use ($filename) {
                 DB::transaction(function () use ($filename, $reader) {
                     // Loop for all the rows of the table
-                    $readerArray = $reader->toArray();
                     $index = 1;
-                    $reader->each(function ($row) use ($filename, $reader, $readerArray, &$index) {
+                    $reader->each(function ($row) use (&$index) {
                         // Calculate the row index
                         $index++;
 
@@ -121,7 +120,7 @@ class EnrollmentController extends Controller
     /**
      * Show the form for importing enrollments.
      *
-     * @return Illuminate\View\View
+     * @return \Illuminate\View\View
      */
     public function import()
     {

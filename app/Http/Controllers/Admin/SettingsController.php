@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use DB;
 use App\Judite\Models\Settings;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\UpdateRequest;
 
@@ -12,7 +12,7 @@ class SettingsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function edit()
     {
@@ -23,7 +23,7 @@ class SettingsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\Settings\UpdateRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(UpdateRequest $request)
     {

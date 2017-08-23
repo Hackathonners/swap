@@ -23,7 +23,7 @@ class AuthorizeExchangeActions
     /**
      * Determine if the enrollments period is active.
      *
-     * @return mixed
+     * @return null|\Illuminate\Http\RedirectResponse
      *
      * @throws \Illuminate\Auth\AuthenticationException
      */

@@ -21,8 +21,7 @@ class DeclinedExchangeNotification extends Mailable
     /**
      * Create a new message instance.
      *
-     * @param  \App\Safira\Models\Exchange  $exchange
-     * @return void
+     * @param \App\Judite\Models\Exchange|\App\Safira\Models\Exchange $exchange
      */
     public function __construct(Exchange $exchange)
     {

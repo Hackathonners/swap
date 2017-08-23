@@ -90,8 +90,6 @@ class ExchangeTest extends TestCase
             'from_enrollment_id' => $toEnrollment->id,
             'to_enrollment_id' => $fromEnrollment->id,
         ]);
-        $fromShiftId = $fromEnrollment->shift_id;
-        $toShiftId = $toEnrollment->shift_id;
 
         // Execute
         $actualReturn = Exchange::findMatchingExchange($fromEnrollment, $toEnrollment);
@@ -199,7 +197,7 @@ class ExchangeTest extends TestCase
     }
 
     /**
-     * @expectedException App\Exceptions\CannotExchangeToShiftsOnDifferentCoursesException
+     * @expectedException \App\Exceptions\CannotExchangeToShiftsOnDifferentCoursesException
      */
     public function testThrowsExceptionWhenExchangedEnrollmentsAreOnDifferentCourses()
     {
@@ -209,11 +207,11 @@ class ExchangeTest extends TestCase
 
         // Execute
         $exchange = new Exchange;
-        $actualReturn = $exchange->setExchangeEnrollments($fromEnrollment, $toEnrollment);
+        $exchange->setExchangeEnrollments($fromEnrollment, $toEnrollment);
     }
 
     /**
-     * @expectedException App\Exceptions\CannotExchangeEnrollmentMultipleTimesException
+     * @expectedException \App\Exceptions\CannotExchangeEnrollmentMultipleTimesException
      */
     public function testThrowsExceptionWhenAnEnrollmentIsAlreadyListedForExchange()
     {

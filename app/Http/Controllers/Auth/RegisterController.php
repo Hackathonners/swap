@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
-use DB;
-use Auth;
-use Mail;
 use App\Judite\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use App\Mail\RegistrationConfirmation;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -36,8 +36,6 @@ class RegisterController extends Controller
 
     /**
      * Create a new controller instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -64,7 +62,7 @@ class RegisterController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
-     * @return User
+     * @return \App\Judite\Models\User
      */
     protected function create(array $data)
     {
@@ -88,7 +86,7 @@ class RegisterController extends Controller
      * Confirm a student account.
      *
      * @param  string  $token
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function confirm($token)
     {
@@ -112,7 +110,7 @@ class RegisterController extends Controller
     /**
      * Resend confirmation email of a student account.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function resendConfirmationEmail()
     {
@@ -134,7 +132,7 @@ class RegisterController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  mixed  $user
-     * @return mixed
+     * @return void
      */
     protected function registered(Request $request, $user)
     {
@@ -145,7 +143,7 @@ class RegisterController extends Controller
      * Send the confirmation e-mail to the given user.
      *
      * @param  mixed  $user
-     * @return mixed
+     * @return void
      */
     protected function sendConfirmationEmail($user)
     {

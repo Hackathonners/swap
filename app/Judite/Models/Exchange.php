@@ -28,8 +28,7 @@ class Exchange extends Model
     /**
      * Create a new Exchange model instance.
      *
-     * @param  array  $attributes
-     * @return void
+     * @param  array $attributes
      */
     public function __construct(array $attributes = [])
     {
@@ -40,9 +39,12 @@ class Exchange extends Model
     /**
      * Set the enrollments of this exchange.
      *
-     * @param  \App\Judite\Models\Enrollemnt  $fromEnrollment
-     * @param  \App\Judite\Models\Enrollemnt  $toEnrollment
+     * @param \App\Judite\Models\Enrollemnt|\App\Judite\Models\Enrollment $fromEnrollment
+     * @param \App\Judite\Models\Enrollemnt|\App\Judite\Models\Enrollment $toEnrollment
      * @return $this
+     * @throws \App\Exceptions\CannotExchangeEnrollmentMultipleTimesException
+     * @throws \App\Exceptions\CannotExchangeEnrollmentWithoutAssociatedShiftException
+     * @throws \App\Exceptions\CannotExchangeToShiftsOnDifferentCoursesException
      */
     public function setExchangeEnrollments(Enrollment $fromEnrollment, Enrollment $toEnrollment)
     {
@@ -70,6 +72,8 @@ class Exchange extends Model
     /**
      * Check if an inverse exchange exists.
      *
+     * @param \App\Judite\Models\Enrollment $fromEnrollment
+     * @param \App\Judite\Models\Enrollment $toEnrollment
      * @return \App\Judite\Models\Exchange
      */
     public static function findMatchingExchange(Enrollment $fromEnrollment, Enrollment $toEnrollment)

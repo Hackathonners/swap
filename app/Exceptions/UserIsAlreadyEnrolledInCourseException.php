@@ -17,9 +17,8 @@ class UserIsAlreadyEnrolledInCourseException extends Exception
     /**
      * Create a new exception instance.
      *
-     * @param  \App\Judite\Models\Course  $course
-     * @param  string  $message
-     * @return void
+     * @param  \App\Judite\Models\Course $course
+     * @param  string $message
      */
     public function __construct(Course $course = null, $message = 'User is already enrolled in course.')
     {

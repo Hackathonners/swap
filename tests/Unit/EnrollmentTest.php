@@ -100,7 +100,7 @@ class EnrollmentTest extends TestCase
     }
 
     /**
-     * @expectedException App\Exceptions\UserIsAlreadyEnrolledInCourseException
+     * @expectedException \App\Exceptions\UserIsAlreadyEnrolledInCourseException
      */
     public function testThrowsExceptionWhenStudentIsAlreadyEnrolledInCourse()
     {

@@ -76,8 +76,9 @@ class Student extends Model
     /**
      * Enroll this student with a given course.
      *
-     * @param  \App\Judite\Models\Course  $course
-     * @return \App\Judite\Model\Enrollment
+     * @param  \App\Judite\Models\Course $course
+     * @return \App\Judite\Models\Enrollment
+     * @throws \App\Exceptions\UserIsAlreadyEnrolledInCourseException
      */
     public function enroll(Course $course)
     {

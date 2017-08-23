@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Registration;
 
-use Mail;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 use App\Judite\Models\Student;
 use App\Mail\RegistrationConfirmation;
@@ -26,7 +26,7 @@ class RegistrationConfirmationTest extends TestCase
 
         // Execute
         $this->actingAs($student->user);
-        $response = $this->post(route('register.resend_confirmation'));
+        $this->post(route('register.resend_confirmation'));
 
         // Assert
         $user = $student->user;
@@ -43,7 +43,7 @@ class RegistrationConfirmationTest extends TestCase
 
         // Execute
         $this->actingAs($student->user);
-        $response = $this->post(route('register.resend_confirmation'));
+        $this->post(route('register.resend_confirmation'));
 
         // Assert
         Mail::assertNotSent(RegistrationConfirmation::class);
@@ -58,7 +58,7 @@ class RegistrationConfirmationTest extends TestCase
 
         // Execute
         $this->actingAs($student->user);
-        $response = $this->get(route('register.confirm', $requestData));
+        $this->get(route('register.confirm', $requestData));
 
         // Assert
         $student = $student->fresh();
@@ -75,7 +75,7 @@ class RegistrationConfirmationTest extends TestCase
 
         // Execute
         $this->actingAs($student->user);
-        $response = $this->get(route('register.confirm', $invalidRequestData));
+        $this->get(route('register.confirm', $invalidRequestData));
 
         // Assert
         $student = $student->fresh();

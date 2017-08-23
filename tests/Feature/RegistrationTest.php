@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use Mail;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 use App\Judite\Models\User;
 use App\Mail\RegistrationConfirmation;
@@ -30,7 +30,7 @@ class RegistrationTest extends TestCase
         ];
 
         // Execute
-        $response = $this->post('/register', $requestData);
+        $this->post('/register', $requestData);
 
         // Assert
         $email = $requestData['email'].'@alunos.uminho.pt';
@@ -52,7 +52,7 @@ class RegistrationTest extends TestCase
         ];
 
         // Execute
-        $response = $this->post(route('register'), $requestData);
+        $this->post(route('register'), $requestData);
 
         // Assert
         $this->assertEquals(0, User::count());

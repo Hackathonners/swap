@@ -63,7 +63,7 @@ class ImportEnrollmentsFileTest extends TestCase
         $enrollments = factory(Enrollment::class, 30)->create(['shift_id' => null]);
 
         // Create a copy of the enrollments and add shifts.
-        $enrollmentsWithShifts = $enrollments->map(function ($enrollment) {
+        $enrollments->map(function ($enrollment) {
             $enrollmentClone = clone $enrollment;
             $course = $enrollmentClone->course;
             $shift = factory(Shift::class)->create(['course_id' => $course->id]);
@@ -169,8 +169,8 @@ class ImportEnrollmentsFileTest extends TestCase
     {
         // Prepare
         $admin = factory(User::class)->states('admin')->create();
-        $student = factory(Student::class)->create();
-        $otherStudent = factory(Student::class)->create();
+        factory(Student::class)->create();
+        factory(Student::class)->create();
         $enrollment = factory(Enrollment::class)->create(['shift_id' => null]);
 
         $enrollmentWithShift = clone $enrollment;
@@ -199,8 +199,8 @@ class ImportEnrollmentsFileTest extends TestCase
     /**
      * A method to create a csv file with the given enrollments.
      *
-     * @param  Illuminate\Database\Eloquent\Collection|App\Judite\Models\Enrollment  $data
-     * @return Illuminate\Http\UploadedFile
+     * @param  \Illuminate\Database\Eloquent\Collection|\App\Judite\Models\Enrollment  $data
+     * @return \Illuminate\Http\UploadedFile
      */
     private function createEnrollmentsFile($data)
     {

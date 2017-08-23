@@ -2,23 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use DB;
-use Mail;
 use Illuminate\Http\Request;
 use App\Judite\Models\Exchange;
 use App\Judite\Models\Enrollment;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use App\Mail\DeclinedExchangeNotification;
 use App\Mail\ConfirmedExchangeNotification;
 use App\Http\Requests\Exchange\CreateRequest;
 use App\Exceptions\CannotExchangeEnrollmentMultipleTimesException;
 use App\Exceptions\CannotExchangeToShiftsOnDifferentCoursesException;
+use App\Exceptions\CannotExchangeEnrollmentWithoutAssociatedShiftException;
 
 class ExchangeController extends Controller
 {
     /**
      * Create a new controller instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -68,7 +67,7 @@ class ExchangeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Requests\Exchange\CreateRequest  $request
+     * @param \App\Http\Requests\Exchange\CreateRequest|\App\Requests\Exchange\CreateRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(CreateRequest $request)
@@ -105,7 +104,7 @@ class ExchangeController extends Controller
             flash('The exchange was successfully proposed.')->success();
         } catch (CannotExchangeEnrollmentMultipleTimesException
             | CannotExchangeToShiftsOnDifferentCoursesException
-            | CannotExchangeEnrollmentWithoutAssociatedShift $e) {
+            | CannotExchangeEnrollmentWithoutAssociatedShiftException $e) {
             flash($e->getMessage())->error();
         }
 

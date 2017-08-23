@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use DB;
-use Auth;
 use Illuminate\Http\Request;
 use App\Judite\Models\Course;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Exceptions\UserIsAlreadyEnrolledInCourseException;
 
 class EnrollmentController extends Controller
 {
     /**
      * Create a new controller instance.
-     *
-     * @return void
      */
     public function __construct()
     {

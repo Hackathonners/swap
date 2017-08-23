@@ -2,8 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use Auth;
 use Closure;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\AuthorizationException;
 
 class AuthorizeStudent
@@ -24,10 +24,8 @@ class AuthorizeStudent
 
     /**
      * Determine if the user is a student.
-     *
      * @return void
-     *
-     * @throws \Illuminate\Auth\AuthenticationException
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     protected function checkStudent()
     {
