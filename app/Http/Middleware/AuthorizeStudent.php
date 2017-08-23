@@ -32,5 +32,6 @@ class AuthorizeStudent
         if (! auth()->check() || ! auth()->user()->isStudent()) {
             throw new AuthorizationException('Unauthorized.');
         }
+
     }
 }

@@ -39,8 +39,8 @@ class Exchange extends Model
     /**
      * Set the enrollments of this exchange.
      *
-     * @param \App\Judite\Models\Enrollemnt|\App\Judite\Models\Enrollment $fromEnrollment
-     * @param \App\Judite\Models\Enrollemnt|\App\Judite\Models\Enrollment $toEnrollment
+     * @param \App\Judite\Models\Enrollment $fromEnrollment
+     * @param \App\Judite\Models\Enrollment $toEnrollment
      *
      * @throws \App\Exceptions\CannotExchangeEnrollmentMultipleTimesException
      * @throws \App\Exceptions\CannotExchangeEnrollmentWithoutAssociatedShiftException
