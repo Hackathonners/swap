@@ -108,15 +108,15 @@
         <div class="container">
             <div class="row align-items-center p-4 text-muted small">
                 <div class="col">
-                    Designed and developed with all the love by <a target="_blank" href="//hackathonners.org">Hackathonners</a>.
+                    Developed with love by <a target="_blank" href="//hackathonners.org">Hackathonners</a>.
                     <br>
                     Follow us on <a target="_blank" href="//twitter.com/Hackathonners">Twitter</a> / <a target="_blank" href="//github.com/Hackathonners">Github</a> / <a target="_blank" href="//blog.hackathonners.org">Medium</a>.
                 </div>
                 <div class="col-2 text-center">
                     <img alt="Brand" height="28" src="{{ asset('images/logo-icon.svg') }}">
                 </div>
-                <div class="col text-right">
-                    The source code of Swap project is available on <a target="_blank" href="//github.com/Hackathonners/swap">Github</a>.
+                <div class="col d-none d-md-block text-right">
+                    The source code is publicly available on <a target="_blank" href="//github.com/Hackathonners/swap">Github</a>.
                 </div>
             </div>
         </div>

@@ -5,7 +5,7 @@
                 {{ $year }} year
             </th>
             <tr>
-                <th>Semester</th>
+                <th class="d-none d-sm-table-cell">Semester</th>
                 <th>Course</th>
                 <th>Shift</th>
                 <th></th>

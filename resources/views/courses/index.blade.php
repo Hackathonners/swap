@@ -12,13 +12,13 @@
                         </th>
                     </tr>
                     <tr>
-                        <th>Semester</th>
+                        <th class="d-none d-sm-table-cell">Semester</th>
                         <th>Course</th>
                         <th></th>
                     </tr>
                     @foreach ($courses as $course)
                         <tr>
-                            <td>{{ $course->present()->getOrdinalSemester() }}</td>
+                            <td class="d-none d-sm-table-cell">{{ $course->present()->getOrdinalSemester() }}</td>
                             <td>{{ $course->name }}</td>
                             <td>
                                 @include('courses.action', compact('course'))

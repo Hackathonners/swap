@@ -1,5 +1,5 @@
 <tr>
-    <td>
+    <td class="d-none d-sm-table-cell">
         {{ $enrollment->course->present()->getOrdinalSemester() }}
     </td>
     <td>
