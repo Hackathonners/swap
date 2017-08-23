@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="card card--section mb-4">
+    <div class="card card--section mb-5">
         <div class="card-header">Import enrollments</div>
         <div class="card-body">
             <form class="form-horizontal" role="form" method="POST" action="{{ route('enrollments.import') }}" enctype="multipart/form-data">
