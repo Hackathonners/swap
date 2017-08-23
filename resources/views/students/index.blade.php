@@ -13,7 +13,9 @@
                 {{ $enrollments->links() }}
             </div>
             <div class="col-auto align-self-center">
-                Page {{ $enrollments->currentPage() }} of {{ $enrollments->lastPage() }}
+                @if ($enrollments->lastPage() > 0)
+                    Page {{ $enrollments->currentPage() }} of {{ $enrollments->lastPage() }}
+                @endif
             </div>
         </div>
     </div>
