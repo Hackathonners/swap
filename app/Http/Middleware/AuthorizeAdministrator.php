@@ -29,7 +29,7 @@ class AuthorizeAdministrator
      */
     protected function checkAdmin()
     {
-        if (auth()->check() && auth()->user()->isAdmin()) {
+        if (! auth()->check() || ! auth()->user()->isAdmin()) {
             throw new AuthorizationException('Unauthorized.');
         }
     }
