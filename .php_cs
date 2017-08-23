@@ -26,6 +26,7 @@ $rules = [
     'lowercase_cast' => true,
     'lowercase_constants' => true,
     'lowercase_keywords' => true,
+    'magic_constant_casing' => true,
     'method_argument_space' => true,
     'method_separation' => true,
     'native_function_casing' => true,
@@ -44,7 +45,9 @@ $rules = [
     'no_short_bool_cast' => true,
     'no_singleline_whitespace_before_semicolons' => true,
     'no_spaces_after_function_name' => true,
+    'no_spaces_around_offset' => ['positions' => ['inside']],
     'no_spaces_inside_parenthesis' => true,
+    'indentation_type' => true,
     'no_trailing_comma_in_list_call' => true,
     'no_trailing_comma_in_singleline_array' => true,
     'no_trailing_whitespace' => true,
@@ -61,7 +64,6 @@ $rules = [
     'ordered_imports' => ['sortAlgorithm' => 'length'],
     'phpdoc_align' => true,
     'phpdoc_indent' => true,
-    'phpdoc_inline_tag' => true,
     'phpdoc_inline_tag' => true,
     'phpdoc_no_access' => true,
     'phpdoc_no_package' => true,
@@ -107,6 +109,8 @@ $finder = Finder::create()
 
 return Config::create()
     ->setRiskyAllowed(true)
+    ->setIndent('    ')
+    ->setLineEnding("\n")
     ->setRules($rules)
     ->setFinder($finder)
     ->setUsingCache(true);
