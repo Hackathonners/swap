@@ -3,8 +3,8 @@
 </p>
 
 <p align="center">
-    <a href="https://gitlab.com/Hackathonners/judite/commits/develop"><img alt="build status" src="https://gitlab.com/Hackathonners/judite/badges/develop/build.svg" /></a>
-    <a href="https://gitlab.com/Hackathonners/judite/commits/develop"><img alt="coverage report" src="https://gitlab.com/Hackathonners/judite/badges/develop/coverage.svg" /></a>
+    <a href="https://travis-ci.org/Hackathonners/swag"><img src="https://travis-ci.org/Hackathonners/swap.svg" alt="Build Status"></a>
+    <a href="https://styleci.io/repos/7548986/"><img src="https://styleci.io/repos/7548986/shield?style=flat" alt="StyleCI Status"></a>
 </p>
 
 ## About Swap
