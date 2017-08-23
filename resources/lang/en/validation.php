@@ -87,7 +87,7 @@ return [
     'unique' => 'The :attribute has already been taken.',
     'uploaded' => 'The :attribute failed to upload.',
     'url' => 'The :attribute format is invalid.',
-    'student_email' => 'The :attribute should be your student email.',
+    'student_number' => 'The :attribute must be a valid student email.',
 
     /*
     |--------------------------------------------------------------------------
