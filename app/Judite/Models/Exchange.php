@@ -21,14 +21,14 @@ class Exchange extends Model
     /**
      * The exchanges logger.
      *
-     * @var  \App\Judite\Contracts\ExchangeLogger
+     * @var \App\Judite\Contracts\ExchangeLogger
      */
     private $logger;
 
     /**
      * Create a new Exchange model instance.
      *
-     * @param  array $attributes
+     * @param array $attributes
      */
     public function __construct(array $attributes = [])
     {
@@ -92,8 +92,8 @@ class Exchange extends Model
     /**
      * Scope a query to only filter exchanges which source enrollment is in a set of values.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  mixed  $values
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param mixed                                 $values
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -105,8 +105,8 @@ class Exchange extends Model
     /**
      * Scope a query to only filter exchanges which target enrollment is in a set of values.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  mixed  $values
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param mixed                                 $values
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -157,7 +157,7 @@ class Exchange extends Model
     /**
      * Deletes all exchanges involving the given enrollments.
      *
-     * @param  \Illuminate\Support\Collection  $enrollments
+     * @param \Illuminate\Support\Collection $enrollments
      */
     private function deleteExchangesOfEnrollments(Collection $enrollments)
     {

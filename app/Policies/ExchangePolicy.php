@@ -13,8 +13,8 @@ class ExchangePolicy
     /**
      * Determine whether the user can make a decision on the given exchange.
      *
-     * @param  \App\Judite\Models\User  $user
-     * @param  \App\Judite\Models\Exchange  $exchange
+     * @param \App\Judite\Models\User     $user
+     * @param \App\Judite\Models\Exchange $exchange
      *
      * @return bool
      */
@@ -26,8 +26,8 @@ class ExchangePolicy
     /**
      * Determine whether the user can delete or not the given exchange.
      *
-     * @param  \App\Judite\Models\User  $user
-     * @param  \App\Judite\Models\Exchange  $exchange
+     * @param \App\Judite\Models\User     $user
+     * @param \App\Judite\Models\Exchange $exchange
      *
      * @return bool
      */

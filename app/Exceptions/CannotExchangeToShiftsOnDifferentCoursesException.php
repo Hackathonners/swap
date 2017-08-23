@@ -9,7 +9,7 @@ class CannotExchangeToShiftsOnDifferentCoursesException extends Exception
     /**
      * Create a new exception instance.
      *
-     * @param  string $message
+     * @param string $message
      */
     public function __construct($message = 'Cannot exchange to shifts on different courses.')
     {

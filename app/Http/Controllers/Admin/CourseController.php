@@ -11,7 +11,7 @@ class CourseController extends Controller
     /**
      * Display a resource of given id.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\View\View
      */

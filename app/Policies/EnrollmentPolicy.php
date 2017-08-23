@@ -13,8 +13,8 @@ class EnrollmentPolicy
     /**
      * Determine whether the user can exchange an enrollment.
      *
-     * @param  \App\Judite\Models\User  $user
-     * @param  \App\Judite\Models\Enrollment  $enrollment
+     * @param \App\Judite\Models\User       $user
+     * @param \App\Judite\Models\Enrollment $enrollment
      *
      * @return bool
      */

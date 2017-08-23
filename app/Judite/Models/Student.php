@@ -76,7 +76,7 @@ class Student extends Model
     /**
      * Enroll this student with a given course.
      *
-     * @param  \App\Judite\Models\Course $course
+     * @param \App\Judite\Models\Course $course
      *
      * @throws \App\Exceptions\UserIsAlreadyEnrolledInCourseException
      *
@@ -98,7 +98,7 @@ class Student extends Model
     /**
      * Check if this student is enrolled in a course.
      *
-     * @param  \App\Judite\Models\Course  $course
+     * @param \App\Judite\Models\Course $course
      *
      * @return bool
      */
@@ -110,7 +110,7 @@ class Student extends Model
     /**
      * Remove enrollment in the given course.
      *
-     * @param  \App\Judite\Models\Course  $course
+     * @param \App\Judite\Models\Course $course
      *
      * @return bool
      */
@@ -122,8 +122,8 @@ class Student extends Model
     /**
      * Scope a query to only include users with the given student number.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  string  $studentNumber
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string                                $studentNumber
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */

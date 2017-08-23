@@ -27,7 +27,7 @@ class Enrollment extends Model
     /**
      * Scope a query to order enrollments by course.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -43,8 +43,8 @@ class Enrollment extends Model
     /**
      * Scope a query to filter similar enrollments.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder $query
-     * @param \App\Judite\Models\Enrollment $enrollment
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param \App\Judite\Models\Enrollment         $enrollment
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -58,7 +58,7 @@ class Enrollment extends Model
     /**
      * Scope a query to order enrollments by students.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -72,7 +72,7 @@ class Enrollment extends Model
     /**
      * Exchange shifts with the given enrollment.
      *
-     * @param  \App\Judite\Models\Enrollment  $enrollment
+     * @param \App\Judite\Models\Enrollment $enrollment
      *
      * @return $this
      */

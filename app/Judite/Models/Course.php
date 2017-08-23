@@ -54,7 +54,7 @@ class Course extends Model
     /**
      * Add shift to this course.
      *
-     * @param  \App\Judite\Models\Shift  $shift
+     * @param \App\Judite\Models\Shift $shift
      *
      * @return $this
      */

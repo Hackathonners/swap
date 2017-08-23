@@ -199,7 +199,7 @@ class ImportEnrollmentsFileTest extends TestCase
     /**
      * A method to create a csv file with the given enrollments.
      *
-     * @param  \Illuminate\Database\Eloquent\Collection|\App\Judite\Models\Enrollment  $data
+     * @param \Illuminate\Database\Eloquent\Collection|\App\Judite\Models\Enrollment $data
      *
      * @return \Illuminate\Http\UploadedFile
      */

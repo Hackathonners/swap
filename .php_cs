@@ -59,6 +59,7 @@ $rules = [
     'not_operator_with_successor_space' => true,
     'object_operator_without_whitespace' => true,
     'ordered_imports' => ['sortAlgorithm' => 'length'],
+    'phpdoc_align' => true,
     'phpdoc_indent' => true,
     'phpdoc_inline_tag' => true,
     'phpdoc_no_access' => true,

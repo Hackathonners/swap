@@ -9,8 +9,8 @@ interface ExchangeLogger
     /**
      * Log an exchange of enrollments to the exchanges history.
      *
-     * @param  \App\Judite\Models\Enrollment  $fromEnrollment
-     * @param  \App\Judite\Models\Enrollment  $toEnrollment
+     * @param \App\Judite\Models\Enrollment $fromEnrollment
+     * @param \App\Judite\Models\Enrollment $toEnrollment
      */
     public function log(Enrollment $fromEnrollment, Enrollment $toEnrollment);
 }

@@ -46,7 +46,7 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param array $data
      *
      * @return \Illuminate\Contracts\Validation\Validator
      */
@@ -62,7 +62,7 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param array $data
      *
      * @return \App\Judite\Models\User
      */
@@ -87,7 +87,7 @@ class RegisterController extends Controller
     /**
      * Confirm a student account.
      *
-     * @param  string  $token
+     * @param string $token
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -133,8 +133,8 @@ class RegisterController extends Controller
     /**
      * The user has been registered.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  mixed  $user
+     * @param \Illuminate\Http\Request $request
+     * @param mixed                    $user
      */
     protected function registered(Request $request, $user)
     {
@@ -144,7 +144,7 @@ class RegisterController extends Controller
     /**
      * Send the confirmation e-mail to the given user.
      *
-     * @param  mixed  $user
+     * @param mixed $user
      */
     protected function sendConfirmationEmail($user)
     {

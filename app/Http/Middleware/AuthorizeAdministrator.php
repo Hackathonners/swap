@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\AuthorizationException;
 
 class AuthorizeAdministrator
@@ -11,8 +10,8 @@ class AuthorizeAdministrator
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
      *
      * @return mixed
      */
@@ -30,10 +29,8 @@ class AuthorizeAdministrator
      */
     protected function checkAdmin()
     {
-        if (Auth::check() && Auth::user()->isAdmin()) {
-            return;
+        if (auth()->check() && auth()->user()->isAdmin()) {
+            throw new AuthorizationException('Unauthorized.');
         }
-
-        throw new AuthorizationException('Unauthorized.');
     }
 }

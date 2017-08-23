@@ -7,14 +7,14 @@ class InvalidFieldValueException extends InvalidImportFileException
     /**
      * The invalid field.
      *
-     * @var  string
+     * @var string
      */
     protected $field;
 
     /**
      * The invalid value.
      *
-     * @var  int|string
+     * @var int|string
      */
     protected $value;
 
@@ -41,9 +41,9 @@ class InvalidFieldValueException extends InvalidImportFileException
     /**
      * Set the field name and value of this exception.
      *
-     * @param  string  $field
-     * @param  int|string  $value
-     * @param  string  $message
+     * @param string     $field
+     * @param int|string $value
+     * @param string     $message
      *
      * @return $this
      */
