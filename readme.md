@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-    <a href="https://travis-ci.org/Hackathonners/swag"><img src="https://travis-ci.org/Hackathonners/swap.svg" alt="Build Status"></a>
+    <a href="https://travis-ci.org/Hackathonners/swap"><img src="https://travis-ci.org/Hackathonners/swap.svg" alt="Build Status"></a>
     <a href="https://styleci.io/repos/7548986/"><img src="https://styleci.io/repos/7548986/shield?style=flat" alt="StyleCI Status"></a>
 </p>
 
