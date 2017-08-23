@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use Tests\TestCase;
 use App\Judite\Models\User;
 use App\Judite\Models\Student;
 use App\Judite\Models\Exchange;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ConfirmExchangeTest extends TestCase

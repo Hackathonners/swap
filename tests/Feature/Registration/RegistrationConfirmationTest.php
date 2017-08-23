@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Registration;
 
-use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 use App\Judite\Models\Student;
+use Illuminate\Support\Facades\Mail;
 use App\Mail\RegistrationConfirmation;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
