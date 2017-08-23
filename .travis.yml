@@ -8,14 +8,13 @@ php:
 
 sudo: false
 
-# cache vendor dirs
 cache:
   directories:
     - vendor
     - $HOME/.composer/cache
 
-before_install:
-  - phpenv config-rm xdebug.ini
+# before_install:
+#   - phpenv config-rm xdebug.ini
 
 install:
   - COMPOSER_DISCARD_CHANGES=1 composer install --dev --prefer-source --no-interaction
@@ -25,4 +24,4 @@ before_script:
   - php artisan migrate
 
 script:
-  - vendor/bin/phpunit
+  - composer ci-test
