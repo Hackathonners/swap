@@ -53,14 +53,11 @@ class EnrollmentController extends Controller
         try {
             $file = $request->enrollments;
             $path = $file->path();
-            $filename = $file->getClientOriginalName();
 
-            Excel::load($path, function ($reader) use ($filename) {
-                DB::transaction(function () use ($filename, $reader) {
+            Excel::load($path, function ($reader) {
+                DB::transaction(function () use ($reader) {
                     // Loop for all the rows of the table
-                    $index = 1;
-                    $reader->each(function ($row) use (&$index) {
-                        // Calculate the row index
+                    $reader->each(function ($row, $index) {
                         $index++;
 
                         // Get the models of the given ids

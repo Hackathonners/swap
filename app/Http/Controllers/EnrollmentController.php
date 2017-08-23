@@ -35,7 +35,7 @@ class EnrollmentController extends Controller
 
                 $student = Auth::user()->student;
                 $course = Course::find($request->input('course_id'));
-                $enrollment = $student->enroll($course);
+                $student->enroll($course);
 
                 return $course;
             });
