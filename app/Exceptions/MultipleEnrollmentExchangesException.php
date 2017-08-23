@@ -4,7 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 
-class CannotExchangeEnrollmentMultipleTimesException extends Exception
+class MultipleEnrollmentExchangesException extends Exception
 {
     /**
      * Create a new exception instance.

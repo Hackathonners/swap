@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\DeclinedExchangeNotification;
 use App\Mail\ConfirmedExchangeNotification;
 use App\Http\Requests\Exchange\CreateRequest;
-use App\Exceptions\CannotExchangeEnrollmentMultipleTimesException;
-use App\Exceptions\CannotExchangeToShiftsOnDifferentCoursesException;
-use App\Exceptions\CannotExchangeEnrollmentWithoutAssociatedShiftException;
+use App\Exceptions\MultipleEnrollmentExchangesException;
+use App\Exceptions\ExchangeEnrollmentWithoutShiftException;
+use App\Exceptions\ExchangeEnrollmentsOnDifferentCoursesException;
 
 class ExchangeController extends Controller
 {
@@ -50,11 +50,10 @@ class ExchangeController extends Controller
             });
 
             $data['matchingEnrollments'] = $data['matchingEnrollments']->map(function ($item) {
-                $newItem = [];
-                $newItem['id'] = $item->id;
-                $newItem['_toString'] = $item->present()->inlineToString();
-
-                return $newItem;
+                return [
+                    'id' => $item->id,
+                    '_toString' => $item->present()->inlineToString(),
+                ];
             });
 
             return view('exchanges.create', $data);
@@ -104,9 +103,9 @@ class ExchangeController extends Controller
             });
 
             flash('The exchange was successfully proposed.')->success();
-        } catch (CannotExchangeEnrollmentMultipleTimesException
-            | CannotExchangeToShiftsOnDifferentCoursesException
-            | CannotExchangeEnrollmentWithoutAssociatedShiftException $e) {
+        } catch (MultipleEnrollmentExchangesException
+            | ExchangeEnrollmentsOnDifferentCoursesException
+            | ExchangeEnrollmentWithoutShiftException $e) {
             flash($e->getMessage())->error();
         }
 

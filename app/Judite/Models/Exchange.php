@@ -5,9 +5,9 @@ namespace App\Judite\Models;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use App\Judite\Contracts\ExchangeLogger;
-use App\Exceptions\CannotExchangeEnrollmentMultipleTimesException;
-use App\Exceptions\CannotExchangeToShiftsOnDifferentCoursesException;
-use App\Exceptions\CannotExchangeEnrollmentWithoutAssociatedShiftException;
+use App\Exceptions\MultipleEnrollmentExchangesException;
+use App\Exceptions\ExchangeEnrollmentWithoutShiftException;
+use App\Exceptions\ExchangeEnrollmentsOnDifferentCoursesException;
 
 class Exchange extends Model
 {
@@ -42,9 +42,9 @@ class Exchange extends Model
      * @param \App\Judite\Models\Enrollment $from
      * @param \App\Judite\Models\Enrollment $to
      *
-     * @throws \App\Exceptions\CannotExchangeEnrollmentMultipleTimesException
-     * @throws \App\Exceptions\CannotExchangeEnrollmentWithoutAssociatedShiftException
-     * @throws \App\Exceptions\CannotExchangeToShiftsOnDifferentCoursesException
+     * @throws \App\Exceptions\MultipleEnrollmentExchangesException
+     * @throws \App\Exceptions\ExchangeEnrollmentWithoutShiftException
+     * @throws \App\Exceptions\ExchangeEnrollmentsOnDifferentCoursesException
      *
      * @return $this
      */
@@ -54,15 +54,15 @@ class Exchange extends Model
         // are allowed to create only a single exchange related to the
         // same enrollment, ensuring that each request exists once.
         if ($from->exchangesAsSource()->exists()) {
-            throw new CannotExchangeEnrollmentMultipleTimesException();
+            throw new MultipleEnrollmentExchangesException();
         }
 
         if ($from->course_id !== $to->course_id) {
-            throw new CannotExchangeToShiftsOnDifferentCoursesException();
+            throw new ExchangeEnrollmentsOnDifferentCoursesException();
         }
 
-        if (is_null($from->shift_id) || is_null($from->shift_id)) {
-            throw new CannotExchangeEnrollmentWithoutAssociatedShiftException();
+        if (is_null($from->shift_id) || is_null($to->shift_id)) {
+            throw new ExchangeEnrollmentWithoutShiftException();
         }
 
         $this->fromEnrollment()->associate($from);

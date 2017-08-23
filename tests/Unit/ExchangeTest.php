@@ -9,6 +9,9 @@ use App\Judite\Models\Exchange;
 use App\Judite\Models\Enrollment;
 use App\Judite\Contracts\ExchangeLogger;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use App\Exceptions\MultipleEnrollmentExchangesException;
+use App\Exceptions\ExchangeEnrollmentWithoutShiftException;
+use App\Exceptions\ExchangeEnrollmentsOnDifferentCoursesException;
 
 class ExchangeTest extends TestCase
 {
@@ -196,11 +199,10 @@ class ExchangeTest extends TestCase
         $this->assertEquals($toEnrollment->student->id, $exchange->toStudent()->id);
     }
 
-    /**
-     * @expectedException \App\Exceptions\CannotExchangeToShiftsOnDifferentCoursesException
-     */
     public function testThrowsExceptionWhenExchangedEnrollmentsAreOnDifferentCourses()
     {
+        $this->expectException(ExchangeEnrollmentsOnDifferentCoursesException::class);
+
         // Prepare
         $fromEnrollment = factory(Enrollment::class)->make();
         $toEnrollment = factory(Enrollment::class)->make();
@@ -210,22 +212,34 @@ class ExchangeTest extends TestCase
         $exchange->setExchangeEnrollments($fromEnrollment, $toEnrollment);
     }
 
-    /**
-     * @expectedException \App\Exceptions\CannotExchangeEnrollmentMultipleTimesException
-     */
     public function testThrowsExceptionWhenAnEnrollmentIsAlreadyListedForExchange()
     {
+        $this->expectException(MultipleEnrollmentExchangesException::class);
+
         // Prepare
-        $course = factory(Course::class)->create();
-        $fromEnrollment = factory(Enrollment::class)->create(['course_id' => $course->id]);
-        $toEnrollment = factory(Enrollment::class)->create(['course_id' => $course->id]);
-        $otherToEnrollment = factory(Enrollment::class)->create(['course_id' => $course->id]);
-        $exchange = factory(Exchange::class)->create([
-            'from_enrollment_id' => $fromEnrollment->id,
-            'to_enrollment_id' => $toEnrollment->id,
+        $existingExchange = factory(Exchange::class)->create();
+        $toEnrollment = factory(Enrollment::class)->create([
+            'course_id' => $existingExchange->course()->id,
         ]);
 
         // Execute
-        $exchange->setExchangeEnrollments($fromEnrollment, $otherToEnrollment);
+        $exchange = Exchange::make();
+        $exchange->setExchangeEnrollments($existingExchange->fromEnrollment, $toEnrollment);
+    }
+
+    public function testThrowsExceptionWhenAnEnrollmentWithoutAssociatedShiftIsExchanged()
+    {
+        $this->expectException(ExchangeEnrollmentWithoutShiftException::class);
+
+        // Prepare
+        $fromEnrollment = factory(Enrollment::class)->create();
+        $toEnrollment = factory(Enrollment::class)->create([
+            'course_id' => $fromEnrollment->course->id,
+            'shift_id' => null,
+        ]);
+
+        // Execute
+        $exchange = Exchange::make();
+        $exchange->setExchangeEnrollments($fromEnrollment, $toEnrollment);
     }
 }

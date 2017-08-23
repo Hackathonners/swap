@@ -4,7 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 
-class CannotExchangeEnrollmentWithoutAssociatedShiftException extends Exception
+class ExchangeEnrollmentWithoutShiftException extends Exception
 {
     /**
      * Create a new exception instance.

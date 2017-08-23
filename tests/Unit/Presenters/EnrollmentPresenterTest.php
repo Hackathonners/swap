@@ -25,6 +25,35 @@ class EnrollmentPresenterTest extends TestCase
         $this->assertEquals('test', $actualReturn);
     }
 
+    public function testGetUpdatedAt()
+    {
+        // Prepare
+        $enrollment = factory(Enrollment::class)->create();
+
+        // Execute
+        $actualReturn = $enrollment->present()->getUpdatedAt();
+
+        // Assert
+        $this->assertEquals($enrollment->updated_at->toDayDateTimeString(), $actualReturn);
+    }
+
+    public function testInlineToString()
+    {
+        // Prepare
+        $enrollment = factory(Enrollment::class)->create();
+
+        // Execute
+        $actualReturn = $enrollment->present()->inlineToString();
+
+        // Assert
+        $expected = $enrollment->student->user->name
+            .' ('.$enrollment->student->student_number.')'
+            .' - '.$enrollment->shift->tag
+            .' on '.$enrollment->course->name;
+
+        $this->assertEquals($expected, $actualReturn);
+    }
+
     public function testGetShiftTagPlaceholderWhenShiftIsUndefined()
     {
         // Prepare

@@ -4,7 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 
-class CannotExchangeToShiftsOnDifferentCoursesException extends Exception
+class ExchangeEnrollmentsOnDifferentCoursesException extends Exception
 {
     /**
      * Create a new exception instance.
