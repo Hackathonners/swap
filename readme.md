@@ -9,10 +9,54 @@
 
 ## About Swap
 
-Swap is project that aims to ease the control of enrollments and shifts exchanges for both students and teachers. The project is developed with considering the following features:
+Swap is a project that simplifies the control of enrollments and shifts exchanges for both students and teachers. The project is developed with considering the following features:
 
-- Enroll in the available courses;
-- Assign shifts to enrollments;
-- Students exchange shifts.
+- Students enroll in the available courses;
+- Shifts are assigned to enrollments by teachers;
+- Students propose and confirm shift exchanges among them.
 
-This project was requested by Department of Informatics, at the University of Minho and counts on several developers of Hackathonners who study there.
+This project was entirely developed to the Department of Informatics of University of Minho and counts on several developers of Hackathonners who either studied or currently study there.
+
+## Requirements
+
+- [PHP](http://php.net/) 7.1+
+- PostgreSQL or MySQL database
+- [Composer](https://getcomposer.org/) - Installs package dependencies
+- [NodeJS](https://nodejs.org/en/) - Provides NPM to install node packages
+- [Yarn](https://yarnpkg.com/lang/en/) - Provides a fast, reliable and secure node package manager.
+
+## Installation
+
+- Clone or download this repository.
+- Rename `.env.example` to `.env` and fill the options
+> **Note**: This project sends e-mails. Therefore, ensure that the e-mail driver is specified.
+
+- Install project dependencies:
+```
+composer install
+yarn install
+```
+
+- Generate application key:
+```
+php artisan key:generate
+```
+
+- Migrate and seed the database:
+```
+php artisan migrate
+php artisan db:seed
+```
+
+- Build assets (e.g. in development environment)
+```
+npm run dev
+```
+
+- Start local server
+```
+php artisan serve
+```
+
+## License
+The Swap project is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
