@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://image.ibb.co/fHdnSF/swap.png" height="78">
+    <img src="http://i.imgur.com/EwYWc4Q.png" height="78">
 </p>
 
 <p align="center">
