@@ -24,7 +24,7 @@ class RegistrationTest extends TestCase
         // Prepare
         $requestData = [
             'name' => 'John Doe',
-            'email' => 'pg12345',
+            'student_number' => 'pg12345',
             'password' => 'secret',
             'password_confirmation' => 'secret',
         ];
@@ -33,7 +33,7 @@ class RegistrationTest extends TestCase
         $this->post('/register', $requestData);
 
         // Assert
-        $email = $requestData['email'].'@alunos.uminho.pt';
+        $email = $requestData['student_number'].'@alunos.uminho.pt';
         Mail::assertSent(RegistrationConfirmation::class, function ($mail) use ($email) {
             return $mail->hasTo($email);
         });

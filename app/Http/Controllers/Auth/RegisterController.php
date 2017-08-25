@@ -54,7 +54,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|max:255|unique:students,student_number|student_number',
+            'student_number' => 'required|string|unique:students,student_number|student_number',
             'password' => 'required|string|min:6|confirmed',
         ]);
     }
@@ -71,12 +71,12 @@ class RegisterController extends Controller
         $user = DB::transaction(function () use ($data) {
             $user = User::make([
                 'name' => $data['name'],
-                'email' => $data['email'].'@alunos.uminho.pt',
+                'email' => $data['student_number'].'@alunos.uminho.pt',
                 'password' => bcrypt($data['password']),
             ]);
             $user->verification_token = str_random(32);
             $user->save();
-            $user->student()->create(['student_number' => $data['email']]);
+            $user->student()->create(['student_number' => $data['student_number']]);
 
             return $user;
         });

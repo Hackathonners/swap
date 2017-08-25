@@ -16,13 +16,13 @@
 
                 {{-- E-mail address --}}
                 <div class="form-group">
-                    <label for="email">E-mail address</label>
-                    <div class="input-group {{ $errors->has('email') ? 'is-invalid' : '' }}">
-                        <input id="email" type="text" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" name="email" value="{{ old('email') }}" required>
+                    <label for="student_number">E-mail address</label>
+                    <div class="input-group {{ $errors->has('student_number') ? 'is-invalid' : '' }}">
+                        <input id="student_number" type="text" class="form-control {{ $errors->has('student_number') ? 'is-invalid' : '' }}" name="student_number" value="{{ old('student_number') }}" required>
                         <span class="input-group-addon">@alunos.uminho.pt</span>
                     </div>
-                    @if ($errors->has('email'))
-                        <div class="invalid-feedback">{{ $errors->first('email') }}</div>
+                    @if ($errors->has('student_number'))
+                        <div class="invalid-feedback">{{ $errors->first('student_number') }}</div>
                     @else
                         <small class="form-text text-muted">Notifications will be sent to your academic e-mail address.</small>
                     @endif
