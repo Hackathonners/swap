@@ -36,12 +36,14 @@ Vue.directive('delete-exchange', DeleteExchange);
 import ElementUI from 'element-ui';
 import CalendarEnrollments from './components/CalendarEnrollments.vue';
 import CalendarExchanges from './components/CalendarExchanges.vue';
+import FileInput from './components/FileInput.vue';
 import 'element-ui/lib/theme-default/index.css';
 import locale from 'element-ui/lib/locale/lang/en'
 
 Vue.use(ElementUI, { locale });
 Vue.component('calendar-enrollments', CalendarEnrollments);
 Vue.component('calendar-exchanges', CalendarExchanges);
+Vue.component('file-input', FileInput);
 
 const app = new Vue({
   el: '#app',
