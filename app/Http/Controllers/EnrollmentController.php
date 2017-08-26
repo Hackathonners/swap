@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Judite\Models\Course;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Enrollment\CreateRequest;
+use App\Http\Requests\Enrollment\DestroyRequest;
 use App\Exceptions\UserIsAlreadyEnrolledInCourseException;
 
 class EnrollmentController extends Controller
@@ -21,11 +22,11 @@ class EnrollmentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\Enrollments\CreateRequest $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateRequest $request)
     {
         try {
             $course = DB::transaction(function () use ($request) {
@@ -52,11 +53,11 @@ class EnrollmentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\Enrollments\DestroyRequest $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy(DestroyRequest $request)
     {
         $course = DB::transaction(function () use ($request) {
             $this->validate($request, [

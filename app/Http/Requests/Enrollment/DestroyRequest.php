@@ -4,7 +4,7 @@ namespace App\Http\Requests\Enrollment;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRequest extends FormRequest
+class DestroyRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,18 +25,6 @@ class StoreRequest extends FormRequest
     {
         return [
             'course_id' => 'required',
-        ];
-    }
-
-    /**
-     * Get custom attributes for validator errors.
-     *
-     * @return array
-     */
-    public function attributes()
-    {
-        return [
-            'course_id' => 'course',
         ];
     }
 }
