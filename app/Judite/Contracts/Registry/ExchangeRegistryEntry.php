@@ -38,4 +38,11 @@ interface ExchangeRegistryEntry
      * @return \App\Judite\Models\Course
      */
     public function course();
+
+    /**
+     * Get date of this recorded exchange.
+     *
+     * @return \Carbon\Carbon
+     */
+    public function getDate();
 }

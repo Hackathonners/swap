@@ -19,7 +19,7 @@ class ExchangeRegistryEntry extends Model implements ExchangeRegistryEntryContra
      */
     public function fromShift()
     {
-        return $this->fromShiftRelation()->first();
+        return $this->fromShiftRelation;
     }
 
     /**
@@ -27,7 +27,7 @@ class ExchangeRegistryEntry extends Model implements ExchangeRegistryEntryContra
      */
     public function toShift()
     {
-        return $this->toShiftRelation()->first();
+        return $this->toShiftRelation;
     }
 
     /**
@@ -35,7 +35,7 @@ class ExchangeRegistryEntry extends Model implements ExchangeRegistryEntryContra
      */
     public function fromStudent()
     {
-        return $this->fromStudentRelation()->first();
+        return $this->fromStudentRelation;
     }
 
     /**
@@ -43,7 +43,7 @@ class ExchangeRegistryEntry extends Model implements ExchangeRegistryEntryContra
      */
     public function toStudent()
     {
-        return $this->toStudentRelation()->first();
+        return $this->toStudentRelation;
     }
 
     /**
@@ -51,7 +51,15 @@ class ExchangeRegistryEntry extends Model implements ExchangeRegistryEntryContra
      */
     public function course()
     {
-        return $this->toShift->course;
+        return $this->fromShiftRelation->course;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDate()
+    {
+        return $this->created_at;
     }
 
     /**
