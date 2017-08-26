@@ -58,7 +58,7 @@ class EnrollmentController extends Controller
                 DB::transaction(function () use ($reader) {
                     // Loop for all the rows of the table
                     $reader->each(function ($row, $index) {
-                        $index++;
+                        $index += 2; // Skip header
 
                         // Get the models of the given ids
                         // Check if the given student number exists
