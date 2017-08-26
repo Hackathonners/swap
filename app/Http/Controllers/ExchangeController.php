@@ -104,8 +104,8 @@ class ExchangeController extends Controller
 
             flash('The exchange was successfully proposed.')->success();
         } catch (MultipleEnrollmentExchangesException
-            | ExchangeEnrollmentsOnDifferentCoursesException
-            | ExchangeEnrollmentWithoutShiftException $e) {
+        | ExchangeEnrollmentsOnDifferentCoursesException
+        | ExchangeEnrollmentWithoutShiftException $e) {
             flash($e->getMessage())->error();
         }
 

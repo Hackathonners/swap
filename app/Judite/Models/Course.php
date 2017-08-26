@@ -27,8 +27,8 @@ class Course extends Model
     public function scopeOrderedList($query)
     {
         return $query->orderBy('year', 'asc')
-                     ->orderBy('semester', 'asc')
-                     ->orderBy('name', 'asc');
+            ->orderBy('semester', 'asc')
+            ->orderBy('name', 'asc');
     }
 
     /**

@@ -25,8 +25,8 @@ class EnrollmentController extends Controller
         // Get the list of students enrolled on each course
         $enrollments = DB::transaction(function () {
             $enrollments = Enrollment::with(['student', 'course'])
-                                     ->get()
-                                     ->sortByDesc('courses.name');
+                ->get()
+                ->sortByDesc('courses.name');
 
             return $enrollments;
         });
