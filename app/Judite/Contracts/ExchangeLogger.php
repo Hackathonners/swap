@@ -13,4 +13,11 @@ interface ExchangeLogger
      * @param \App\Judite\Models\Enrollment $toEnrollment
      */
     public function log(Enrollment $fromEnrollment, Enrollment $toEnrollment);
+
+    /**
+     * Get the exchanges history.
+     * 
+     * @return \Illuminate\Contracts\Pagination
+     */
+    public function history();
 }

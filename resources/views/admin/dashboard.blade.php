@@ -5,10 +5,19 @@
         <div class="card-header">
             <div class="row">
                 <div class="col">
-                  Enrollments summary
+                    Enrollments summary
                 </div>
                 <div class="col text-right">
-                    <a href="{{ route('enrollments.export') }}" class="btn btn-primary btn-sm">Export enrollments</a>
+                    <div class="btn-group">
+                        <a href="{{ route('enrollments.export') }}" class="btn btn-primary btn-sm">Export enrollments</a>
+                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a href="{{ route('enrollments.import') }}" class="dropdown-item btn btn-sm">Import enrollments</a>
+                        </div>
+                    </div>
                 </div>
 
             </div>

@@ -45,4 +45,14 @@ class LogExchange extends Model
     {
         return $this->belongsTo(Student::class, 'to_student_id');
     }
+
+    /**
+     * Get course of this logged exchange.
+     *
+     * @return \App\Judite\Models\Course
+     */
+    public function course()
+    {
+        return $this->toShift->course;
+    }
 }

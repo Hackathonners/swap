@@ -12,4 +12,14 @@ class Shift extends Model
      * @var array
      */
     protected $fillable = ['tag'];
+
+    /**
+     * Get course of this shift.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
 }

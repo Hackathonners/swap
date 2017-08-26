@@ -20,4 +20,12 @@ class EloquentExchangeLogger implements ExchangeLogger
         $logExchange->toStudent()->associate($toEnrollment->student);
         $logExchange->save();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function history()
+    {
+        return LogExchange::latest('id')->paginate();
+    }
 }
