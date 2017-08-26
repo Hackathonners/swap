@@ -16,7 +16,7 @@ interface ExchangeLogger
 
     /**
      * Get the exchanges history.
-     * 
+     *
      * @return \Illuminate\Contracts\Pagination
      */
     public function history();
