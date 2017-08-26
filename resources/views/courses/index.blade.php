@@ -3,7 +3,7 @@
 @section('content')
     <div class="card card--section mb-5">
         <div class="card-header">List of courses</div>
-        <table class="card-table table">
+        <table class="card-table table table-responsive">
             <tbody>
                 @foreach ($courses as $year => $courses)
                     <tr>

@@ -1,4 +1,4 @@
-<table class="card-table table">
+<table class="card-table table table-responsive">
     <tbody>
         <tr>
             <td><strong>Student ID</strong></td>

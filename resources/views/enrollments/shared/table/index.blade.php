@@ -1,4 +1,4 @@
-<table class="card-table table">
+<table class="card-table table table-responsive">
     <tbody>
         @foreach ($enrollments as $year => $enrollments)
             <th colspan="4" class="table-active">
