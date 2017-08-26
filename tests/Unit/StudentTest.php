@@ -76,10 +76,13 @@ class StudentTest extends TestCase
         });
 
         // Execute
-        $actualReturn = $student->proposedExchanges();
+        $actualReturn = $student->proposedExchanges()->orderBy('id');
 
         // Assert
-        $expectedExchanges = Exchange::whereIn('to_enrollment_id', $student->enrollments->pluck('id'))->get();
+        $expectedExchanges = Exchange::whereIn(
+            'to_enrollment_id',
+            $student->enrollments->pluck('id')
+        )->orderBy('id')->get();
         $this->assertEquals($expectedExchanges->pluck('id'), $actualReturn->pluck('id'));
     }
 
