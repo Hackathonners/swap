@@ -49,9 +49,9 @@ class EnrollmentTest extends TestCase
 
         // Assert
         $expectedOrder = Course::orderBy('year', 'asc')
-                                ->orderBy('semester', 'asc')
-                                ->orderBy('name', 'asc')
-                                ->get();
+            ->orderBy('semester', 'asc')
+            ->orderBy('name', 'asc')
+            ->get();
 
         $this->assertEquals($expectedOrder->pluck('id'), $actualReturn->pluck('course.id'));
     }

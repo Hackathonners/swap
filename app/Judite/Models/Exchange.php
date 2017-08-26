@@ -4,7 +4,7 @@ namespace App\Judite\Models;
 
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
-use App\Judite\Contracts\ExchangeLogger;
+use App\Judite\Contracts\Registry\ExchangeRegistry;
 use App\Exceptions\MultipleEnrollmentExchangesException;
 use App\Exceptions\ExchangeEnrollmentWithoutShiftException;
 use App\Exceptions\ExchangeEnrollmentsOnDifferentCoursesException;
@@ -19,11 +19,11 @@ class Exchange extends Model
     protected $with = ['fromEnrollment', 'toEnrollment'];
 
     /**
-     * The exchanges logger.
+     * The exchanges registry.
      *
-     * @var \App\Judite\Contracts\ExchangeLogger
+     * @var \App\Judite\Contracts\Registry\ExchangeRegistry
      */
-    private $logger;
+    private $registry;
 
     /**
      * Create a new Exchange model instance.
@@ -33,7 +33,7 @@ class Exchange extends Model
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-        $this->logger = resolve(ExchangeLogger::class);
+        $this->registry = resolve(ExchangeRegistry::class);
     }
 
     /**
@@ -129,7 +129,7 @@ class Exchange extends Model
         $exchangedEnrollments = collect([$this->fromEnrollment, $this->toEnrollment]);
         $this->deleteExchangesOfEnrollments($exchangedEnrollments);
 
-        $this->logger->log($fromEnrollmentCopy, $toEnrollmentCopy);
+        $this->registry->record($fromEnrollmentCopy, $toEnrollmentCopy);
 
         return $this;
     }

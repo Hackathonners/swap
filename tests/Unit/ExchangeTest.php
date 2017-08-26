@@ -7,7 +7,7 @@ use Tests\TestCase;
 use App\Judite\Models\Course;
 use App\Judite\Models\Exchange;
 use App\Judite\Models\Enrollment;
-use App\Judite\Contracts\ExchangeLogger;
+use App\Judite\Contracts\Registry\ExchangeRegistry;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Exceptions\MultipleEnrollmentExchangesException;
 use App\Exceptions\ExchangeEnrollmentWithoutShiftException;
@@ -17,13 +17,13 @@ class ExchangeTest extends TestCase
 {
     use DatabaseTransactions;
 
-    private $loggerMock;
+    private $registryMock;
 
     public function setUp()
     {
         parent::setUp();
-        $this->loggerMock = m::mock(ExchangeLogger::class);
-        $this->app->instance(ExchangeLogger::class, $this->loggerMock);
+        $this->registryMock = m::mock(ExchangeRegistry::class);
+        $this->app->instance(ExchangeRegistry::class, $this->registryMock);
     }
 
     public function tearDown()
@@ -68,8 +68,7 @@ class ExchangeTest extends TestCase
         ]);
         $fromShiftId = $fromEnrollment->shift_id;
         $toShiftId = $toEnrollment->shift_id;
-        $this->loggerMock->shouldReceive('log')
-                         ->once();
+        $this->registryMock->shouldReceive('record')->once();
 
         // Execute
         $actualReturn = $exchange->perform();

@@ -69,9 +69,9 @@ class CourseTest extends TestCase
 
         // Assert
         $expectedOrderedCourses = Course::orderBy('year', 'asc')
-                                        ->orderBy('semester', 'asc')
-                                        ->orderBy('name', 'asc')
-                                        ->get();
+            ->orderBy('semester', 'asc')
+            ->orderBy('name', 'asc')
+            ->get();
         $this->assertEquals($expectedOrderedCourses, $actualReturn);
     }
 }

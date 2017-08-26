@@ -77,7 +77,7 @@ class ImportEnrollmentsFileTest extends TestCase
 
         // Execute
         $response = $this->actingAs($student->user)
-                            ->post(route('enrollments.storeImport'), $requestData);
+            ->post(route('enrollments.storeImport'), $requestData);
 
         // Assert
         $response->assertStatus(302); // TODO: effetive unauthorized exception handling
@@ -151,7 +151,7 @@ class ImportEnrollmentsFileTest extends TestCase
 
         // Execute
         $response = $this->actingAs($admin)
-                            ->post(route('enrollments.storeImport'), $requestData);
+            ->post(route('enrollments.storeImport'), $requestData);
 
         // Delete file
         File::delete($file->path());
@@ -186,7 +186,7 @@ class ImportEnrollmentsFileTest extends TestCase
 
         // Execute
         $response = $this->actingAs($admin)
-                            ->post(route('enrollments.storeImport'), $requestData);
+            ->post(route('enrollments.storeImport'), $requestData);
 
         // Delete file
         File::delete($file->path());
