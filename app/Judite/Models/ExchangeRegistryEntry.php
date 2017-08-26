@@ -2,6 +2,7 @@
 
 namespace App\Judite\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use App\Judite\Contracts\Registry\ExchangeRegistryEntry as ExchangeRegistryEntryContract;
 
@@ -17,7 +18,7 @@ class ExchangeRegistryEntry extends Model implements ExchangeRegistryEntryContra
     /**
      * {@inheritdoc}
      */
-    public function fromShift()
+    public function fromShift(): Shift
     {
         return $this->fromShiftRelation;
     }
@@ -25,7 +26,7 @@ class ExchangeRegistryEntry extends Model implements ExchangeRegistryEntryContra
     /**
      * {@inheritdoc}
      */
-    public function toShift()
+    public function toShift(): Shift
     {
         return $this->toShiftRelation;
     }
@@ -33,7 +34,7 @@ class ExchangeRegistryEntry extends Model implements ExchangeRegistryEntryContra
     /**
      * {@inheritdoc}
      */
-    public function fromStudent()
+    public function fromStudent(): Student
     {
         return $this->fromStudentRelation;
     }
@@ -41,7 +42,7 @@ class ExchangeRegistryEntry extends Model implements ExchangeRegistryEntryContra
     /**
      * {@inheritdoc}
      */
-    public function toStudent()
+    public function toStudent(): Student
     {
         return $this->toStudentRelation;
     }
@@ -49,7 +50,7 @@ class ExchangeRegistryEntry extends Model implements ExchangeRegistryEntryContra
     /**
      * {@inheritdoc}
      */
-    public function course()
+    public function course(): Course
     {
         return $this->fromShiftRelation->course;
     }
@@ -57,7 +58,7 @@ class ExchangeRegistryEntry extends Model implements ExchangeRegistryEntryContra
     /**
      * {@inheritdoc}
      */
-    public function getDate()
+    public function getDate(): Carbon
     {
         return $this->created_at;
     }

@@ -76,7 +76,7 @@ class Enrollment extends Model
      *
      * @return $this
      */
-    public function exchange(Enrollment $enrollment)
+    public function exchange(Enrollment $enrollment): Enrollment
     {
         $fromShiftId = $this->shift_id;
         $this->shift()->associate($enrollment->shift_id);

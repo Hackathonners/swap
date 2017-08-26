@@ -82,7 +82,7 @@ class Student extends Model
      *
      * @return \App\Judite\Models\Enrollment
      */
-    public function enroll(Course $course)
+    public function enroll(Course $course): Enrollment
     {
         if ($this->isEnrolledInCourse($course)) {
             throw new UserIsAlreadyEnrolledInCourseException($course);
@@ -102,7 +102,7 @@ class Student extends Model
      *
      * @return bool
      */
-    public function isEnrolledInCourse(Course $course)
+    public function isEnrolledInCourse(Course $course): bool
     {
         return $this->enrollments()->where('course_id', $course->id)->exists();
     }
@@ -114,7 +114,7 @@ class Student extends Model
      *
      * @return bool
      */
-    public function removeEnrollmentInCourse(Course $course)
+    public function removeEnrollmentInCourse(Course $course): bool
     {
         return $this->enrollments()->where('course_id', $course->id)->delete();
     }

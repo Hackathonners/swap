@@ -37,7 +37,7 @@ class Settings extends Model
      *
      * @return bool
      */
-    public function withinExchangePeriod()
+    public function withinExchangePeriod(): bool
     {
         if (is_null($this->exchanges_start_at) || is_null($this->exchanges_end_at)) {
             return false;
@@ -51,7 +51,7 @@ class Settings extends Model
      *
      * @return bool
      */
-    public function withinEnrollmentPeriod()
+    public function withinEnrollmentPeriod(): bool
     {
         if (is_null($this->enrollments_start_at) || is_null($this->enrollments_end_at)) {
             return false;

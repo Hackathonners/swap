@@ -42,7 +42,7 @@ class User extends Authenticatable
      *
      * @return bool
      */
-    public function isAdmin()
+    public function isAdmin(): bool
     {
         return $this->is_admin;
     }
@@ -52,7 +52,7 @@ class User extends Authenticatable
      *
      * @return bool
      */
-    public function isStudent()
+    public function isStudent(): bool
     {
         return ! is_null($this->student);
     }

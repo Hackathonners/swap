@@ -58,7 +58,7 @@ class Course extends Model
      *
      * @return $this
      */
-    public function addShift(Shift $shift)
+    public function addShift(Shift $shift): Course
     {
         $this->shifts()->save($shift);
 
@@ -72,7 +72,7 @@ class Course extends Model
      *
      * @return \App\Judite\Models\Shift|null
      */
-    public function getShiftByTag($tag)
+    public function getShiftByTag($tag): ?Shift
     {
         return $this->shifts()->where('tag', $tag)->first();
     }

@@ -48,7 +48,7 @@ class Exchange extends Model
      *
      * @return $this
      */
-    public function setExchangeEnrollments(Enrollment $from, Enrollment $to)
+    public function setExchangeEnrollments(Enrollment $from, Enrollment $to) : Exchange
     {
         // Each enrollment can be requested to exchange once. The students
         // are allowed to create only a single exchange related to the
@@ -79,7 +79,7 @@ class Exchange extends Model
      *
      * @return \App\Judite\Models\Exchange|null
      */
-    public static function findMatchingExchange(Enrollment $from, Enrollment $to)
+    public static function findMatchingExchange(Enrollment $from, Enrollment $to): ?Exchange
     {
         $inverseMatch = [
             'from_enrollment_id' => $to->id,
@@ -120,7 +120,7 @@ class Exchange extends Model
      *
      * @return $this
      */
-    public function perform()
+    public function perform(): Exchange
     {
         $fromEnrollmentCopy = clone $this->fromEnrollment;
         $toEnrollmentCopy = clone $this->toEnrollment;
@@ -173,7 +173,7 @@ class Exchange extends Model
      *
      * @return \App\Judite\Models\Course
      */
-    public function course()
+    public function course(): Course
     {
         return $this->fromEnrollment->course;
     }
@@ -183,7 +183,7 @@ class Exchange extends Model
      *
      * @return \App\Judite\Models\Shift
      */
-    public function fromShift()
+    public function fromShift(): Shift
     {
         return $this->fromEnrollment->shift;
     }
@@ -193,7 +193,7 @@ class Exchange extends Model
      *
      * @return \App\Judite\Models\Shift
      */
-    public function toShift()
+    public function toShift(): Shift
     {
         return $this->toEnrollment->shift;
     }
@@ -203,7 +203,7 @@ class Exchange extends Model
      *
      * @return \App\Judite\Models\Student
      */
-    public function fromStudent()
+    public function fromStudent(): Student
     {
         return $this->fromEnrollment->student;
     }
@@ -213,7 +213,7 @@ class Exchange extends Model
      *
      * @return \App\Judite\Models\Student
      */
-    public function toStudent()
+    public function toStudent(): Student
     {
         return $this->toEnrollment->student;
     }
