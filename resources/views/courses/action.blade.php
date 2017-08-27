@@ -19,9 +19,8 @@
         @endif
     @elseif ($settings->withinEnrollmentPeriod())
         {{-- Show button to enroll in course. --}}
-        <form action="{{ route('enrollments.create') }}" method="post">
+        <form action="{{ route('enrollments.store', $course->id) }}" method="post">
             {{ csrf_field() }}
-            <input type="hidden" name="course_id" value="{{ $course->id }}">
             <button type="submit" class="btn btn-success btn-sm">Enroll in course</button>
         </form>
     @endif

@@ -34,7 +34,7 @@ class EnrollmentTest extends TestCase
     {
         // Execute
         $this->actingAs($this->student->user);
-        $response = $this->post(route('enrollments.create'), ['course_id' => $this->course->id]);
+        $response = $this->post(route('enrollments.store', $this->course->id));
 
         // Assert
         $response->assertRedirect(route('courses.index'));
@@ -89,7 +89,7 @@ class EnrollmentTest extends TestCase
 
         // Execute
         $this->actingAs($this->student->user);
-        $response = $this->post(route('enrollments.create'), ['course_id' => $this->course->id]);
+        $response = $this->post(route('enrollments.store', $this->course->id));
 
         // Assert
         $response->assertRedirect(route('courses.index'));
@@ -111,7 +111,7 @@ class EnrollmentTest extends TestCase
     public function unauthenticated_users_may_not_enroll_in_courses()
     {
         // Execute
-        $response = $this->post(route('enrollments.create'), ['course_id' => $this->course->id]);
+        $response = $this->post(route('enrollments.store', $this->course->id));
 
         // Assert
         $response->assertRedirect(route('login'));
@@ -129,7 +129,7 @@ class EnrollmentTest extends TestCase
         $requestData = ['course_id' => $this->course->id];
 
         // Execute
-        $response = $this->post(route('enrollments.destroy'), $requestData);
+        $response = $this->delete(route('enrollments.destroy'), $requestData);
 
         // Assert
         $response->assertRedirect(route('login'));
