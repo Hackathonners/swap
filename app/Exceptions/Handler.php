@@ -10,6 +10,8 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -59,6 +61,10 @@ class Handler extends ExceptionHandler
             flash('Your session has expired and is now restored. Please, try again.')->error();
 
             return redirect()->back();
+        }
+
+        if ($exception instanceof MethodNotAllowedHttpException) {
+            throw new NotFoundHttpException($exception->getMessage(), $exception);
         }
 
         return parent::render($request, $exception);
