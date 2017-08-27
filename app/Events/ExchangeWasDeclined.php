@@ -13,7 +13,7 @@ class ExchangeWasDeclined
     /**
      * The declined exchange.
      *
-     * @var \App\Judite\Models\Exchange.
+     * @var \App\Judite\Models\Exchange
      */
     public $exchange;
 

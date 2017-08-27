@@ -13,7 +13,7 @@ class ExchangeWasConfirmed
     /**
      * The confirmed exchange.
      *
-     * @var \App\Judite\Models\Exchange.
+     * @var \App\Judite\Models\Exchange
      */
     public $exchange;
 
