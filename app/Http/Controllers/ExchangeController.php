@@ -5,9 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Judite\Models\Exchange;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\DeclinedExchangeNotification;
-use App\Mail\ConfirmedExchangeNotification;
+use App\Events\ExchangeWasDeclined;
+use App\Events\ExchangeWasConfirmed;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -37,9 +36,8 @@ class ExchangeController extends Controller
             return $exchange->perform();
         });
 
+        event(new ExchangeWasConfirmed($exchange));
         flash('The shift exchange request was successfully confirmed.')->success();
-        Mail::to($exchange->fromStudent()->user)
-            ->send(new ConfirmedExchangeNotification($exchange));
 
         return redirect()->back();
     }
@@ -61,9 +59,8 @@ class ExchangeController extends Controller
             return $exchange;
         });
 
+        event(new ExchangeWasDeclined($exchange));
         flash('The shift exchange request was successfully declined.')->success();
-        Mail::to($exchange->fromStudent()->user)
-            ->send(new DeclinedExchangeNotification($exchange));
 
         return redirect()->back();
     }

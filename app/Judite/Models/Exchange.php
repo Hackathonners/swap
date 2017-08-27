@@ -25,6 +25,13 @@ class Exchange extends Model
     private $registry;
 
     /**
+     * Performed exchange indicator.
+     *
+     * @var bool
+     */
+    private $performed = false;
+
+    /**
      * Create a new Exchange model instance.
      *
      * @param array $attributes
@@ -140,7 +147,19 @@ class Exchange extends Model
 
         $this->registry->record($fromEnrollmentCopy, $toEnrollmentCopy);
 
+        $this->performed = true;
+
         return $this;
+    }
+
+    /**
+     * Check whether this exchange is performed.
+     *
+     * @return bool
+     */
+    public function isPerformed(): bool
+    {
+        return $this->performed;
     }
 
     /**

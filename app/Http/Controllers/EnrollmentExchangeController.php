@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Judite\Models\Exchange;
 use App\Judite\Models\Enrollment;
 use Illuminate\Support\Facades\DB;
+use App\Events\ExchangeWasConfirmed;
 use App\Http\Requests\Exchange\CreateRequest;
 use App\Exceptions\EnrollmentCannotBeExchangedException;
 use App\Exceptions\ExchangeEnrollmentsOnDifferentCoursesException;
@@ -71,7 +72,7 @@ class EnrollmentExchangeController extends Controller
     public function store($enrollmentId, CreateRequest $request)
     {
         try {
-            DB::transaction(function () use ($enrollmentId, $request) {
+            $exchange = DB::transaction(function () use ($enrollmentId, $request) {
                 $this->validate($request, [
                     'to_enrollment_id' => 'exists:enrollments,id',
                 ]);
@@ -96,7 +97,13 @@ class EnrollmentExchangeController extends Controller
                 return $exchange;
             });
 
-            flash('The exchange was successfully proposed.')->success();
+            $message = 'The exchange was successfully proposed.';
+            if ($exchange->isPerformed()) {
+                $message = 'The exchanged was successfully confirmed, since it matched an existing one.';
+                event(new ExchangeWasConfirmed($exchange));
+            }
+
+            flash($message)->success();
         } catch (EnrollmentCannotBeExchangedException | ExchangeEnrollmentsOnDifferentCoursesException $e) {
             flash($e->getMessage())->error();
         }
