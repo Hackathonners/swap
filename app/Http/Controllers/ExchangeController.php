@@ -35,7 +35,9 @@ class ExchangeController extends Controller
     {
         try {
             $data = DB::transaction(function () use ($enrollmentId) {
-                $enrollment = Enrollment::findOrFail($enrollmentId);
+                $enrollment = Enrollment::ownedBy(auth()->user()->student)
+                    ->findOrFail($enrollmentId);
+
                 $this->authorize('exchange', $enrollment);
 
                 if (is_null($enrollment->shift)) {

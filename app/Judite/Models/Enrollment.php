@@ -25,6 +25,19 @@ class Enrollment extends Model
     protected $presenter = EnrollmentPresenter::class;
 
     /**
+     * Scope a query to filter enrollments by owner.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param \App\Judite\Models\Student            $student
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOwnedBy($query, Student $student)
+    {
+        return $query->whereStudentId($student->id);
+    }
+
+    /**
      * Scope a query to order enrollments by course.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
