@@ -114,12 +114,9 @@ class EnrollmentExchangeController extends Controller
     public function destroy($id)
     {
         DB::transaction(function () use ($id) {
-            $exchange = Exchange::ownedBy(auth()->user()->student)
-                ->findOrFail($id);
-
-            $exchange->delete();
-
-            return $exchange;
+            Exchange::ownedBy(auth()->user()->student)
+                ->findOrFail($id)
+                ->delete();
         });
 
         flash('The shift exchange request was successfully deleted.')->success();

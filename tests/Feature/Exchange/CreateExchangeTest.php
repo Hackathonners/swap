@@ -24,7 +24,6 @@ class CreateExchangeTest extends TestCase
             'course_id' => $this->fromEnrollment->course->id,
         ]);
 
-        // Enable exchanges period
         $settings = app('settings');
         $settings->exchanges_start_at = Carbon::yesterday();
         $settings->exchanges_end_at = Carbon::tomorrow();
