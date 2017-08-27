@@ -25,7 +25,7 @@ Route::middleware(['auth', 'can.student'])->group(function () {
     Route::middleware('confirmed')->group(function () {
         Route::get('/courses', 'CourseController@index')->name('courses.index');
         Route::post('/courses/{courseId}/enroll', 'EnrollmentController@store')->name('enrollments.store');
-        Route::delete('/enrollments', 'EnrollmentController@destroy')->name('enrollments.destroy');
+        Route::delete('/courses/{courseId}/unenroll', 'EnrollmentController@destroy')->name('enrollments.destroy');
         Route::get('/enrollments/{enrollmentId}/exchange', 'ExchangeController@create')->name('exchanges.create');
         Route::post('/exchanges', 'ExchangeController@store')->name('exchanges.store');
         Route::delete('/exchanges', 'ExchangeController@destroy')->name('exchanges.destroy');

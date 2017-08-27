@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Judite\Models\Course;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\Enrollment\DestroyRequest;
 use App\Exceptions\UserIsAlreadyEnrolledInCourseException;
 
 class EnrollmentController extends Controller
@@ -30,7 +28,7 @@ class EnrollmentController extends Controller
         try {
             $course = DB::transaction(function () use ($courseId) {
                 $course = Course::findOrFail($courseId);
-                $student = Auth::user()->student;
+                $student = auth()->user()->student;
                 $student->enroll($course);
 
                 return $course;
@@ -48,20 +46,15 @@ class EnrollmentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Http\Requests\Enrollments\DestroyRequest $request
+     * @param int $courseId
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy(DestroyRequest $request)
+    public function destroy($courseId)
     {
-        $course = DB::transaction(function () use ($request) {
-            $this->validate($request, [
-                'course_id' => 'exists:courses,id',
-            ]);
-
-            $student = Auth::user()->student;
-            $course = Course::find($request->input('course_id'));
-            $student->removeEnrollmentInCourse($course);
+        $course = DB::transaction(function () use ($courseId) {
+            $course = Course::findOrFail($courseId);
+            auth()->user()->student->removeEnrollmentInCourse($course);
 
             return $course;
         });

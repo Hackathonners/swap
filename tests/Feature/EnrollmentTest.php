@@ -49,11 +49,10 @@ class EnrollmentTest extends TestCase
             'student_id' => $this->student->id,
             'course_id' => $this->course->id,
         ]);
-        $requestData = ['course_id' => $this->course->id];
 
         // Execute
         $this->actingAs($this->student->user);
-        $response = $this->delete(route('enrollments.destroy'), $requestData);
+        $response = $this->delete(route('enrollments.destroy', $this->course->id));
 
         // Assert
         $response->assertRedirect();
@@ -67,11 +66,10 @@ class EnrollmentTest extends TestCase
         $enrollment = factory(Enrollment::class)->create([
             'course_id' => $this->course->id,
         ]);
-        $requestData = ['course_id' => $this->course->id];
 
         // Execute
         $this->actingAs($this->student->user);
-        $response = $this->delete(route('enrollments.destroy'), $requestData);
+        $response = $this->delete(route('enrollments.destroy', $this->course->id));
 
         // Assert
         $response->assertRedirect();
@@ -126,10 +124,9 @@ class EnrollmentTest extends TestCase
             'student_id' => $this->student->id,
             'course_id' => $this->course->id,
         ]);
-        $requestData = ['course_id' => $this->course->id];
 
         // Execute
-        $response = $this->delete(route('enrollments.destroy'), $requestData);
+        $response = $this->delete(route('enrollments.destroy', $this->course->id));
 
         // Assert
         $response->assertRedirect(route('login'));
