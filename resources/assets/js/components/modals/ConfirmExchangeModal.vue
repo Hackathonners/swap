@@ -4,7 +4,6 @@
 
         <form slot="modal-footer" :action="`/exchanges/${ this.id }/confirm`" method="post">
             <csrf-field></csrf-field>
-            <input type="hidden" name="exchange_id" :value="id">
             <button type="button" name="button" class="btn btn-outline-secondary" @click="close">Close</button>
             <button type="submit" name="button" class="btn btn-primary">Exchange to {{ this.toShift }}</button>
         </form>
