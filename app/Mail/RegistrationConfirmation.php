@@ -21,7 +21,7 @@ class RegistrationConfirmation extends Mailable
     /**
      * Create a new message instance.
      *
-     * @param \App\Judite\Models\User|\App\Safira\Models\User $user
+     * @param \App\Judite\Models\User $user
      */
     public function __construct(User $user)
     {
