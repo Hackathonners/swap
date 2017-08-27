@@ -22,17 +22,4 @@ class ExchangePolicy
     {
         return $user->id === $exchange->toEnrollment->student->user_id;
     }
-
-    /**
-     * Determine whether the user can delete or not the given exchange.
-     *
-     * @param \App\Judite\Models\User     $user
-     * @param \App\Judite\Models\Exchange $exchange
-     *
-     * @return bool
-     */
-    public function delete(User $user, Exchange $exchange)
-    {
-        return $user->id === $exchange->fromEnrollment->student->user_id;
-    }
 }

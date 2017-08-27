@@ -37,12 +37,9 @@ class DeclineExchangeTest extends TestCase
     /** @test */
     public function a_student_can_decline_a_proposed_exchange()
     {
-        // Prepare
-        $requestData = ['exchange_id' => $this->exchange->id];
-
         // Execute
         $this->actingAs($this->toEnrollment->student->user);
-        $response = $this->post(route('exchanges.decline', $requestData));
+        $response = $this->post(route('exchanges.decline', $this->exchange->id));
 
         // Assert
         $response->assertRedirect(route('home'));
@@ -56,32 +53,28 @@ class DeclineExchangeTest extends TestCase
     /** @test */
     public function a_student_may_not_decline_its_own_proposed_exchange()
     {
-        // Prepare
-        $requestData = ['exchange_id' => $this->exchange->id];
-
         // Execute
         $this->actingAs($this->fromEnrollment->student->user);
-        $response = $this->post(route('exchanges.decline', $requestData));
+        $response = $this->post(route('exchanges.decline', $this->exchange->id));
 
         // Assert
-        $response->assertStatus(302); // TODO: effetive unauthorized exception handling
+        $response->assertStatus(302);
         $this->assertEnrollmentsRemainUnchanged();
         Mail::assertNotSent(DeclinedExchangeNotification::class);
     }
 
     /** @test */
-    public function a_student_may_not_decline_a_third_party_exchange()
+    public function a_student_may_not_decline_an_exchange_of_another_student()
     {
         // Prepare
         $unauthorizedStudent = factory(Student::class)->create();
-        $requestData = ['exchange_id' => $this->exchange->id];
 
         // Execute
         $this->actingAs($unauthorizedStudent->user);
-        $response = $this->post(route('exchanges.decline', $requestData));
+        $response = $this->post(route('exchanges.decline', $this->exchange->id));
 
         // Assert
-        $response->assertStatus(302); // TODO: effetive unauthorized exception handling
+        $response->assertStatus(404);
         $this->assertEnrollmentsRemainUnchanged();
         Mail::assertNotSent(DeclinedExchangeNotification::class);
     }
@@ -89,16 +82,14 @@ class DeclineExchangeTest extends TestCase
     /** @test */
     public function admins_may_not_decline_exchanges()
     {
-        // Prepare
         $admin = factory(User::class)->states('admin')->create();
-        $requestData = ['exchange_id' => $this->exchange->id];
 
         // Execute
         $this->actingAs($admin);
-        $response = $this->post(route('exchanges.decline', $requestData));
+        $response = $this->post(route('exchanges.decline', $this->exchange->id));
 
         // Assert
-        $response->assertStatus(302); // TODO: effetive unauthorized exception handling
+        $response->assertStatus(302);
         $this->assertEnrollmentsRemainUnchanged();
         Mail::assertNotSent(DeclinedExchangeNotification::class);
     }
@@ -106,11 +97,8 @@ class DeclineExchangeTest extends TestCase
     /** @test */
     public function unauthenticated_users_may_not_decline_exchanges()
     {
-        // Prepare
-        $requestData = ['exchange_id' => $this->exchange->id];
-
         // Execute
-        $response = $this->post(route('exchanges.decline', $requestData));
+        $response = $this->post(route('exchanges.decline', $this->exchange->id));
 
         // Assert
         $response->assertRedirect(route('login'));

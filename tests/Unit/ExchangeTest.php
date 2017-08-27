@@ -9,8 +9,7 @@ use App\Judite\Models\Exchange;
 use App\Judite\Models\Enrollment;
 use App\Judite\Contracts\Registry\ExchangeRegistry;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\Exceptions\MultipleEnrollmentExchangesException;
-use App\Exceptions\ExchangeEnrollmentWithoutShiftException;
+use App\Exceptions\EnrollmentCannotBeExchangedException;
 use App\Exceptions\ExchangeEnrollmentsOnDifferentCoursesException;
 
 class ExchangeTest extends TestCase
@@ -100,6 +99,26 @@ class ExchangeTest extends TestCase
         $this->assertNotNull($actualReturn);
         $this->assertEquals(Exchange::class, get_class($actualReturn));
         $this->assertEquals($existingExchange->id, $actualReturn->id);
+    }
+
+    public function testFilterOwnedExchanges()
+    {
+        // Prepare
+        $course = factory(Course::class)->create();
+        $fromEnrollment = factory(Enrollment::class)->create(['course_id' => $course->id]);
+        $toEnrollment = factory(Enrollment::class)->create(['course_id' => $course->id]);
+        $ownedExchange = factory(Exchange::class)->create([
+            'from_enrollment_id' => $fromEnrollment->id,
+            'to_enrollment_id' => $toEnrollment->id,
+        ]);
+        factory(Exchange::class)->create();
+
+        // Execute
+        $actualReturn = Exchange::ownedBy($fromEnrollment->student)->get();
+
+        // Assert
+        $this->assertEquals(1, $actualReturn->count());
+        $this->assertTrue($actualReturn->contains($ownedExchange));
     }
 
     public function testFilterFromEnrollment()
@@ -213,7 +232,7 @@ class ExchangeTest extends TestCase
 
     public function testThrowsExceptionWhenAnEnrollmentIsAlreadyListedForExchange()
     {
-        $this->expectException(MultipleEnrollmentExchangesException::class);
+        $this->expectException(EnrollmentCannotBeExchangedException::class);
 
         // Prepare
         $existingExchange = factory(Exchange::class)->create();
@@ -228,7 +247,7 @@ class ExchangeTest extends TestCase
 
     public function testThrowsExceptionWhenAnEnrollmentWithoutAssociatedShiftIsExchanged()
     {
-        $this->expectException(ExchangeEnrollmentWithoutShiftException::class);
+        $this->expectException(EnrollmentCannotBeExchangedException::class);
 
         // Prepare
         $fromEnrollment = factory(Enrollment::class)->create();

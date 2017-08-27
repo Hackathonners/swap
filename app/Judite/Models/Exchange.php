@@ -5,8 +5,7 @@ namespace App\Judite\Models;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use App\Judite\Contracts\Registry\ExchangeRegistry;
-use App\Exceptions\MultipleEnrollmentExchangesException;
-use App\Exceptions\ExchangeEnrollmentWithoutShiftException;
+use App\Exceptions\EnrollmentCannotBeExchangedException;
 use App\Exceptions\ExchangeEnrollmentsOnDifferentCoursesException;
 
 class Exchange extends Model
@@ -37,32 +36,41 @@ class Exchange extends Model
     }
 
     /**
+     * Scope a query to filter exchanges by owner.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param \App\Judite\Models\Student            $student
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOwnedBy($query, Student $student)
+    {
+        $studentEnrollmentsQuery = $student->enrollments()
+            ->select((new Enrollment())->getKeyName())
+            ->getBaseQuery();
+
+        return $query->whereIn('from_enrollment_id', $studentEnrollmentsQuery);
+    }
+
+    /**
      * Set the enrollments of this exchange.
      *
      * @param \App\Judite\Models\Enrollment $from
      * @param \App\Judite\Models\Enrollment $to
      *
-     * @throws \App\Exceptions\MultipleEnrollmentExchangesException
-     * @throws \App\Exceptions\ExchangeEnrollmentWithoutShiftException
+     * @throws \App\Exceptions\EnrollmentCannotBeExchangedException
      * @throws \App\Exceptions\ExchangeEnrollmentsOnDifferentCoursesException
      *
      * @return $this
      */
     public function setExchangeEnrollments(Enrollment $from, Enrollment $to) : Exchange
     {
-        // Each enrollment can be requested to exchange once. The students
-        // are allowed to create only a single exchange related to the
-        // same enrollment, ensuring that each request exists once.
-        if ($from->exchangesAsSource()->exists()) {
-            throw new MultipleEnrollmentExchangesException();
+        if (! $from->availableForExchange() || is_null($to->shift)) {
+            throw new EnrollmentCannotBeExchangedException();
         }
 
-        if ($from->course_id !== $to->course_id) {
+        if (! $from->course->is($to->course)) {
             throw new ExchangeEnrollmentsOnDifferentCoursesException();
-        }
-
-        if (is_null($from->shift_id) || is_null($to->shift_id)) {
-            throw new ExchangeEnrollmentWithoutShiftException();
         }
 
         $this->fromEnrollment()->associate($from);
@@ -126,6 +134,7 @@ class Exchange extends Model
         $toEnrollmentCopy = clone $this->toEnrollment;
 
         $this->fromEnrollment->exchange($this->toEnrollment);
+
         $exchangedEnrollments = collect([$this->fromEnrollment, $this->toEnrollment]);
         $this->deleteExchangesOfEnrollments($exchangedEnrollments);
 
@@ -216,5 +225,17 @@ class Exchange extends Model
     public function toStudent(): Student
     {
         return $this->toEnrollment->student;
+    }
+
+    /**
+     * Get the target student of this exchange.
+     *
+     * @param \App\Judite\Models\Student $student
+     *
+     * @return bool
+     */
+    public function isOwnedBy(Student $student): bool
+    {
+        return $this->fromStudent()->is($student);
     }
 }

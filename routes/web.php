@@ -26,11 +26,11 @@ Route::middleware(['auth', 'can.student'])->group(function () {
         Route::get('/courses', 'CourseController@index')->name('courses.index');
         Route::post('/courses/{courseId}/enroll', 'EnrollmentController@store')->name('enrollments.store');
         Route::delete('/courses/{courseId}/unenroll', 'EnrollmentController@destroy')->name('enrollments.destroy');
-        Route::get('/enrollments/{enrollmentId}/exchange', 'ExchangeController@create')->name('exchanges.create');
-        Route::post('/enrollments/{enrollmentId}/exchange', 'ExchangeController@store')->name('exchanges.store');
-        Route::delete('/exchanges', 'ExchangeController@destroy')->name('exchanges.destroy');
-        Route::post('/exchanges/confirm', 'ExchangeController@storeConfirmation')->name('exchanges.confirm');
-        Route::post('/exchanges/decline', 'ExchangeController@storeDecline')->name('exchanges.decline');
+        Route::get('/enrollments/{enrollmentId}/exchange', 'EnrollmentExchangeController@create')->name('exchanges.create');
+        Route::post('/enrollments/{enrollmentId}/exchange', 'EnrollmentExchangeController@store')->name('exchanges.store');
+        Route::delete('/exchanges/{id}', 'EnrollmentExchangeController@destroy')->name('exchanges.destroy');
+        Route::post('/exchanges/{id}/confirm', 'ExchangeController@confirm')->name('exchanges.confirm');
+        Route::post('/exchanges/{id}/decline', 'ExchangeController@decline')->name('exchanges.decline');
     });
 });
 

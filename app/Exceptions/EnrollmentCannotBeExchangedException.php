@@ -4,14 +4,14 @@ namespace App\Exceptions;
 
 use Exception;
 
-class ExchangeEnrollmentWithoutShiftException extends Exception
+class EnrollmentCannotBeExchangedException extends Exception
 {
     /**
      * Create a new exception instance.
      *
      * @param string $message
      */
-    public function __construct($message = 'Cannot exchange an enrollment that does not have an associated shift.')
+    public function __construct($message = 'The enrollment cannot be exchanged.')
     {
         parent::__construct($message);
     }

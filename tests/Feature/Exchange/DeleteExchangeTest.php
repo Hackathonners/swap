@@ -33,12 +33,9 @@ class DeleteExchangeTest extends TestCase
     /** @test */
     public function a_student_can_delete_a_shift_exchange_request()
     {
-        // Prepare
-        $requestData = ['exchange_id' => $this->exchange->id];
-
         // Execute
         $this->actingAs($this->fromEnrollment->student->user);
-        $response = $this->delete(route('exchanges.destroy'), $requestData);
+        $response = $this->delete(route('exchanges.destroy', $this->exchange->id));
 
         // Assert
         $response->assertRedirect();
@@ -50,14 +47,13 @@ class DeleteExchangeTest extends TestCase
     {
         // Prepare
         $unauthorizedStudent = factory(Student::class)->create();
-        $requestData = ['exchange_id' => $this->exchange->id];
 
         // Execute
         $this->actingAs($unauthorizedStudent->user);
-        $response = $this->delete(route('exchanges.destroy'), $requestData);
+        $response = $this->delete(route('exchanges.destroy', $this->exchange->id));
 
         // Assert
-        $response->assertStatus(302); // TODO: effetive unauthorized exception handling
+        $response->assertStatus(404);
         $this->assertEquals(1, Exchange::count());
         $this->assertEnrollmentsRemainUnchanged();
     }
@@ -65,11 +61,8 @@ class DeleteExchangeTest extends TestCase
     /** @test */
     public function unauthenticated_users_may_not_delete_exchanges()
     {
-        // Prepare
-        $requestData = ['exchange_id' => $this->exchange->id];
-
         // Execute
-        $response = $this->delete(route('exchanges.destroy', $requestData));
+        $response = $this->delete(route('exchanges.destroy', $this->exchange->id));
 
         // Assert
         $response->assertRedirect(route('login'));

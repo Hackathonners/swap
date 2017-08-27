@@ -36,12 +36,9 @@ class ConfirmExchangeTest extends TestCase
     /** @test */
     public function a_student_can_confirm_a_proposed_exchange()
     {
-        // Prepare
-        $requestData = ['exchange_id' => $this->exchange->id];
-
         // Execute
         $this->actingAs($this->toEnrollment->student->user);
-        $response = $this->post(route('exchanges.confirm', $requestData));
+        $response = $this->post(route('exchanges.confirm', $this->exchange->id));
 
         // Assert
         $response->assertRedirect(route('home'));
@@ -51,15 +48,12 @@ class ConfirmExchangeTest extends TestCase
     /** @test */
     public function a_student_may_not_confirm_its_own_proposed_exchange()
     {
-        // Prepare
-        $requestData = ['exchange_id' => $this->exchange->id];
-
         // Execute
         $this->actingAs($this->fromEnrollment->student->user);
-        $response = $this->post(route('exchanges.confirm', $requestData));
+        $response = $this->post(route('exchanges.confirm', $this->exchange->id));
 
         // Assert
-        $response->assertStatus(302); // TODO: effetive unauthorized exception handling
+        $response->assertRedirect();
         $this->assertEnrollmentsRemainUnchanged();
     }
 
@@ -68,14 +62,13 @@ class ConfirmExchangeTest extends TestCase
     {
         // Prepare
         $unauthorizedStudent = factory(Student::class)->create();
-        $requestData = ['exchange_id' => $this->exchange->id];
 
         // Execute
         $this->actingAs($unauthorizedStudent->user);
-        $response = $this->post(route('exchanges.confirm', $requestData));
+        $response = $this->post(route('exchanges.confirm', $this->exchange->id));
 
         // Assert
-        $response->assertStatus(302); // TODO: effetive unauthorized exception handling
+        $response->assertStatus(404);
         $this->assertEnrollmentsRemainUnchanged();
     }
 
@@ -84,14 +77,13 @@ class ConfirmExchangeTest extends TestCase
     {
         // Prepare
         $admin = factory(User::class)->states('admin')->create();
-        $requestData = ['exchange_id' => $this->exchange->id];
 
         // Execute
         $this->actingAs($admin);
-        $response = $this->post(route('exchanges.confirm', $requestData));
+        $response = $this->post(route('exchanges.confirm', $this->exchange->id));
 
         // Assert
-        $response->assertStatus(302); // TODO: effetive unauthorized exception handling
+        $response->assertStatus(302);
         $this->assertEnrollmentsRemainUnchanged();
     }
 
@@ -102,7 +94,7 @@ class ConfirmExchangeTest extends TestCase
         $requestData = ['exchange_id' => $this->exchange->id];
 
         // Execute
-        $response = $this->post(route('exchanges.confirm', $requestData));
+        $response = $this->post(route('exchanges.confirm', $this->exchange->id));
 
         // Assert
         $response->assertRedirect(route('login'));

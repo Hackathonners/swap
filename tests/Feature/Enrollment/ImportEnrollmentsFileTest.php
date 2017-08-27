@@ -80,7 +80,7 @@ class ImportEnrollmentsFileTest extends TestCase
             ->post(route('enrollments.storeImport'), $requestData);
 
         // Assert
-        $response->assertStatus(302); // TODO: effetive unauthorized exception handling
+        $response->assertStatus(302);
     }
 
     /** @test */
