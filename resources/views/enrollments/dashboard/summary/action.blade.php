@@ -16,10 +16,9 @@
             <span class="sr-only">Toggle Dropdown</span>
         </button>
         <div class="dropdown-menu dropdown-menu-right">
-            <form action="{{ route('enrollments.destroy') }}" method="post">
+            <form action="{{ route('enrollments.destroy', $enrollment->course_id) }}" method="post">
                 {{ csrf_field() }}
                 {{ method_field('DELETE') }}
-                <input type="hidden" name="course_id" value="{{ $enrollment->course_id }}">
                 <button type="submit" class="dropdown-item btn btn-sm text-danger">Delete enrollment</button>
             </form>
         </div>

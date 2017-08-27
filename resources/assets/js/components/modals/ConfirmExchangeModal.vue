@@ -1,12 +1,12 @@
 <template lang="html">
-    <b-modal ref="modal" :title="`Confirm exchange on ${this.course}`" size="lg">
+    <b-modal ref="modal" :title="`Confirm exchange on ${ this.course }`" size="lg">
         Confirming the exchange proposed by <strong>{{ this.student.name }} ({{ this.student.number }})</strong>, your enrollment in the course <strong>{{ this.course }}</strong> will be updated from shift <strong>{{ this.fromShift }}</strong> to <strong>{{ this.toShift }}</strong>.
 
-        <form slot="modal-footer" action="/exchanges/confirm" method="post">
+        <form slot="modal-footer" :action="`/exchanges/${ this.id }/confirm`" method="post">
             <csrf-field></csrf-field>
             <input type="hidden" name="exchange_id" :value="id">
             <button type="button" name="button" class="btn btn-outline-secondary" @click="close">Close</button>
-            <button type="submit" name="button" class="btn btn-primary">Exchange to {{this.toShift}}</button>
+            <button type="submit" name="button" class="btn btn-primary">Exchange to {{ this.toShift }}</button>
         </form>
     </b-modal>
 </template>

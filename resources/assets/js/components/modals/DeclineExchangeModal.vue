@@ -1,12 +1,11 @@
 <template lang="html">
-    <b-modal ref="modal" :title="`Decline exchange on ${this.course}`" size="lg">
+    <b-modal ref="modal" :title="`Decline exchange on ${ this.course }`" size="lg">
         Are you sure to decline the exchange proposed by <strong>{{ this.student.name }} ({{ this.student.number }})</strong>?
         <br>
         You will keep enrolled in <strong>{{ this.fromShift }}</strong> on <strong>{{ this.course }}</strong>.
 
-        <form slot="modal-footer" action="/exchanges/decline" method="post">
+        <form slot="modal-footer" :action="`/exchanges/${ this.id }/decline`" method="post">
             <csrf-field></csrf-field>
-            <input type="hidden" name="exchange_id" :value="id">
             <button type="button" name="button" class="btn btn-outline-secondary" @click="close">Close</button>
             <button type="submit" name="button" class="btn btn-danger">Decline exchange</button>
         </form>

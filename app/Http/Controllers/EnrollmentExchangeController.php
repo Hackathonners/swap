@@ -34,7 +34,7 @@ class EnrollmentExchangeController extends Controller
                 $enrollment = Enrollment::ownedBy(auth()->user()->student)
                     ->findOrFail($enrollmentId);
 
-                if ($enrollment->availableForExchange()) {
+                if (! $enrollment->availableForExchange()) {
                     throw new \LogicException('The enrollment is not available for exchange.');
                 }
 
