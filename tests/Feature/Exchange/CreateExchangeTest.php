@@ -36,13 +36,12 @@ class CreateExchangeTest extends TestCase
     {
         // Prepare
         $requestData = [
-            'from_enrollment_id' => $this->fromEnrollment->id,
             'to_enrollment_id' => $this->toEnrollment->id,
         ];
 
         // Execute
         $this->actingAs($this->fromEnrollment->student->user);
-        $response = $this->post(route('exchanges.store'), $requestData);
+        $response = $this->post(route('exchanges.store', $this->fromEnrollment->id), $requestData);
 
         // Assert
         $response->assertRedirect();
@@ -58,16 +57,15 @@ class CreateExchangeTest extends TestCase
         // Prepare
         $unauthorizedStudent = factory(Student::class)->create();
         $requestData = [
-            'from_enrollment_id' => $this->fromEnrollment->id,
             'to_enrollment_id' => $this->toEnrollment->id,
         ];
 
         // Execute
         $this->actingAs($unauthorizedStudent->user);
-        $response = $this->post(route('exchanges.store'), $requestData);
+        $response = $this->post(route('exchanges.store', $this->fromEnrollment->id), $requestData);
 
         // Assert
-        $response->assertStatus(302); // TODO: effetive unauthorized exception handling
+        $response->assertStatus(404);
         $this->assertEquals(0, Exchange::count());
     }
 
@@ -76,12 +74,11 @@ class CreateExchangeTest extends TestCase
     {
         // Prepare
         $requestData = [
-            'from_enrollment_id' => $this->fromEnrollment->id,
             'to_enrollment_id' => $this->toEnrollment->id,
         ];
 
         // Execute
-        $response = $this->post(route('exchanges.store', $requestData));
+        $response = $this->post(route('exchanges.store', $this->fromEnrollment->id), $requestData);
 
         // Assert
         $response->assertRedirect(route('login'));

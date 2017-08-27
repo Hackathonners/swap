@@ -4,13 +4,12 @@
     <div class="card card--section">
         <div class="card-header">Propose a new shift exchange</div>
         <div class="card-body">
-            <form method="post" action="{{ route('exchanges.store') }}">
+            <form method="post" action="{{ route('exchanges.store', $enrollment->id) }}">
                 {{ csrf_field() }}
 
                 {{-- From enrollment--}}
                 <div class="form-group">
                     <label>From enrollment</label>
-                    <input type="hidden" name="from_enrollment_id" value="{{ $enrollment->id }}">
                     <input type="text"
                     class="form-control {{ $errors->has('from_enrollment_id') ? 'is-invalid' : '' }}"
                     value="{{ $enrollment->present()->inlineToString() }}"

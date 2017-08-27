@@ -69,20 +69,21 @@ class ExchangeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
+     * @param int                                       $enrollmentId
      * @param \App\Http\Requests\Exchange\CreateRequest $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateRequest $request)
+    public function store($enrollmentId, CreateRequest $request)
     {
         try {
-            DB::transaction(function () use ($request) {
+            DB::transaction(function () use ($enrollmentId, $request) {
                 $this->validate($request, [
-                    'from_enrollment_id' => 'exists:enrollments,id',
                     'to_enrollment_id' => 'exists:enrollments,id',
                 ]);
 
-                $fromEnrollment = Enrollment::find($request->input('from_enrollment_id'));
+                $fromEnrollment = Enrollment::ownedBy(auth()->user()->student)
+                    ->findOrFail($enrollmentId);
                 $toEnrollment = Enrollment::find($request->input('to_enrollment_id'));
                 $this->authorize('exchange', $fromEnrollment);
 
@@ -106,8 +107,8 @@ class ExchangeController extends Controller
 
             flash('The exchange was successfully proposed.')->success();
         } catch (MultipleEnrollmentExchangesException
-        | ExchangeEnrollmentsOnDifferentCoursesException
-        | ExchangeEnrollmentWithoutShiftException $e) {
+            | ExchangeEnrollmentsOnDifferentCoursesException
+            | ExchangeEnrollmentWithoutShiftException $e) {
             flash($e->getMessage())->error();
         }
 

@@ -24,7 +24,6 @@ class CreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'from_enrollment_id' => 'required',
             'to_enrollment_id' => 'required',
         ];
     }
