@@ -5,7 +5,9 @@
         <div class="card-header">Import enrollments</div>
         <div class="card-body">
 
-            <form class="form-horizontal" role="form" method="POST" action="{{ route('enrollments.import') }}" enctype="multipart/form-data">
+            <form class="form-horizontal" role="form" method="POST"
+                action="{{ route('enrollments.import') }}"
+                enctype="multipart/form-data">
                 {{ csrf_field() }}
 
                 {{-- File input --}}

@@ -1,10 +1,14 @@
 <div class="btn-group">
-    {{-- Show button to exchange shift, if exchanges period is active --}}
-    @if ($settings->withinExchangePeriod() && $enrollment->exchanges_as_source_count < 1 && !is_null($enrollment->shift))
-        <a href="{{ route('exchanges.create', $enrollment->id )}}" class="btn btn-outline-secondary btn-sm">Exchange shift</a>
+    {{-- Exchange action --}}
+    @if ($settings->withinExchangePeriod() && $enrollment->availableForExchange())
+        <a
+            href="{{ route('exchanges.create', $enrollment->id )}}"
+            class="btn btn-outline-secondary btn-sm">
+            Exchange shift
+        </a>
     @endif
 
-    {{-- Show enrollment actions, if enrollments period is active --}}
+    {{-- Enrollment actions --}}
     @if ($settings->withinEnrollmentPeriod())
         <button type="button" class="btn btn-outline-secondary btn-sm disabled">Enrolled</button>
         <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

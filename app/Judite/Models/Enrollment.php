@@ -127,4 +127,18 @@ class Enrollment extends Model
     {
         return $this->belongsTo(Shift::class);
     }
+
+    /**
+     * Check whether this enrollment is available for exchange.
+     *
+     * @return bool
+     */
+    public function availableForExchange()
+    {
+        $isBeingExchanged = is_null($this->exchanges_as_source_count)
+            ? $this->exchangesAsSource()->exists()
+            : $this->exchanges_as_source_count > 0;
+
+        return ! $isBeingExchanged && ! is_null($this->shift_id);
+    }
 }
