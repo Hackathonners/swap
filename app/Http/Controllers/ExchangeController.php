@@ -86,7 +86,7 @@ class ExchangeController extends Controller
         } catch (AuthorizationException $e) {
             throw $exchange->isOwnedBy(auth()->user()->student)
                 ? $e
-                : new ModelNotFoundException(get_class($exchange), $exchange->getKey());
+                : new ModelNotFoundException(get_class($exchange), $exchange->id);
         }
     }
 }
