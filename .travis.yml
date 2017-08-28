@@ -13,8 +13,8 @@ cache:
     - vendor
     - $HOME/.composer/cache
 
-# before_install:
-#   - phpenv config-rm xdebug.ini
+before_install:
+  - phpenv config-rm xdebug.ini
 
 install:
   - COMPOSER_DISCARD_CHANGES=1 composer install --dev --prefer-source --no-interaction
@@ -22,6 +22,11 @@ install:
 before_script:
   - psql -c 'create database judite_testing;' -U postgres
   - php artisan migrate
+  - nvm install --lts
+  - npm install -g yarn
+  - yarn install
 
 script:
   - composer ci-test
+  - composer ci-lint
+  - npm run production
