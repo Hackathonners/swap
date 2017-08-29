@@ -28,8 +28,8 @@ Route::post('/exchanges/{id}/confirm', 'ExchangeController@confirm')->name('exch
 Route::post('/exchanges/{id}/decline', 'ExchangeController@decline')->name('exchanges.decline');
 Route::delete('/exchanges/{id}', 'ExchangeController@destroy')->name('exchanges.destroy');
 
-Route::get('/confirm/{token}', 'Auth\RegisterController@confirm')->name('register.confirm');
-Route::post('/registrations/resend-confirmation', 'Auth\RegisterController@resendConfirmationEmail')->name('register.resend_confirmation');
+Route::get('/registrations/confirm/{token}', 'Auth\AccountVerificationController@store')->name('register.confirm');
+Route::post('/registrations/email', 'Auth\AccountVerificationController@sendEmail')->name('register.resend_confirmation');
 
 /*
  * Admin routes

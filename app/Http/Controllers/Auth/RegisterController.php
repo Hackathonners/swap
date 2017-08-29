@@ -6,9 +6,6 @@ use App\Judite\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\RegistrationConfirmation;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -25,7 +22,7 @@ class RegisterController extends Controller
     |
     */
 
-    use RegistersUsers;
+    use RegistersUsers, SendsConfirmationEmails;
 
     /**
      * Where to redirect users after registration.
@@ -39,57 +36,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')
-            ->except(['confirm', 'resendConfirmationEmail']);
-
-        $this->middleware(['auth', 'can.student'])
-            ->only(['confirm', 'resendConfirmationEmail']);
-    }
-
-    /**
-     * Confirm a student account.
-     *
-     * @param string $token
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function confirm($token)
-    {
-        $user = Auth::user();
-
-        if ($user->verification_token !== $token) {
-            flash('Invalid account confirmation.')->error();
-
-            return redirect($this->redirectTo);
-        }
-
-        $user->verified = true;
-        $user->verification_token = null;
-        $user->save();
-
-        flash('Your account is now confirmed.')->success();
-
-        return redirect($this->redirectTo);
-    }
-
-    /**
-     * Resend confirmation email of a student account.
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function resendConfirmationEmail()
-    {
-        $user = Auth::user();
-        if ($user->verified) {
-            flash('Your account is already confirmed.')->error();
-
-            return redirect($this->redirectTo);
-        }
-
-        $this->sendConfirmationEmail(Auth::user());
-        flash('A new confirmation e-mail has been sent. Please check your e-mail account.')->success();
-
-        return redirect($this->redirectTo);
+        $this->middleware('guest');
     }
 
     /**
@@ -141,16 +88,6 @@ class RegisterController extends Controller
      */
     protected function registered(Request $request, $user)
     {
-        $this->sendConfirmationEmail($user);
-    }
-
-    /**
-     * Send the confirmation e-mail to the given user.
-     *
-     * @param mixed $user
-     */
-    protected function sendConfirmationEmail($user)
-    {
-        Mail::to($user)->send(new RegistrationConfirmation($user));
+        $this->sendAccountConfirmationEmail($user);
     }
 }
