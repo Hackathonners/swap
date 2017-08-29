@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Judite\Models\Exchange;
-use App\Policies\ExchangePolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -14,7 +12,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        Exchange::class => ExchangePolicy::class,
+        //
     ];
 
     /**
