@@ -22,7 +22,7 @@ Route::middleware(['auth', 'can.student'])->group(function () {
          ->name('register.resend_confirmation');
 
     // Allowed routes after confirmation
-    Route::middleware('confirmed')->group(function () {
+    Route::middleware('student.verified')->group(function () {
         Route::get('/courses', 'CourseController@index')->name('courses.index');
         Route::post('/courses/{courseId}/enroll', 'EnrollmentController@store')->name('enrollments.store');
         Route::delete('/courses/{courseId}/unenroll', 'EnrollmentController@destroy')->name('enrollments.destroy');
