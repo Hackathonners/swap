@@ -52,7 +52,7 @@ class ConfirmExchangeTest extends TestCase
         $response = $this->post(route('exchanges.confirm', $this->exchange->id));
 
         // Assert
-        $response->assertRedirect();
+        $response->assertStatus(404);
         $this->assertEnrollmentsRemainUnchanged();
     }
 

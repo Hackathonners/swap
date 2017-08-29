@@ -7,7 +7,6 @@ use App\Judite\Models\Exchange;
 use App\Judite\Models\Enrollment;
 use Illuminate\Support\Facades\DB;
 use App\Events\ExchangeWasConfirmed;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Exchange\CreateRequest;
 use App\Exceptions\EnrollmentCannotBeExchangedException;
 use App\Exceptions\ExchangeEnrollmentsOnDifferentCoursesException;
@@ -121,9 +120,7 @@ class EnrollmentExchangeController extends Controller
     public function destroy($id)
     {
         DB::transaction(function () use ($id) {
-            Exchange::ownedBy(auth()->user()->student)
-                ->findOrFail($id)
-                ->delete();
+            student()->requestedExchanges()->findOrFail($id)->delete();
         });
 
         flash('The shift exchange request was successfully deleted.')->success();

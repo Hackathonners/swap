@@ -57,7 +57,7 @@ class DeclineExchangeTest extends TestCase
         $response = $this->post(route('exchanges.decline', $this->exchange->id));
 
         // Assert
-        $response->assertStatus(302);
+        $response->assertStatus(404);
         $this->assertEnrollmentsRemainUnchanged();
         Mail::assertNotSent(DeclinedExchangeNotification::class);
     }
