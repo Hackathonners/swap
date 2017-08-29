@@ -54,7 +54,7 @@ class EnrollmentController extends Controller
     {
         $course = DB::transaction(function () use ($courseId) {
             $course = Course::findOrFail($courseId);
-            student()->removeEnrollmentInCourse($course);
+            student()->unenroll($course);
 
             return $course;
         });

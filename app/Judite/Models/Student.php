@@ -114,7 +114,7 @@ class Student extends Model
      *
      * @return bool
      */
-    public function removeEnrollmentInCourse(Course $course): bool
+    public function unenroll(Course $course): bool
     {
         return $this->enrollments()->where('course_id', $course->id)->delete();
     }
