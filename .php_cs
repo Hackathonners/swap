@@ -62,6 +62,7 @@ $rules = [
     'normalize_index_brace' => true,
     'not_operator_with_successor_space' => true,
     'object_operator_without_whitespace' => true,
+    'ordered_class_elements' => true,
     'ordered_imports' => ['sortAlgorithm' => 'length'],
     'phpdoc_align' => true,
     'phpdoc_indent' => true,

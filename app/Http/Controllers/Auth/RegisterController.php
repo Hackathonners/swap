@@ -47,47 +47,6 @@ class RegisterController extends Controller
     }
 
     /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param array $data
-     *
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'name' => 'required|string|max:255',
-            'student_number' => 'required|string|unique:students,student_number|student_number',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
-    }
-
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param array $data
-     *
-     * @return \App\Judite\Models\User
-     */
-    protected function create(array $data)
-    {
-        $user = DB::transaction(function () use ($data) {
-            $user = User::make([
-                'name' => $data['name'],
-                'email' => $data['student_number'].'@alunos.uminho.pt',
-                'password' => bcrypt($data['password']),
-            ]);
-            $user->verification_token = str_random(32);
-            $user->save();
-            $user->student()->create(['student_number' => $data['student_number']]);
-
-            return $user;
-        });
-
-        return $user;
-    }
-
-    /**
      * Confirm a student account.
      *
      * @param string $token
@@ -131,6 +90,47 @@ class RegisterController extends Controller
         flash('A new confirmation e-mail has been sent. Please check your e-mail account.')->success();
 
         return redirect($this->redirectTo);
+    }
+
+    /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param array $data
+     *
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'name' => 'required|string|max:255',
+            'student_number' => 'required|string|unique:students,student_number|student_number',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+    }
+
+    /**
+     * Create a new user instance after a valid registration.
+     *
+     * @param array $data
+     *
+     * @return \App\Judite\Models\User
+     */
+    protected function create(array $data)
+    {
+        $user = DB::transaction(function () use ($data) {
+            $user = User::make([
+                'name' => $data['name'],
+                'email' => $data['student_number'].'@alunos.uminho.pt',
+                'password' => bcrypt($data['password']),
+            ]);
+            $user->verification_token = str_random(32);
+            $user->save();
+            $user->student()->create(['student_number' => $data['student_number']]);
+
+            return $user;
+        });
+
+        return $user;
     }
 
     /**

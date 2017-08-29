@@ -183,20 +183,6 @@ class Exchange extends Model
     }
 
     /**
-     * Deletes all exchanges involving the given enrollments.
-     *
-     * @param \Illuminate\Support\Collection $enrollments
-     */
-    private function deleteExchangesOfEnrollments(Collection $enrollments)
-    {
-        $enrollmentIds = $enrollments->pluck('id');
-
-        self::whereIn('from_enrollment_id', $enrollmentIds)
-            ->orWhereIn('to_enrollment_id', $enrollmentIds)
-            ->delete();
-    }
-
-    /**
      * Get the course of this exchange.
      *
      * @return \App\Judite\Models\Course
@@ -256,5 +242,19 @@ class Exchange extends Model
     public function isOwnedBy(Student $student): bool
     {
         return $this->fromStudent()->is($student);
+    }
+
+    /**
+     * Deletes all exchanges involving the given enrollments.
+     *
+     * @param \Illuminate\Support\Collection $enrollments
+     */
+    private function deleteExchangesOfEnrollments(Collection $enrollments)
+    {
+        $enrollmentIds = $enrollments->pluck('id');
+
+        self::whereIn('from_enrollment_id', $enrollmentIds)
+            ->orWhereIn('to_enrollment_id', $enrollmentIds)
+            ->delete();
     }
 }
