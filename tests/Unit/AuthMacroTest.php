@@ -7,7 +7,7 @@ use App\Judite\Models\Student;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class HelpersTest extends TestCase
+class AuthMacroTest extends TestCase
 {
     use DatabaseTransactions;
 
@@ -16,6 +16,6 @@ class HelpersTest extends TestCase
         $student = factory(Student::class)->create();
         Auth::loginUsingId($student->user->id);
 
-        $this->assertTrue(student()->is(Auth::user()->student));
+        $this->assertTrue(Auth::student()->is(Auth::user()->student));
     }
 }

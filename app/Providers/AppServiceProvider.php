@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Judite\Models\Settings;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use App\Judite\Registry\EloquentExchangeRegistry;
@@ -15,6 +16,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Auth::macro('student', function () {
+            return Auth::check() ? Auth::user()->student : null;
+        });
+
         Validator::extend('student_number', function ($attribute, $value, $parameters, $validator) {
             return preg_match('/^(a|pg)[0-9]+$/', $value) === 1;
         });

@@ -7,6 +7,7 @@ use App\Judite\Models\Exchange;
 use Illuminate\Support\Facades\DB;
 use App\Events\ExchangeWasDeclined;
 use App\Events\ExchangeWasConfirmed;
+use Illuminate\Support\Facades\Auth;
 
 class ExchangeController extends Controller
 {
@@ -31,7 +32,7 @@ class ExchangeController extends Controller
     public function confirm($id)
     {
         $exchange = DB::transaction(function () use ($id) {
-            $exchange = student()->proposedExchanges()->findOrFail($id);
+            $exchange = Auth::student()->proposedExchanges()->findOrFail($id);
 
             return $exchange->perform();
         });
@@ -52,7 +53,7 @@ class ExchangeController extends Controller
     public function decline($id)
     {
         $exchange = DB::transaction(function () use ($id) {
-            $exchange = student()->proposedExchanges()->findOrFail($id);
+            $exchange = Auth::student()->proposedExchanges()->findOrFail($id);
             $exchange->delete();
 
             return $exchange;
@@ -74,7 +75,7 @@ class ExchangeController extends Controller
     public function destroy($id)
     {
         DB::transaction(function () use ($id) {
-            student()->requestedExchanges()->findOrFail($id)->delete();
+            Auth::student()->requestedExchanges()->findOrFail($id)->delete();
         });
 
         flash('The shift exchange request was successfully deleted.')->success();

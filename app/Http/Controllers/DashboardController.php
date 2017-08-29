@@ -56,12 +56,12 @@ class DashboardController extends Controller
     protected function studentDashboard()
     {
         $data = DB::transaction(function () {
-            $data['enrollments'] = student()->enrollments()
+            $data['enrollments'] = Auth::student()->enrollments()
                 ->withCount('exchangesAsSource')
                 ->orderByCourse()
                 ->get();
-            $data['requestedExchanges'] = student()->requestedExchanges()->get();
-            $data['proposedExchanges'] = student()->proposedExchanges()->get();
+            $data['requestedExchanges'] = Auth::student()->requestedExchanges()->get();
+            $data['proposedExchanges'] = Auth::student()->proposedExchanges()->get();
 
             return $data;
         });

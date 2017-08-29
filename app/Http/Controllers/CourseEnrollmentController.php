@@ -32,7 +32,7 @@ class CourseEnrollmentController extends Controller
         try {
             $course = DB::transaction(function () use ($id) {
                 $course = Course::findOrFail($id);
-                student()->enroll($course);
+                Auth::student()->enroll($course);
 
                 return $course;
             });
@@ -57,7 +57,7 @@ class CourseEnrollmentController extends Controller
     {
         $course = DB::transaction(function () use ($id) {
             $course = Course::findOrFail($id);
-            student()->unenroll($course);
+            Auth::student()->unenroll($course);
 
             return $course;
         });

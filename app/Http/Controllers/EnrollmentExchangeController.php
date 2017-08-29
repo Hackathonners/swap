@@ -6,6 +6,7 @@ use App\Judite\Models\Exchange;
 use App\Judite\Models\Enrollment;
 use Illuminate\Support\Facades\DB;
 use App\Events\ExchangeWasConfirmed;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Exchange\CreateRequest;
 use App\Exceptions\EnrollmentCannotBeExchangedException;
 use App\Exceptions\ExchangeEnrollmentsOnDifferentCoursesException;
@@ -34,7 +35,7 @@ class EnrollmentExchangeController extends Controller
     {
         try {
             $data = DB::transaction(function () use ($id) {
-                $enrollment = student()->enrollments()->findOrFail($id);
+                $enrollment = Auth::student()->enrollments()->findOrFail($id);
 
                 if (! $enrollment->availableForExchange()) {
                     throw new \LogicException('The enrollment is not available for exchange.');
@@ -78,7 +79,7 @@ class EnrollmentExchangeController extends Controller
                     'to_enrollment_id' => 'exists:enrollments,id',
                 ]);
 
-                $fromEnrollment = student()->enrollments()->findOrFail($id);
+                $fromEnrollment = Auth::student()->enrollments()->findOrFail($id);
                 $toEnrollment = Enrollment::find($request->input('to_enrollment_id'));
 
                 // Firstly check if the inverse exchange for the same enrollments
