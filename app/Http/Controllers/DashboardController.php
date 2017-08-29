@@ -60,8 +60,8 @@ class DashboardController extends Controller
                 ->withCount('exchangesAsSource')
                 ->orderByCourse()
                 ->get();
-            $data['requestedExchanges'] = $student->requestedExchanges()->get();
-            $data['proposedExchanges'] = $student->proposedExchanges()->get();
+            $data['requestedExchanges'] = student()->requestedExchanges()->get();
+            $data['proposedExchanges'] = student()->proposedExchanges()->get();
 
             return $data;
         });
