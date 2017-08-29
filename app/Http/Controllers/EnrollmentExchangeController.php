@@ -18,6 +18,9 @@ class EnrollmentExchangeController extends Controller
      */
     public function __construct()
     {
+        $this->middleware('auth');
+        $this->middleware('can.student');
+        $this->middleware('student.verified');
         $this->middleware('can.exchange');
     }
 
@@ -108,23 +111,5 @@ class EnrollmentExchangeController extends Controller
         }
 
         return redirect()->route('home');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        DB::transaction(function () use ($id) {
-            student()->requestedExchanges()->findOrFail($id)->delete();
-        });
-
-        flash('The shift exchange request was successfully deleted.')->success();
-
-        return redirect()->back();
     }
 }

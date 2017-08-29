@@ -41,6 +41,9 @@ class RegisterController extends Controller
     {
         $this->middleware('guest')
             ->except(['confirm', 'resendConfirmationEmail']);
+
+        $this->middleware(['auth', 'can.student'])
+            ->only(['confirm', 'resendConfirmationEmail']);
     }
 
     /**

@@ -9,6 +9,14 @@ use App\Http\Controllers\Controller;
 class CourseController extends Controller
 {
     /**
+     * Create a new controller instance.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('can.admin');
+    }
+    /**
      * Display a resource of given id.
      *
      * @param int $id

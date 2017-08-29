@@ -8,6 +8,16 @@ use Illuminate\Support\Facades\DB;
 class CourseController extends Controller
 {
     /**
+     * Create a new controller instance.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('can.student');
+        $this->middleware('student.verified');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response

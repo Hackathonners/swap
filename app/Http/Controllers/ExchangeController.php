@@ -15,6 +15,9 @@ class ExchangeController extends Controller
      */
     public function __construct()
     {
+        $this->middleware('auth');
+        $this->middleware('can.student');
+        $this->middleware('student.verified');
         $this->middleware('can.exchange');
     }
 
@@ -57,6 +60,24 @@ class ExchangeController extends Controller
 
         event(new ExchangeWasDeclined($exchange));
         flash('The shift exchange request was successfully declined.')->success();
+
+        return redirect()->back();
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        DB::transaction(function () use ($id) {
+            student()->requestedExchanges()->findOrFail($id)->delete();
+        });
+
+        flash('The shift exchange request was successfully deleted.')->success();
 
         return redirect()->back();
     }

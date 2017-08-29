@@ -7,29 +7,32 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Exceptions\UserIsAlreadyEnrolledInCourseException;
 
-class EnrollmentController extends Controller
+class CourseEnrollmentController extends Controller
 {
     /**
      * Create a new controller instance.
      */
     public function __construct()
     {
+        $this->middleware('auth');
+        $this->middleware('can.student');
+        $this->middleware('student.verified');
         $this->middleware('can.enroll');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param int $courseId
+     * @param int $id
      *
      * @return \Illuminate\Http\Response
      */
-    public function store($courseId)
+    public function store($id)
     {
         try {
-            $course = DB::transaction(function () use ($courseId) {
-                $course = Course::findOrFail($courseId);
-                Auth::user()->student->enroll($course);
+            $course = DB::transaction(function () use ($id) {
+                $course = Course::findOrFail($id);
+                student()->enroll($course);
 
                 return $course;
             });
@@ -46,14 +49,14 @@ class EnrollmentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $courseId
+     * @param int $id
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($courseId)
+    public function destroy($id)
     {
-        $course = DB::transaction(function () use ($courseId) {
-            $course = Course::findOrFail($courseId);
+        $course = DB::transaction(function () use ($id) {
+            $course = Course::findOrFail($id);
             student()->unenroll($course);
 
             return $course;

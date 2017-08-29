@@ -16,6 +16,15 @@ use App\Http\Requests\Enrollment\ImportRequest;
 class EnrollmentController extends Controller
 {
     /**
+     * Create a new controller instance.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('can.admin');
+    }
+    
+    /**
      * Exports the list of students enrolled in each course.
      *
      * @return \Illuminate\Http\Response
