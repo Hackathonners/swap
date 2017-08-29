@@ -8,6 +8,7 @@ use App\Judite\Models\Enrollment;
 use App\Judite\Models\ExchangeRegistryEntry;
 use App\Judite\Registry\EloquentExchangeRegistry;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class EloquentExchangeRegistryTest extends TestCase
 {
@@ -31,5 +32,19 @@ class EloquentExchangeRegistryTest extends TestCase
         $this->assertEquals($toEnrollment->student_id, $actualLogExchange->to_student_id);
         $this->assertEquals($fromEnrollment->shift_id, $actualLogExchange->from_shift_id);
         $this->assertEquals($toEnrollment->shift_id, $actualLogExchange->to_shift_id);
+    }
+
+    public function testPaginateRecords()
+    {
+        $exchangeRegistry = new EloquentExchangeRegistry();
+        $records = factory(ExchangeRegistryEntry::class, 10)->create();
+
+        $actualRecords = $exchangeRegistry->paginate();
+
+        $this->assertTrue($actualRecords instanceof LengthAwarePaginator);
+        $this->assertEquals(10, $actualRecords->total());
+        collect($actualRecords->items())->each(function ($item) use ($records) {
+            $this->assertTrue($records->contains($item));
+        });
     }
 }
