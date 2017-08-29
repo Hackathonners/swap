@@ -81,7 +81,7 @@ class ExchangeController extends Controller
         try {
             $this->authorize('decide', $exchange);
         } catch (AuthorizationException $e) {
-            throw $exchange->isOwnedBy(auth()->user()->student)
+            throw $exchange->isOwnedBy(student())
                 ? $e
                 : new ModelNotFoundException(get_class($exchange), $exchange->id);
         }

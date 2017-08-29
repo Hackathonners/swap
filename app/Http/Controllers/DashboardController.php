@@ -23,7 +23,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return auth()->user()->isAdmin()
+        return Auth::user()->isAdmin()
             ? $this->adminDashboard()
             : $this->studentDashboard();
     }
@@ -56,11 +56,9 @@ class DashboardController extends Controller
     protected function studentDashboard()
     {
         $data = DB::transaction(function () {
-            $student = Auth::user()->student;
-            $data['enrollments'] = $student
-                ->enrollments()
-                ->orderByCourse()
+            $data['enrollments'] = student()->enrollments()
                 ->withCount('exchangesAsSource')
+                ->orderByCourse()
                 ->get();
             $data['requestedExchanges'] = $student->requestedExchanges()->get();
             $data['proposedExchanges'] = $student->proposedExchanges()->get();

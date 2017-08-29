@@ -7,6 +7,7 @@ use App\Judite\Models\Exchange;
 use App\Judite\Models\Enrollment;
 use Illuminate\Support\Facades\DB;
 use App\Events\ExchangeWasConfirmed;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Exchange\CreateRequest;
 use App\Exceptions\EnrollmentCannotBeExchangedException;
 use App\Exceptions\ExchangeEnrollmentsOnDifferentCoursesException;
@@ -24,16 +25,15 @@ class EnrollmentExchangeController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @param int $enrollmentId
+     * @param int $id
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($enrollmentId)
+    public function create($id)
     {
         try {
-            $data = DB::transaction(function () use ($enrollmentId) {
-                $enrollment = Enrollment::ownedBy(auth()->user()->student)
-                    ->findOrFail($enrollmentId);
+            $data = DB::transaction(function () use ($id) {
+                $enrollment = student()->enrollments()->findOrFail($id);
 
                 if (! $enrollment->availableForExchange()) {
                     throw new \LogicException('The enrollment is not available for exchange.');
@@ -64,20 +64,20 @@ class EnrollmentExchangeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param int                                       $enrollmentId
+     * @param int                                       $id
      * @param \App\Http\Requests\Exchange\CreateRequest $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function store($enrollmentId, CreateRequest $request)
+    public function store($id, CreateRequest $request)
     {
         try {
-            $exchange = DB::transaction(function () use ($enrollmentId, $request) {
+            $exchange = DB::transaction(function () use ($id, $request) {
                 $this->validate($request, [
                     'to_enrollment_id' => 'exists:enrollments,id',
                 ]);
 
-                $fromEnrollment = Enrollment::ownedBy(auth()->user()->student)->findOrFail($enrollmentId);
+                $fromEnrollment = student()->enrollments()->findOrFail($id);
                 $toEnrollment = Enrollment::find($request->input('to_enrollment_id'));
 
                 // Firstly check if the inverse exchange for the same enrollments

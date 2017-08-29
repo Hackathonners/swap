@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Judite\Models\Course;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Exceptions\UserIsAlreadyEnrolledInCourseException;
 
 class EnrollmentController extends Controller
@@ -28,8 +29,7 @@ class EnrollmentController extends Controller
         try {
             $course = DB::transaction(function () use ($courseId) {
                 $course = Course::findOrFail($courseId);
-                $student = auth()->user()->student;
-                $student->enroll($course);
+                Auth::user()->student->enroll($course);
 
                 return $course;
             });
@@ -54,7 +54,7 @@ class EnrollmentController extends Controller
     {
         $course = DB::transaction(function () use ($courseId) {
             $course = Course::findOrFail($courseId);
-            auth()->user()->student->removeEnrollmentInCourse($course);
+            student()->removeEnrollmentInCourse($course);
 
             return $course;
         });
