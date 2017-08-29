@@ -54,7 +54,7 @@ class Handler extends ExceptionHandler
         if ($exception instanceof AuthorizationException) {
             flash('You do not have permissions to perform this action.')->error();
 
-            return redirect()->route('home');
+            return redirect()->route('dashboard');
         }
 
         if ($exception instanceof TokenMismatchException) {

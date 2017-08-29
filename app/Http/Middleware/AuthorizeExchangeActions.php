@@ -19,7 +19,7 @@ class AuthorizeExchangeActions
         if (! app('settings')->withinExchangePeriod()) {
             flash('The exchanges period is closed. You are not allowed to perform this action.')->error();
 
-            return redirect()->route('home');
+            return redirect()->route('dashboard');
         }
 
         return $next($request);

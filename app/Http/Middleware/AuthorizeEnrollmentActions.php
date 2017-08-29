@@ -19,7 +19,7 @@ class AuthorizeEnrollmentActions
         if (! app('settings')->withinEnrollmentPeriod()) {
             flash('The enrollments period is closed. You are not allowed to perform this action.')->error();
 
-            return redirect()->route('home');
+            return redirect()->route('dashboard');
         }
 
         return $next($request);

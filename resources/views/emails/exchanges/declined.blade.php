@@ -4,7 +4,7 @@
 **Unfortunately, {{ $toStudent->user->name }} declined your requested exchange.**<br>
 You are still enrolled in shift **{{ $toShift->tag }}** of the **{{ $course->name }}** course.
 
-@component('mail::button', ['url' => route('home')])
+@component('mail::button', ['url' => route('dashboard')])
 Request a new exchange
 @endcomponent
 

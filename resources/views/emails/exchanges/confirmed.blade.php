@@ -4,7 +4,7 @@
 **{{ $toStudent->user->name }} confirmed your requested exchange.**<br>
 You are now enrolled in shift **{{ $toShift->tag }}** of the **{{ $course->name }}** course!
 
-@component('mail::button', ['url' => route('home')])
+@component('mail::button', ['url' => route('dashboard')])
 See your enrollments
 @endcomponent
 
