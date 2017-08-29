@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\AuthorizationException;
 
 class AuthorizeStudent
@@ -19,7 +20,7 @@ class AuthorizeStudent
      */
     public function handle($request, Closure $next)
     {
-        if (! auth()->check() || ! auth()->user()->isStudent()) {
+        if (! Auth::user()->isStudent()) {
             throw new AuthorizationException('Unauthorized.');
         }
 
