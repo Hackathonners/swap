@@ -30,8 +30,7 @@ $factory->define(Student::class, function (Faker\Generator $faker) {
     ];
 });
 
-/* @var \Illuminate\Database\Eloquent\Factory $factory */
-$factory->state(Student::class, 'unconfirmed', function (Faker\Generator $faker) {
+$factory->state(Student::class, 'unverified', function (Faker\Generator $faker) {
     return [
         'user_id' => factory(User::class)->create([
             'is_admin' => false,

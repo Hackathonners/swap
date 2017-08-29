@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Judite\Models\Exchange;
 use App\Judite\Models\Enrollment;
 use Illuminate\Support\Facades\DB;
@@ -59,7 +58,7 @@ class EnrollmentExchangeController extends Controller
         } catch (\LogicException $e) {
             flash($e->getMessage())->error();
 
-            return redirect()->route('home');
+            return redirect()->route('dashboard');
         }
     }
 
@@ -110,6 +109,6 @@ class EnrollmentExchangeController extends Controller
             flash($e->getMessage())->error();
         }
 
-        return redirect()->route('home');
+        return redirect()->route('dashboard');
     }
 }

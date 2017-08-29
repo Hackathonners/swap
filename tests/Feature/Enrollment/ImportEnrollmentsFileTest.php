@@ -80,7 +80,7 @@ class ImportEnrollmentsFileTest extends TestCase
             ->post(route('enrollments.storeImport'), $requestData);
 
         // Assert
-        $response->assertStatus(302);
+        $response->assertStatus(404);
     }
 
     /** @test */

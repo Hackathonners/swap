@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
-use Carbon\Carbon;
 use Tests\TestCase;
 use App\Judite\Models\User;
 use App\Judite\Models\Student;
 use App\Judite\Models\Exchange;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\ConfirmedExchangeNotification;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ConfirmExchangeTest extends TestCase
@@ -22,84 +22,76 @@ class ConfirmExchangeTest extends TestCase
     {
         parent::setUp();
         Mail::fake();
+        $this->enableExchangesPeriod();
         $this->exchange = factory(Exchange::class)->create();
         $this->fromEnrollment = $this->exchange->fromEnrollment;
         $this->toEnrollment = $this->exchange->toEnrollment;
-
-        $settings = app('settings');
-        $settings->exchanges_start_at = Carbon::yesterday();
-        $settings->exchanges_end_at = Carbon::tomorrow();
-        $settings->save();
     }
 
     /** @test */
     public function a_student_can_confirm_a_proposed_exchange()
     {
-        // Execute
-        $this->actingAs($this->toEnrollment->student->user);
-        $response = $this->post(route('exchanges.confirm', $this->exchange->id));
+        $response = $this->actingAs($this->toEnrollment->student->user)
+            ->post(route('exchanges.confirm', $this->exchange->id));
 
-        // Assert
-        $response->assertRedirect(route('home'));
-        $this->assertEnrollmentsAreUpdated();
+        $response->assertRedirect(route('dashboard'));
+        $this->assertEnrollmentsChanged();
+        $notifiedUser = $this->exchange->fromStudent()->user;
+        Mail::assertSent(ConfirmedExchangeNotification::class, function ($mail) use ($notifiedUser) {
+            return $mail->hasTo($notifiedUser->email);
+        });
     }
 
     /** @test */
     public function a_student_may_not_confirm_its_own_proposed_exchange()
     {
-        // Execute
-        $this->actingAs($this->fromEnrollment->student->user);
-        $response = $this->post(route('exchanges.confirm', $this->exchange->id));
+        $response = $this->actingAs($this->fromEnrollment->student->user)
+            ->post(route('exchanges.confirm', $this->exchange->id));
 
-        // Assert
         $response->assertStatus(404);
         $this->assertEnrollmentsRemainUnchanged();
+        Mail::assertNotSent(ConfirmedExchangeNotification::class);
     }
 
     /** @test */
     public function a_student_may_not_confirm_a_third_party_exchange()
     {
-        // Prepare
         $unauthorizedStudent = factory(Student::class)->create();
 
-        // Execute
-        $this->actingAs($unauthorizedStudent->user);
-        $response = $this->post(route('exchanges.confirm', $this->exchange->id));
+        $response = $this->actingAs($unauthorizedStudent->user)
+            ->post(route('exchanges.confirm', $this->exchange->id));
 
-        // Assert
         $response->assertStatus(404);
         $this->assertEnrollmentsRemainUnchanged();
+        Mail::assertNotSent(ConfirmedExchangeNotification::class);
     }
 
     /** @test */
     public function admins_may_not_confirm_exchanges()
     {
-        // Prepare
         $admin = factory(User::class)->states('admin')->create();
 
-        // Execute
-        $this->actingAs($admin);
-        $response = $this->post(route('exchanges.confirm', $this->exchange->id));
+        $response = $this->actingAs($admin)
+            ->post(route('exchanges.confirm', $this->exchange->id));
 
-        // Assert
-        $response->assertStatus(302);
+        $response->assertStatus(404);
         $this->assertEnrollmentsRemainUnchanged();
+        Mail::assertNotSent(ConfirmedExchangeNotification::class);
     }
 
     /** @test */
     public function unauthenticated_users_may_not_confirm_exchanges()
     {
-        // Prepare
-        $requestData = ['exchange_id' => $this->exchange->id];
-
-        // Execute
         $response = $this->post(route('exchanges.confirm', $this->exchange->id));
 
-        // Assert
         $response->assertRedirect(route('login'));
         $this->assertEnrollmentsRemainUnchanged();
+        Mail::assertNotSent(ConfirmedExchangeNotification::class);
     }
 
+    /*
+     * Assert enrollments remain unchanged.
+     */
     protected function assertEnrollmentsRemainUnchanged()
     {
         $actualFromEnrollment = $this->fromEnrollment->fresh();
@@ -108,7 +100,10 @@ class ConfirmExchangeTest extends TestCase
         $this->assertEquals($this->toEnrollment->shift->id, $actualToEnrollment->shift->id);
     }
 
-    protected function assertEnrollmentsAreUpdated()
+    /*
+     * Assert enrollments changed.
+     */
+    protected function assertEnrollmentsChanged()
     {
         $actualFromEnrollment = $this->fromEnrollment->fresh();
         $actualToEnrollment = $this->toEnrollment->fresh();

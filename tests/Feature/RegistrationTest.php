@@ -21,40 +21,33 @@ class RegistrationTest extends TestCase
     /** @test */
     public function a_confirmation_email_is_sent_after_registration()
     {
-        // Prepare
-        $requestData = [
+        $this->post('/register', [
             'name' => 'John Doe',
             'student_number' => 'pg12345',
             'password' => 'secret',
             'password_confirmation' => 'secret',
-        ];
+        ]);
 
-        // Execute
-        $this->post('/register', $requestData);
-
-        // Assert
-        $email = $requestData['student_number'].'@alunos.uminho.pt';
+        $email = 'pg12345@alunos.uminho.pt';
+        $this->assertEquals(1, User::where('email', $email)->count());
         Mail::assertSent(RegistrationConfirmation::class, function ($mail) use ($email) {
             return $mail->hasTo($email);
         });
-        $this->assertEquals(1, User::where('email', $email)->count());
     }
 
     /** @test */
     public function a_user_may_not_register_without_a_student_email()
     {
-        // Prepare
-        $requestData = [
+        $response = $this->post(route('register'), [
             'name' => 'Marco Couto',
-            'email' => 'a12345@mail.pt',
+            'student_number' => '12345',
             'password' => '123456',
             'password_confirmation' => '123456',
-        ];
+        ]);
 
-        // Execute
-        $this->post(route('register'), $requestData);
-
-        // Assert
+        $response->assertRedirect();
+        $response->assertSessionHasErrors('student_number');
         $this->assertEquals(0, User::count());
+        Mail::assertNotSent(RegistrationConfirmation::class);
     }
 }

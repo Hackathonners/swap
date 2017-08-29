@@ -17,7 +17,7 @@ class SettingsController extends Controller
         $this->middleware('auth');
         $this->middleware('can.admin');
     }
-    
+
     /**
      * Show the form for editing the specified resource.
      *

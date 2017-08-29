@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Auth\Access\AuthorizationException;
 
 class AuthorizeAdministrator
 {
@@ -21,7 +20,7 @@ class AuthorizeAdministrator
     public function handle($request, Closure $next)
     {
         if (! Auth::user()->isAdmin()) {
-            throw new AuthorizationException('Unauthorized.');
+            abort(404);
         }
 
         return $next($request);

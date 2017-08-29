@@ -16,6 +16,7 @@ class CourseController extends Controller
         $this->middleware('auth');
         $this->middleware('can.admin');
     }
+
     /**
      * Display a resource of given id.
      *

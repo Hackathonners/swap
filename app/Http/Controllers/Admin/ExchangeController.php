@@ -16,7 +16,7 @@ class ExchangeController extends Controller
         $this->middleware('auth');
         $this->middleware('can.admin');
     }
-    
+
     /**
      * Display a listing of the resource.
      *

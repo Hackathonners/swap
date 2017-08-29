@@ -16,9 +16,13 @@ class DashboardTest extends TestCase
     {
         $student = factory(Student::class)->create();
 
-        $response = $this->actingAs($student->user)->get(route('home'));
+        $response = $this->actingAs($student->user)
+            ->get(route('dashboard'));
 
         $response->assertStatus(200);
+        $response->assertViewHas([
+            'enrollments', 'proposedExchanges', 'requestedExchanges',
+        ]);
     }
 
     /** @test */
@@ -26,8 +30,10 @@ class DashboardTest extends TestCase
     {
         $admin = factory(User::class)->states('admin')->create();
 
-        $response = $this->actingAs($admin)->get(route('home'));
+        $response = $this->actingAs($admin)
+            ->get(route('dashboard'));
 
         $response->assertStatus(200);
+        $response->assertViewHas('courses');
     }
 }

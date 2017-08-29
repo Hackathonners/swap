@@ -21,14 +21,11 @@ class RegistrationConfirmationTest extends TestCase
     /** @test */
     public function authenticated_users_can_request_the_resend_of_the_confirmation_email()
     {
-        // Prepare
-        $student = factory(Student::class)->states('unconfirmed')->create();
+        $student = factory(Student::class)->states('unverified')->create();
 
-        // Execute
-        $this->actingAs($student->user);
-        $this->post(route('register.resend_confirmation'));
+        $this->actingAs($student->user)
+            ->post(route('register.resend_confirmation'));
 
-        // Assert
         $user = $student->user;
         Mail::assertSent(RegistrationConfirmation::class, function ($mail) use ($user) {
             return $mail->hasTo($user->email);
@@ -38,30 +35,23 @@ class RegistrationConfirmationTest extends TestCase
     /** @test */
     public function a_confirmed_user_may_not_request_a_resend_of_the_confirmation_email()
     {
-        // Prepare
         $student = factory(Student::class)->create();
 
-        // Execute
-        $this->actingAs($student->user);
-        $this->post(route('register.resend_confirmation'));
+        $this->actingAs($student->user)
+            ->post(route('register.resend_confirmation'));
 
-        // Assert
         Mail::assertNotSent(RegistrationConfirmation::class);
     }
 
     /** @test */
     public function a_student_can_confirm_the_account()
     {
-        // Prepare
-        $student = factory(Student::class)->states('unconfirmed')->create();
-        $requestData = ['token' => $student->user->verification_token];
+        $student = factory(Student::class)->states('unverified')->create();
 
-        // Execute
-        $this->actingAs($student->user);
-        $this->get(route('register.confirm', $requestData));
+        $this->actingAs($student->user)
+            ->get(route('register.confirm', ['token' => $student->user->verification_token]));
 
-        // Assert
-        $student = $student->fresh();
+        $student->refresh();
         $this->assertTrue($student->user->verified);
         $this->assertNull($student->user->verification_token);
     }
@@ -69,16 +59,12 @@ class RegistrationConfirmationTest extends TestCase
     /** @test */
     public function an_account_may_not_be_confirmed_with_an_invalid_verification_token()
     {
-        // Prepare
-        $student = factory(Student::class)->states('unconfirmed')->create();
-        $invalidRequestData = ['token' => 'invalid secret'];
+        $student = factory(Student::class)->states('unverified')->create();
 
-        // Execute
-        $this->actingAs($student->user);
-        $this->get(route('register.confirm', $invalidRequestData));
+        $this->actingAs($student->user)
+            ->get(route('register.confirm', ['token' => 'invalid secret']));
 
-        // Assert
-        $student = $student->fresh();
+        $student->refresh();
         $this->assertFalse($student->user->verified);
     }
 }

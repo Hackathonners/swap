@@ -23,7 +23,7 @@ class EnrollmentController extends Controller
         $this->middleware('auth');
         $this->middleware('can.admin');
     }
-    
+
     /**
      * Exports the list of students enrolled in each course.
      *

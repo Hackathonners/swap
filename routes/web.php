@@ -11,7 +11,7 @@
 |
 */
 Auth::routes();
-Route::get('/', 'DashboardController@index')->name('home');
+Route::get('/', 'DashboardController@index')->name('dashboard');
 
 /*
  * Student routes
@@ -20,7 +20,7 @@ Route::get('/courses', 'CourseController@index')->name('courses.index');
 
 Route::post('/courses/{courseId}/enroll', 'CourseEnrollmentController@store')->name('enrollments.store');
 Route::delete('/courses/{courseId}/unenroll', 'CourseEnrollmentController@destroy')->name('enrollments.destroy');
-        
+
 Route::get('/enrollments/{enrollmentId}/exchange', 'EnrollmentExchangeController@create')->name('exchanges.create');
 Route::post('/enrollments/{enrollmentId}/exchange', 'EnrollmentExchangeController@store')->name('exchanges.store');
 
