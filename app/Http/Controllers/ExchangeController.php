@@ -27,7 +27,7 @@ class ExchangeController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function confirm($id)
     {
@@ -36,9 +36,8 @@ class ExchangeController extends Controller
 
             return $exchange->perform();
         });
-
-        event(new ExchangeWasConfirmed($exchange));
         flash('The shift exchange request was successfully confirmed.')->success();
+        event(new ExchangeWasConfirmed($exchange));
 
         return redirect()->back();
     }
@@ -48,7 +47,7 @@ class ExchangeController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function decline($id)
     {
@@ -58,9 +57,8 @@ class ExchangeController extends Controller
 
             return $exchange;
         });
-
-        event(new ExchangeWasDeclined($exchange));
         flash('The shift exchange request was successfully declined.')->success();
+        event(new ExchangeWasDeclined($exchange));
 
         return redirect()->back();
     }
@@ -70,14 +68,13 @@ class ExchangeController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($id)
     {
         DB::transaction(function () use ($id) {
             Auth::student()->requestedExchanges()->findOrFail($id)->delete();
         });
-
         flash('The shift exchange request was successfully deleted.')->success();
 
         return redirect()->back();

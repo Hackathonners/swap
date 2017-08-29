@@ -20,12 +20,12 @@ class ExchangeController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
-    public function index(ExchangeRegistry $exchangeLogger)
+    public function index(ExchangeRegistry $registry)
     {
-        $history = DB::transaction(function () use ($exchangeLogger) {
-            return $exchangeLogger->paginate();
+        $history = DB::transaction(function () use ($registry) {
+            return $registry->paginate();
         });
 
         return view('exchanges.index', compact('history'));

@@ -29,7 +29,7 @@ class EnrollmentExchangeController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      */
     public function create($id)
     {
@@ -69,7 +69,7 @@ class EnrollmentExchangeController extends Controller
      * @param int                                       $id
      * @param \App\Http\Requests\Exchange\CreateRequest $request
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store($id, CreateRequest $request)
     {

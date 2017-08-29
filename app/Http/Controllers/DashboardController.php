@@ -19,7 +19,7 @@ class DashboardController extends Controller
     /**
      * Show the dashboard.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function index()
     {
@@ -31,7 +31,7 @@ class DashboardController extends Controller
     /**
      * Get the admin's dashboard.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     protected function adminDashboard()
     {
@@ -51,24 +51,21 @@ class DashboardController extends Controller
     /**
      * Get the student's dashboard.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     protected function studentDashboard()
     {
         $data = DB::transaction(function () {
-            $data['enrollments'] = Auth::student()->enrollments()
+            $proposedExchanges = Auth::student()->proposedExchanges()->get();
+            $requestedExchanges = Auth::student()->requestedExchanges()->get();
+            $enrollments = Auth::student()->enrollments()
                 ->withCount('exchangesAsSource')
                 ->orderByCourse()
                 ->get();
-            $data['requestedExchanges'] = Auth::student()->requestedExchanges()->get();
-            $data['proposedExchanges'] = Auth::student()->proposedExchanges()->get();
 
-            return $data;
+            return compact('proposedExchanges', 'requestedExchanges', 'enrollments');
         });
 
-        // Group all enrollments by the year of their associated course, so
-        // the enrollments listing is organized by year. This will allow
-        // a better experience, since it matches the official order.
         $data['enrollments'] = $data['enrollments']->groupBy(function ($enrollment) {
             return $enrollment->course->present()->getOrdinalYear();
         });

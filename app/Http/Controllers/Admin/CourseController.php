@@ -27,14 +27,13 @@ class CourseController extends Controller
     public function show($id)
     {
         $data = DB::transaction(function () use ($id) {
-            $data = [];
-            $data['course'] = Course::findOrFail($id);
-            $data['enrollments'] = $data['course']->enrollments()
+            $course = Course::findOrFail($id);
+            $enrollments = $course->enrollments()
                 ->with('student.user')
                 ->orderByStudent()
                 ->paginate();
 
-            return $data;
+            return compact('course', 'enrollments');
         });
 
         return view('students.index', $data);

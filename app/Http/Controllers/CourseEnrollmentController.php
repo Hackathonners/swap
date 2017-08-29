@@ -25,7 +25,7 @@ class CourseEnrollmentController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store($id)
     {
@@ -36,11 +36,9 @@ class CourseEnrollmentController extends Controller
 
                 return $course;
             });
-
             flash("You have successfully enrolled in {$course->name}.")->success();
         } catch (UserIsAlreadyEnrolledInCourseException $e) {
-            $course = $e->getCourse();
-            flash("You are already enrolled in {$course->name}.")->error();
+            flash("You are already enrolled in {$e->getCourse()->name}.")->error();
         }
 
         return redirect()->route('courses.index');
@@ -51,7 +49,7 @@ class CourseEnrollmentController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($id)
     {
@@ -61,7 +59,6 @@ class CourseEnrollmentController extends Controller
 
             return $course;
         });
-
         flash("You have successfully deleted the enrollment in {$course->name}.")->success();
 
         return redirect()->route('courses.index');

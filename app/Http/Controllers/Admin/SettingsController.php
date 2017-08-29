@@ -38,8 +38,7 @@ class SettingsController extends Controller
     public function update(UpdateRequest $request)
     {
         DB::transaction(function () use ($request) {
-            $settings = Settings::first();
-            $settings->update($request->input());
+            app('settings')->update($request->all());
         });
         flash('Settings were successfully updated.')->success();
 
