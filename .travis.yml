@@ -30,3 +30,7 @@ script:
   - composer ci-test
   - composer ci-lint
   - npm run production
+
+
+after_success:
+  - php vendor/bin/coveralls -v
