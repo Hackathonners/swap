@@ -13,8 +13,8 @@ cache:
     - vendor
     - $HOME/.composer/cache
 
-before_install:
-  - phpenv config-rm xdebug.ini
+#before_install:
+#  - phpenv config-rm xdebug.ini
 
 install:
   - COMPOSER_DISCARD_CHANGES=1 composer install --dev --prefer-source --no-interaction
