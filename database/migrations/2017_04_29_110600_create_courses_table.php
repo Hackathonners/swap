@@ -13,6 +13,7 @@ class CreateCoursesTable extends Migration
     {
         Schema::create('courses', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('code', 8)->unique();
             $table->integer('year');
             $table->string('name');
             $table->enum('semester', [1, 2]);

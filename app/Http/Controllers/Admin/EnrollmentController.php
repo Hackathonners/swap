@@ -79,7 +79,7 @@ class EnrollmentController extends Controller
                         }
 
                         // Check if the given course id exists
-                        $course = Course::find($row->course_id);
+                        $course = Course::whereCode($row->course_id)->first();
                         if ($course === null) {
                             $exception = new InvalidFieldValueException();
                             $exception->setField('Course ID', $row->course_id, "The course {$row->course_id} does not exist. (at line {$index})");

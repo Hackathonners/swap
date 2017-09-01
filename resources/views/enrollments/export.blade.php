@@ -12,7 +12,7 @@
     </tr>
     @foreach($enrollments as $enrollment)
     <tr>
-        <td>{{ $enrollment->course->id }}</td>
+        <td>{{ $enrollment->course->code }}</td>
         <td>{{ $enrollment->course->name }}</td>
         <td>{{ $enrollment->student->student_number }}</td>
         <td>{{ $enrollment->student->user->name }}</td>
