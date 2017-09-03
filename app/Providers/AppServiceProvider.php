@@ -37,8 +37,5 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('settings', function ($app) {
             return Settings::firstOrNew([]);
         });
-
-        $this->app->alias('bugsnag.logger', \Illuminate\Contracts\Logging\Log::class);
-        $this->app->alias('bugsnag.logger', \Psr\Log\LoggerInterface::class);
     }
 }
