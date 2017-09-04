@@ -22,7 +22,7 @@
     )
 
     {{-- Enrollments summary --}}
-    @include('enrollments.dashboard.summary.index')
+    @include('enrollments.dashboard.summary.index', [ 'title' => 'Current enrollments summary'])
 
     <confirm-exchange-modal></confirm-exchange-modal>
     <decline-exchange-modal></decline-exchange-modal>

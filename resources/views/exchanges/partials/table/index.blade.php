@@ -2,7 +2,7 @@
     @if($exchanges->isEmpty())
         @include('exchanges.partials.table.empty')
     @else
-    <div class="card-header">Exchanges history</div>
+    <div class="card-header">{{ $title ?? '' }}</div>
         <table class="card-table table table-responsive">
             <tbody>
                 @each('exchanges.partials.table.show', $exchanges, 'exchange')

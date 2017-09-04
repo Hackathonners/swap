@@ -2,7 +2,7 @@
     @if($enrollments->isEmpty())
         @include('enrollments.dashboard.summary.empty')
     @else
-        <div class="card-header">Current enrollments summary</div>
+        <div class="card-header">{{ $title ?? '' }}</div>
         <table class="card-table table table-responsive">
             <tbody>
                 @foreach ($enrollments as $year => $enrollments)
