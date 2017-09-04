@@ -2,8 +2,8 @@
 
 namespace App\Judite\Contracts\Registry;
 
-use App\Judite\Models\Enrollment;
 use App\Judite\Models\Student;
+use App\Judite\Models\Enrollment;
 
 interface ExchangeRegistry
 {

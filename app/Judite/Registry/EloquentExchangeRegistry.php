@@ -2,9 +2,9 @@
 
 namespace App\Judite\Registry;
 
+use App\Judite\Models\Student;
 use App\Judite\Models\Enrollment;
 use App\Judite\Models\ExchangeRegistryEntry;
-use App\Judite\Models\Student;
 use App\Judite\Contracts\Registry\ExchangeRegistry;
 
 class EloquentExchangeRegistry implements ExchangeRegistry
