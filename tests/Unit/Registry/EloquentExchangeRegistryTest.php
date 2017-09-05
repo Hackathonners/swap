@@ -3,8 +3,8 @@
 namespace Tests\Unit\Registry;
 
 use Tests\TestCase;
-use App\Judite\Models\Student;
 use App\Judite\Models\Course;
+use App\Judite\Models\Student;
 use App\Judite\Models\Exchange;
 use App\Judite\Models\Enrollment;
 use App\Judite\Models\ExchangeRegistryEntry;
