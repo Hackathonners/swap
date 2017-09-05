@@ -50,9 +50,6 @@ class EloquentExchangeRegistryTest extends TestCase
         });
     }
 
-    /**
-     * @group failing
-     */
     public function testHistoryOfStudent()
     {
         // Prepare
