@@ -3,7 +3,9 @@
 namespace Tests\Unit\Registry;
 
 use Tests\TestCase;
+use App\Judite\Models\Student;
 use App\Judite\Models\Course;
+use App\Judite\Models\Exchange;
 use App\Judite\Models\Enrollment;
 use App\Judite\Models\ExchangeRegistryEntry;
 use App\Judite\Registry\EloquentExchangeRegistry;
@@ -45,6 +47,47 @@ class EloquentExchangeRegistryTest extends TestCase
         $this->assertEquals(10, $actualRecords->total());
         collect($actualRecords->items())->each(function ($item) use ($records) {
             $this->assertTrue($records->contains($item));
+        });
+    }
+
+    /**
+     * @group failing
+     */
+    public function testHistoryOfStudent()
+    {
+        // Prepare
+        $student = factory(Student::class)->create();
+        $exchangeRegistry = new EloquentExchangeRegistry();
+        $exchanges = collect();
+        $otherExchanges = collect();
+        for ($i = 0; $i < 5; $i++) {
+            $studentEnrollment = factory(Enrollment::class)->create([
+                'student_id' => $student->id,
+            ]);
+            $enrollment = factory(Enrollment::class)->create();
+
+            $studentExchange = factory(Exchange::class)->create([
+                'from_enrollment_id' => $studentEnrollment->id,
+            ]);
+            $otherExchange = factory(Exchange::class)->create([
+                'from_enrollment_id' => $enrollment->id,
+            ]);
+
+            $exchanges->push($studentExchange);
+            $otherExchanges->push($otherExchange);
+
+            $exchangeRegistry->record($studentExchange->fromEnrollment, $studentExchange->toEnrollment);
+            $exchangeRegistry->record($otherExchange->fromEnrollment, $otherExchange->toEnrollment);
+        }
+
+        // Execute
+        $actualHistory = $exchangeRegistry->historyOfStudent($student);
+
+        // Assert
+        $this->assertTrue($actualHistory instanceof LengthAwarePaginator);
+        $this->assertEquals(5, $actualHistory->total());
+        collect($actualHistory->items())->each(function ($exchangeRegistryEntry) use ($student) {
+            $this->assertEquals($student->id, $exchangeRegistryEntry->fromStudent()->id);
         });
     }
 }
