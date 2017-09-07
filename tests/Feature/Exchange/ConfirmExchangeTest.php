@@ -43,6 +43,22 @@ class ConfirmExchangeTest extends TestCase
     }
 
     /** @test */
+    public function an_exchange_is_performed_when_student_creates_a_matching_exchange_proposal()
+    {
+        $requestData = ['to_enrollment_id' => $this->fromEnrollment->id];
+
+        $response = $this->actingAs($this->toEnrollment->student->user)
+            ->post(route('exchanges.store', $this->toEnrollment->id), $requestData);
+
+        $response->assertRedirect(route('dashboard'));
+        $this->assertEnrollmentsChanged();
+        $notifiedUser = $this->exchange->fromStudent()->user;
+        Mail::assertSent(ConfirmedExchangeNotification::class, function ($mail) use ($notifiedUser) {
+            return $mail->hasTo($notifiedUser->email);
+        });
+    }
+
+    /** @test */
     public function a_student_may_not_confirm_its_own_proposed_exchange()
     {
         $response = $this->actingAs($this->fromEnrollment->student->user)
