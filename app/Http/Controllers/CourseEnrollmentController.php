@@ -53,13 +53,16 @@ class CourseEnrollmentController extends Controller
      */
     public function destroy($id)
     {
-        $course = DB::transaction(function () use ($id) {
+        DB::transaction(function () use ($id) {
             $course = Course::findOrFail($id);
-            Auth::student()->unenroll($course);
-
-            return $course;
+            $enrollment = Auth::student()->getEnrollmentByCourseId($course);
+            if ($enrollment && (! $enrollment->hasShift())) {
+                Auth::student()->unenroll($course);
+                flash("You have successfully deleted the enrollment in {$course->name}.")->success();
+            } else {
+                flash('You cannot delete an enrollment that already has a shift')->error();
+            }
         });
-        flash("You have successfully deleted the enrollment in {$course->name}.")->success();
 
         return redirect()->route('courses.index');
     }

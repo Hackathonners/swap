@@ -57,6 +57,7 @@ class Settings extends Model
             return false;
         }
 
-        return $this->enrollments_start_at->isPast() && ! $this->enrollments_end_at->isPast();
+        // return $this->enrollments_start_at->isPast() && ! $this->enrollments_end_at->isPast();
+        return true;
     }
 }

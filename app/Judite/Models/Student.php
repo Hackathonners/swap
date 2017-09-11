@@ -74,6 +74,18 @@ class Student extends Model
     }
 
     /**
+     * Get enrollment of this student in a given course.
+     *
+     * @param \App\Judite\Models\Course $course
+     *
+     * @return \App\Judite\Models\Enrollment|null
+     */
+    public function getEnrollmentByCourseId(Course $course)
+    {
+        return $this->enrollments()->whereCourseId($course->id)->first();
+    }
+
+    /**
      * Enroll this student with a given course.
      *
      * @param \App\Judite\Models\Course $course

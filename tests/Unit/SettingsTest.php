@@ -70,7 +70,7 @@ class SettingsTest extends TestCase
 
         // Execute
         $settings->enrollments_start_at = Carbon::tomorrow();
-        $settings->enrollments_end_at = Carbon::tomorrow()->addDays(2);
+        // $settings->enrollments_end_at = Carbon::tomorrow()->addDays(2);
 
         // Assert
         $this->assertFalse($settings->withinEnrollmentPeriod());
@@ -83,7 +83,7 @@ class SettingsTest extends TestCase
 
         // Execute
         $settings->enrollments_start_at = Carbon::yesterday()->subDays(2);
-        $settings->enrollments_end_at = Carbon::yesterday();
+        // $settings->enrollments_end_at = Carbon::yesterday();
 
         // Assert
         $this->assertFalse($settings->withinEnrollmentPeriod());

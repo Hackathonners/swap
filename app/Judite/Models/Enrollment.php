@@ -142,6 +142,16 @@ class Enrollment extends Model
     }
 
     /**
+     * Check if this enrollment has an associated shift.
+     *
+     * @return bool
+     */
+    public function hasShift()
+    {
+        return ! is_null($this->shift);
+    }
+
+    /**
      * Check whether this enrollment is available for exchange.
      *
      * @return bool

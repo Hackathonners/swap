@@ -44,9 +44,9 @@ export default {
             this.date[1] ? moment.utc(this.date[1]).format() : null
         ];
         this.formatDates();
-        eventBus.$on('set-enrollments-end', (value) => {
-            this.minDate = value ? moment.utc(value).add(1, 'days') : null;
-        });
+        // eventBus.$on('set-enrollments-end', (value) => {
+        //     this.minDate = value ? moment.utc(value).add(1, 'days') : null;
+        // });
     },
     methods: {
         disabledDate (date) {
