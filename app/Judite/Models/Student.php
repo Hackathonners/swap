@@ -3,6 +3,8 @@
 namespace App\Judite\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Exceptions\EnrollmentCannotBeDeleted;
+use App\Exceptions\UserIsNotEnrolledInCourseException;
 use App\Exceptions\UserIsAlreadyEnrolledInCourseException;
 
 class Student extends Model
@@ -80,7 +82,7 @@ class Student extends Model
      *
      * @return \App\Judite\Models\Enrollment|null
      */
-    public function getEnrollmentByCourseId(Course $course)
+    public function getEnrollmentByCourse(Course $course)
     {
         return $this->enrollments()->whereCourseId($course->id)->first();
     }
@@ -128,6 +130,14 @@ class Student extends Model
      */
     public function unenroll(Course $course): bool
     {
+        $enrollment = $this->getEnrollmentByCourse($course);
+
+        if (is_null($enrollment)) {
+            throw new UserIsNotEnrolledInCourseException($course);
+        } elseif ($enrollment->hasShift()) {
+            throw new EnrollmentCannotBeDeleted($enrollment, 'The enrollment cannot be deleted because it as an associated shift.');
+        }
+
         return $this->enrollments()->where('course_id', $course->id)->delete();
     }
 

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Judite\Models\Course;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Exceptions\EnrollmentCannotBeDeleted;
+use App\Exceptions\UserIsNotEnrolledInCourseException;
 use App\Exceptions\UserIsAlreadyEnrolledInCourseException;
 
 class CourseEnrollmentController extends Controller
@@ -53,16 +55,19 @@ class CourseEnrollmentController extends Controller
      */
     public function destroy($id)
     {
-        DB::transaction(function () use ($id) {
-            $course = Course::findOrFail($id);
-            $enrollment = Auth::student()->getEnrollmentByCourseId($course);
-            if ($enrollment && (! $enrollment->hasShift())) {
+        try {
+            $course = DB::transaction(function () use ($id) {
+                $course = Course::findOrFail($id);
                 Auth::student()->unenroll($course);
-                flash("You have successfully deleted the enrollment in {$course->name}.")->success();
-            } else {
-                flash('You cannot delete an enrollment that already has a shift')->error();
-            }
-        });
+
+                return $course;
+            });
+            flash("You have successfully deleted the enrollment in {$course->name}.")->success();
+        } catch (UserIsNotEnrolledInCourseException $e) {
+            flash('You cannot only delete enrollments that you have enrolled.')->error();
+        } catch (EnrollmentCannotBeDeleted $e) {
+            flash('You cannot delete an enrollment that already has a shift.')->error();
+        }
 
         return redirect()->route('courses.index');
     }
