@@ -55,7 +55,6 @@ export default {
         formatDates() {
             this.enrollmentsStart = this.dates[0] ? moment.utc(this.dates[0]).format('YYYY-MM-DD HH:mm:ss') : null;
             this.enrollmentsEnd = this.dates[1] ? moment.utc(this.dates[1]).format('YYYY-MM-DD HH:mm:ss') : null;
-            // eventBus.$emit('set-enrollments-end', this.dates[1]);
         }
     }
 }
