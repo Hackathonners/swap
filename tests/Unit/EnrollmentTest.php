@@ -102,18 +102,18 @@ class EnrollmentTest extends TestCase
     public function hasShift()
     {
         // Prepare
-        $enrollmentWithShift = factory(Enrollment::class)->create();
-        $enrollmentWithNoShift = factory(Enrollment::class)->create([
+        $enrollment = factory(Enrollment::class)->create();
+        $enrollmentWithoutShift = factory(Enrollment::class)->create([
             'shift' => null,
         ]);
 
         // Execute
-        $withShiftResult = $enrollmentWithShift->hasShift();
-        $withNoShiftResult = $enrollmentWithNoShift->hasShift();
+        $withShiftResult = $enrollment->hasShift();
+        $withoutShiftResult = $enrollmentWithoutShift->hasShift();
 
         // Assert
         $this->assertTrue($withShiftResult);
-        $this->assertFalse($withNoShiftResult);
+        $this->assertFalse($withoutShiftResult);
     }
 
     /**
