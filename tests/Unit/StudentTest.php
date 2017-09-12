@@ -97,4 +97,50 @@ class StudentTest extends TestCase
         // Assert
         $this->assertEquals($student->id, $actualReturn->id);
     }
+
+    public function testGetEnrollmentWithShiftByCourse()
+    {
+        // Prepare
+        $student = factory(Student::class)->create();
+        $course = factory(Course::class)->create();
+        $otherCourse = factory(Course::class)->create();
+        $enrollment = factory(Enrollment::class)->create([
+            'student_id' => $student->id,
+            'course_id' => $course->id,
+        ]);
+        $enrollmentWithoutShift = factory(Enrollment::class)->create([
+            'student_id' => $student->id,
+            'course_id' => $otherCourse->id,
+            'shift_id' => null,
+        ]);
+
+        // Execute
+        $actualEnrollmentWithShift = $student->getEnrollmentWithShiftByCourse($course);
+        $actualEnrollmentWithoutShift = $student->getEnrollmentWithShiftByCourse($otherCourse);
+
+        // Assert
+        $this->assertNotNull($actualEnrollmentWithShift);
+        $this->assertEquals($enrollment->id, $actualEnrollmentWithShift->id);
+        $this->assertNull($actualEnrollmentWithoutShift);
+    }
+
+    public function testUnenroll()
+    {
+        // Prepare
+        $student = factory(Student::class)->create();
+        $course = factory(Course::class)->create();
+        $otherCourse = factory(Course::class)->create();
+        $enrollment = factory(Enrollment::class)->create([
+            'student_id' => $student->id,
+            'course_id' => $course->id,
+            'shift_id' => null,
+        ]);
+
+        // Execute
+        $actualReturn = $student->unenroll($course);
+
+        // Assert
+        $this->assertTrue($actualReturn);
+        $this->assertEquals(0, Enrollment::count());
+    }
 }
