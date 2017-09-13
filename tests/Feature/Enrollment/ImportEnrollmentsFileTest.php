@@ -53,6 +53,9 @@ class ImportEnrollmentsFileTest extends TestCase
         $response->assertRedirect(route('enrollments.import'));
         $actualEnrollments = Enrollment::all();
         $this->assertEquals($enrollmentsWithShifts->pluck('id'), $actualEnrollments->pluck('id'));
+        $actualEnrollments->each(function ($enrollment) {
+            $this->assertFalse(is_null($enrollment->shift));
+        });
     }
 
     /** @test */
@@ -165,24 +168,21 @@ class ImportEnrollmentsFileTest extends TestCase
     }
 
     /** @test */
-    public function enrollments_are_not_imported_when_enrollment_is_invalid()
+    public function enrollments_are_inserted_when_they_are_absent()
     {
         // Prepare
         $admin = factory(User::class)->states('admin')->create();
-        factory(Student::class)->create();
-        factory(Student::class)->create();
-        $enrollment = factory(Enrollment::class)->create(['shift_id' => null]);
-
-        $enrollmentWithShift = clone $enrollment;
-        $shift = factory(Shift::class)->create(['course_id' => $enrollment->course->id]);
-        $enrollmentWithShift->shift_id = $shift->id;
+        $student = factory(Student::class)->create();
+        $shift = factory(Shift::class)->create();
+        $enrollment = factory(Enrollment::class)->make([
+            'course_id' => $shift->course->id,
+            'student_id' => $student->id,
+            'shift_id' => $shift->id,
+        ]);
 
         // Create a file.
-        $file = $this->createEnrollmentsFile($enrollmentWithShift);
+        $file = $this->createEnrollmentsFile($enrollment);
         $requestData = ['enrollments' => $file];
-
-        // Remove enrollment from database
-        $enrollment->delete();
 
         // Execute
         $response = $this->actingAs($admin)
@@ -193,7 +193,12 @@ class ImportEnrollmentsFileTest extends TestCase
 
         // Assert
         $response->assertRedirect(route('enrollments.import'));
-        $this->assertEquals(0, Enrollment::count());
+        $this->assertEquals(1, Enrollment::count());
+        tap(Enrollment::first(), function ($newEnrollment) use ($enrollment) {
+            $this->assertEquals($enrollment->student->id, $newEnrollment->student->id);
+            $this->assertEquals($enrollment->course->id, $newEnrollment->course->id);
+            $this->assertEquals($enrollment->shift->id, $newEnrollment->shift->id);
+        });
     }
 
     /**
@@ -213,7 +218,7 @@ class ImportEnrollmentsFileTest extends TestCase
                 $rows->push(['Course ID', 'Student ID', 'Shift']);
                 $data->each(function ($enrollment) use ($rows) {
                     $rows->push([
-                        $enrollment->course_id,
+                        $enrollment->course->code,
                         $enrollment->student->student_number,
                         $enrollment->shift->tag,
                     ]);

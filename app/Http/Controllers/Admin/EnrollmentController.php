@@ -105,8 +105,7 @@ class EnrollmentController extends Controller
                             'student_id' => $student->id,
                         ])->first();
                         if ($enrollment === null) {
-                            $exception = new InvalidImportFileException("The student {$row->student_id} is not enrolled in course {$row->course_id}. (at line {$index})");
-                            throw $exception;
+                            $enrollment = $student->enroll($course);
                         }
 
                         // Add the shift to the enrollment
