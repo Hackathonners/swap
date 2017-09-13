@@ -108,7 +108,7 @@ class StudentTest extends TestCase
             'student_id' => $student->id,
             'course_id' => $course->id,
         ]);
-        $enrollmentWithoutShift = factory(Enrollment::class)->create([
+        factory(Enrollment::class)->create([
             'student_id' => $student->id,
             'course_id' => $otherCourse->id,
             'shift_id' => null,
@@ -130,7 +130,7 @@ class StudentTest extends TestCase
         $student = factory(Student::class)->create();
         $course = factory(Course::class)->create();
         $otherCourse = factory(Course::class)->create();
-        $enrollment = factory(Enrollment::class)->create([
+        factory(Enrollment::class)->create([
             'student_id' => $student->id,
             'course_id' => $course->id,
             'shift_id' => null,
@@ -142,5 +142,68 @@ class StudentTest extends TestCase
         // Assert
         $this->assertTrue($actualReturn);
         $this->assertEquals(0, Enrollment::count());
+    }
+
+    public function testEnrollmentIsDeletableByShift()
+    {
+        // Prepare
+        $this->enableExchangesPeriod();
+        $student = factory(Student::class)->create();
+        $course = factory(Course::class)->create();
+        $otherCourse = factory(Course::class)->create();
+        factory(Enrollment::class)->create([
+            'student_id' => $student->id,
+            'course_id' => $course->id,
+            'shift_id' => null,
+        ]);
+        factory(Enrollment::class)->create([
+            'student_id' => $student->id,
+            'course_id' => $otherCourse->id,
+        ]);
+
+        // Execute
+        $actualReturnDeletableEnrollment = $student->enrollmentIsDeletable($course);
+        $actualReturnNotDeletableEnrollment = $student->enrollmentIsDeletable($otherCourse);
+
+        // Assert
+        $this->assertTrue($actualReturnDeletableEnrollment);
+        $this->assertFalse($actualReturnNotDeletableEnrollment);
+    }
+
+    public function testEnrollmentIsDeletableInExchangePeriod()
+    {
+        // Prepare
+        $this->enableExchangesPeriod();
+        $student = factory(Student::class)->create();
+        $course = factory(Course::class)->create();
+        factory(Enrollment::class)->create([
+            'student_id' => $student->id,
+            'course_id' => $course->id,
+            'shift_id' => null,
+        ]);
+
+        // Execute
+        $actualReturn = $student->enrollmentIsDeletable($course);
+
+        // Assert
+        $this->assertTrue($actualReturn);
+    }
+
+    public function testEnrollmentIsDeletableOutOfExchangePeriod()
+    {
+        // Prepare
+        $student = factory(Student::class)->create();
+        $course = factory(Course::class)->create();
+        factory(Enrollment::class)->create([
+            'student_id' => $student->id,
+            'course_id' => $course->id,
+            'shift_id' => null,
+        ]);
+
+        // Execute
+        $actualReturn = $student->enrollmentIsDeletable($course);
+
+        // Assert
+        $this->assertFalse($actualReturn);
     }
 }

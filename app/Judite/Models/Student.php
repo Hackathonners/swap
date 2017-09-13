@@ -4,7 +4,7 @@ namespace App\Judite\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\EnrollmentCannotBeDeleted;
-use App\Exceptions\UserIsNotEnrolledInCourseException;
+use App\Exceptions\StudentIsNotEnrolledInCourseException;
 use App\Exceptions\UserIsAlreadyEnrolledInCourseException;
 
 class Student extends Model
@@ -129,14 +129,14 @@ class Student extends Model
      *
      * @param \App\Judite\Models\Course $course
      *
-     * @throws \App\Exceptions\UserIsNotEnrolledInCourseException|\App\Exceptions\EnrollmentCannotBeDeleted
+     * @throws \App\Exceptions\StudentIsNotEnrolledInCourseException|\App\Exceptions\EnrollmentCannotBeDeleted
      *
      * @return bool
      */
     public function unenroll(Course $course): bool
     {
         if (! $this->isEnrolledInCourse($course)) {
-            throw new UserIsNotEnrolledInCourseException($course);
+            throw new StudentIsNotEnrolledInCourseException($course);
         }
 
         $enrollment = $this->getEnrollmentWithShiftByCourse($course);
@@ -146,6 +146,26 @@ class Student extends Model
         } else {
             throw new EnrollmentCannotBeDeleted($enrollment, 'The enrollment cannot be deleted because it as an associated shift.');
         }
+    }
+
+    /**
+     * Check if the enrollment of this student in the given course is deletable.
+     *
+     * @param \App\Judite\Models\Course $course
+     *
+     * @throws \App\Exceptions\StudentIsNotEnrolledInCourseException|\App\Exceptions\EnrollmentCannotBeDeleted
+     *
+     * @return bool
+     */
+    public function enrollmentIsDeletable(Course $course): bool
+    {
+        $enrollment = $this->getEnrollmentWithShiftByCourse($course);
+
+        if (is_null($enrollment) && app('settings')->withinExchangePeriod()) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

@@ -20,7 +20,7 @@ class EnrollmentCannotBeDeleted extends Exception
      * @param \App\Judite\Models\Enrollment $course
      * @param string                        $message
      */
-    public function __construct(Enrollment $enrollment = null, $message = 'The enrollmnet cannot be deleted.')
+    public function __construct(Enrollment $enrollment = null, $message = 'The enrollment cannot be deleted.')
     {
         parent::__construct($message);
         $this->enrollment = $enrollment;

@@ -2,7 +2,7 @@
     @if (Auth::user()->student->isEnrolledInCourse($course))
         <button type="button" class="btn btn-outline-secondary btn-sm disabled">Enrolled</button>
 
-        @if ($settings->withinEnrollmentPeriod() && is_null(Auth::student()->get()->getEnrollmentWithShiftByCourse($course)))
+        @if ($settings->withinEnrollmentPeriod() && is_null(Auth::student()->enrollmentIsDeletable($course)))
             {{-- Show dropdown to remove enrollment in course. --}}
             <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="caret"></span>

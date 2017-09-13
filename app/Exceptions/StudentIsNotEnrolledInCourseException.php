@@ -5,7 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use App\Judite\Models\Course;
 
-class UserIsNotEnrolledInCourseException extends Exception
+class StudentIsNotEnrolledInCourseException extends Exception
 {
     /**
      * The course that user is not enrolled in.
