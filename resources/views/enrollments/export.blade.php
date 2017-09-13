@@ -18,7 +18,7 @@
         <td>{{ $enrollment->student->user->name }}</td>
         <td>{{ $enrollment->student->user->email }}</td>
         <td>{{ $enrollment->student->created_at }}</td>
-        <td>{{-- Shift field --}}</td>
+        <td>{{ $enrollment->present()->getShiftTag('') }}</td>
     </tr>
     @endforeach
 </table>
