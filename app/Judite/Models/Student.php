@@ -76,16 +76,15 @@ class Student extends Model
     }
 
     /**
-     * Get enrollment of this student in a given course with a associated shift.
+     * Get enrollment of this student in a given course.
      *
      * @param \App\Judite\Models\Course $course
      *
      * @return \App\Judite\Models\Enrollment|null
      */
-    public function getEnrollmentWithShiftByCourse(Course $course)
+    public function getEnrollmentByCourse(Course $course)
     {
         return $this->enrollments()
-            ->where('shift_id', '!=', null)
             ->where('course_id', $course->id)
             ->first();
     }
@@ -135,33 +134,17 @@ class Student extends Model
      */
     public function unenroll(Course $course): bool
     {
-        if (! $this->isEnrolledInCourse($course)) {
+        $enrollment = $this->getEnrollmentByCourse($course);
+
+        if (is_null($enrollment)) {
             throw new StudentIsNotEnrolledInCourseException($course);
         }
 
-        $enrollment = $this->getEnrollmentWithShiftByCourse($course);
-
-        if (is_null($enrollment)) {
+        if (is_null($enrollment->shift)) {
             return $this->enrollments()->whereCourseId($course->id)->delete();
         } else {
             throw new EnrollmentCannotBeDeleted($enrollment, 'The enrollment cannot be deleted because it has an associated shift.');
         }
-    }
-
-    /**
-     * Check if the enrollment of this student in the given course is deletable.
-     *
-     * @param \App\Judite\Models\Course $course
-     *
-     * @throws \App\Exceptions\StudentIsNotEnrolledInCourseException|\App\Exceptions\EnrollmentCannotBeDeleted
-     *
-     * @return bool
-     */
-    public function enrollmentIsDeletable(Course $course): bool
-    {
-        $enrollment = $this->getEnrollmentWithShiftByCourse($course);
-
-        return is_null($enrollment) && app('settings')->withinExchangePeriod();
     }
 
     /**

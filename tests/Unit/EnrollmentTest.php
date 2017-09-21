@@ -99,23 +99,6 @@ class EnrollmentTest extends TestCase
         $this->assertEquals($expectedOrder->pluck('id'), $actualReturn->pluck('student.id'));
     }
 
-    public function hasShift()
-    {
-        // Prepare
-        $enrollment = factory(Enrollment::class)->create();
-        $enrollmentWithoutShift = factory(Enrollment::class)->create([
-            'shift' => null,
-        ]);
-
-        // Execute
-        $withShiftResult = $enrollment->hasShift();
-        $withoutShiftResult = $enrollmentWithoutShift->hasShift();
-
-        // Assert
-        $this->assertTrue($withShiftResult);
-        $this->assertFalse($withoutShiftResult);
-    }
-
     /**
      * @expectedException \App\Exceptions\UserIsAlreadyEnrolledInCourseException
      */
