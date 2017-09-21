@@ -144,7 +144,7 @@ class Student extends Model
         if (is_null($enrollment)) {
             return $this->enrollments()->whereCourseId($course->id)->delete();
         } else {
-            throw new EnrollmentCannotBeDeleted($enrollment, 'The enrollment cannot be deleted because it as an associated shift.');
+            throw new EnrollmentCannotBeDeleted($enrollment, 'The enrollment cannot be deleted because it has an associated shift.');
         }
     }
 
@@ -161,11 +161,7 @@ class Student extends Model
     {
         $enrollment = $this->getEnrollmentWithShiftByCourse($course);
 
-        if (is_null($enrollment) && app('settings')->withinExchangePeriod()) {
-            return true;
-        }
-
-        return false;
+        return is_null($enrollment) && app('settings')->withinExchangePeriod();
     }
 
     /**
