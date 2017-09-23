@@ -133,5 +133,4 @@ class EnrollmentTest extends TestCase
         $this->assertTrue($deletableReturn);
         $this->assertFalse($notDeletableReturn);
     }
-
 }
