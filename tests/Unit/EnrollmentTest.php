@@ -115,4 +115,23 @@ class EnrollmentTest extends TestCase
         // Execute
         $student->enroll($course);
     }
+
+    public function testIsDeletable()
+    {
+        // Prepare
+        $enrollment = factory(Enrollment::class)->create([
+            'shift_id' => null,
+        ]);
+
+        $enrollmentNotDeletable = factory(Enrollment::class)->create();
+
+        // Execute
+        $deletableReturn = $enrollment->isDeletable();
+        $notDeletableReturn = $enrollmentNotDeletable->isDeletable();
+
+        // Assert
+        $this->assertTrue($deletableReturn);
+        $this->assertFalse($notDeletableReturn);
+    }
+
 }

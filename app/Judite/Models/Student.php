@@ -82,7 +82,7 @@ class Student extends Model
      *
      * @return \App\Judite\Models\Enrollment|null
      */
-    public function getEnrollmentByCourse(Course $course)
+    public function getEnrollmentInCourse(Course $course)
     {
         return $this->enrollments()
             ->where('course_id', $course->id)
@@ -134,17 +134,17 @@ class Student extends Model
      */
     public function unenroll(Course $course): bool
     {
-        $enrollment = $this->getEnrollmentByCourse($course);
+        $enrollment = $this->getEnrollmentInCourse($course);
 
         if (is_null($enrollment)) {
             throw new StudentIsNotEnrolledInCourseException($course);
         }
 
-        if (is_null($enrollment->shift)) {
-            return $this->enrollments()->whereCourseId($course->id)->delete();
-        } else {
+        if (! is_null($enrollment->shift)) {
             throw new EnrollmentCannotBeDeleted($enrollment, 'The enrollment cannot be deleted because it has an associated shift.');
         }
+        
+        return $enrollment->delete();
     }
 
     /**

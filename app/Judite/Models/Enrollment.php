@@ -154,4 +154,14 @@ class Enrollment extends Model
 
         return ! $isBeingExchanged && ! is_null($this->shift_id);
     }
+
+    /**
+     * Check if a enrollment can be deleted.
+     *
+     * @return bool
+     */
+    public function isDeletable()
+    {
+        return is_null($this->shift);
+    }
 }

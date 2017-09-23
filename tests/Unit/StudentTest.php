@@ -98,7 +98,7 @@ class StudentTest extends TestCase
         $this->assertEquals($student->id, $actualReturn->id);
     }
 
-    public function testGetEnrollmentByCourse()
+    public function testGetEnrollmentInCourse()
     {
         // Prepare
         $student = factory(Student::class)->create();
@@ -109,7 +109,7 @@ class StudentTest extends TestCase
         ]);
 
         // Execute
-        $actualEnrollment = $student->getEnrollmentByCourse($course);
+        $actualEnrollment = $student->getEnrollmentInCourse($course);
 
         // Assert
         $this->assertNotNull($actualEnrollment);
