@@ -141,7 +141,7 @@ class Student extends Model
         }
 
         if (! is_null($enrollment->shift)) {
-            throw new EnrollmentCannotBeDeleted($enrollment, 'The enrollment cannot be deleted because it has an associated shift.');
+            throw new EnrollmentCannotBeDeleted($enrollment);
         }
 
         return $enrollment->delete();
