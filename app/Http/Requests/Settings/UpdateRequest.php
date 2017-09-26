@@ -26,7 +26,7 @@ class UpdateRequest extends FormRequest
         return [
             'enrollments_start_at' => 'required|date',
             'enrollments_end_at' => 'required|date|after:enrollments_start_at',
-            'exchanges_start_at' => 'required|date|after:enrollments_end_at',
+            'exchanges_start_at' => 'required|date|after_or_equal:enrollments_start_at',
             'exchanges_end_at' => 'required|date|after:exchanges_start_at',
         ];
     }

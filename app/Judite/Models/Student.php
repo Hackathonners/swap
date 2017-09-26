@@ -3,6 +3,8 @@
 namespace App\Judite\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Exceptions\EnrollmentCannotBeDeleted;
+use App\Exceptions\StudentIsNotEnrolledInCourseException;
 use App\Exceptions\UserIsAlreadyEnrolledInCourseException;
 
 class Student extends Model
@@ -74,6 +76,20 @@ class Student extends Model
     }
 
     /**
+     * Get enrollment of this student in a given course.
+     *
+     * @param \App\Judite\Models\Course $course
+     *
+     * @return \App\Judite\Models\Enrollment|null
+     */
+    public function getEnrollmentInCourse(Course $course)
+    {
+        return $this->enrollments()
+            ->where('course_id', $course->id)
+            ->first();
+    }
+
+    /**
      * Enroll this student with a given course.
      *
      * @param \App\Judite\Models\Course $course
@@ -112,11 +128,23 @@ class Student extends Model
      *
      * @param \App\Judite\Models\Course $course
      *
+     * @throws \App\Exceptions\StudentIsNotEnrolledInCourseException|\App\Exceptions\EnrollmentCannotBeDeleted
+     *
      * @return bool
      */
     public function unenroll(Course $course): bool
     {
-        return $this->enrollments()->where('course_id', $course->id)->delete();
+        $enrollment = $this->getEnrollmentInCourse($course);
+
+        if (is_null($enrollment)) {
+            throw new StudentIsNotEnrolledInCourseException($course);
+        }
+
+        if (! $enrollment->isDeletable()) {
+            throw new EnrollmentCannotBeDeleted($enrollment);
+        }
+
+        return $enrollment->delete();
     }
 
     /**

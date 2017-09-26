@@ -39,6 +39,7 @@ class EnrollmentTest extends TestCase
         factory(Enrollment::class)->create([
             'student_id' => $this->student->id,
             'course_id' => $this->course->id,
+            'shift_id' => null,
         ]);
 
         $response = $this->actingAs($this->student->user)
@@ -46,6 +47,21 @@ class EnrollmentTest extends TestCase
 
         $response->assertRedirect();
         $this->assertEquals(0, Enrollment::count());
+    }
+
+    /** @test */
+    public function a_student_may_not_delete_an_enrollment_with_shift()
+    {
+        $enrollment = factory(Enrollment::class)->create([
+            'student_id' => $this->student->id,
+            'course_id' => $this->course->id,
+        ]);
+
+        $response = $this->actingAs($this->student->user)
+            ->delete(route('enrollments.destroy', $this->course->id));
+
+        $response->assertRedirect();
+        $this->assertTrue($enrollment->is(Enrollment::first()));
     }
 
     /** @test */

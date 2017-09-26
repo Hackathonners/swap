@@ -97,4 +97,81 @@ class StudentTest extends TestCase
         // Assert
         $this->assertEquals($student->id, $actualReturn->id);
     }
+
+    public function testGetEnrollmentInCourse()
+    {
+        // Prepare
+        $student = factory(Student::class)->create();
+        $course = factory(Course::class)->create();
+        $enrollment = factory(Enrollment::class)->create([
+            'student_id' => $student->id,
+            'course_id' => $course->id,
+        ]);
+
+        // Execute
+        $actualEnrollment = $student->getEnrollmentInCourse($course);
+
+        // Assert
+        $this->assertNotNull($actualEnrollment);
+        $this->assertEquals($enrollment->id, $actualEnrollment->id);
+    }
+
+    public function testUnenrollEnrollment()
+    {
+        // Prepare
+        $student = factory(Student::class)->create();
+        $course = factory(Course::class)->create();
+        $otherCourse = factory(Course::class)->create();
+        factory(Enrollment::class)->create([
+            'student_id' => $student->id,
+            'course_id' => $course->id,
+            'shift_id' => null,
+        ]);
+
+        // Execute
+        $actualReturn = $student->unenroll($course);
+
+        // Assert
+        $this->assertTrue($actualReturn);
+        $this->assertEquals(0, Enrollment::count());
+    }
+
+    /**
+     * @expectedException App\Exceptions\StudentIsNotEnrolledInCourseException
+     */
+    public function testUserMayNotUnenrollNotEnrolledCourse()
+    {
+        // Prepare
+        $student = factory(Student::class)->create();
+        $course = factory(Course::class)->create();
+        factory(Enrollment::class)->create();
+
+        // Execute
+        $actualReturn = $student->unenroll($course);
+
+        // Assert
+        $this->assertFalse($actualReturn);
+        $this->assertEquals(1, Enrollment::count());
+    }
+
+    /**
+     * @expectedException App\Exceptions\EnrollmentCannotBeDeleted
+     */
+    public function testUserMayNotUnenrollEnrollmentWithAssociatedShift()
+    {
+        // Prepare
+        $student = factory(Student::class)->create();
+        $course = factory(Course::class)->create();
+        factory(Enrollment::class)->create([
+            'student_id' => $student->id,
+            'course_id' => $course->id,
+        ]);
+
+        // Execute
+        $actualReturn = $student->unenroll($course);
+
+        // Assert
+        $this->assertFalse($actualReturn);
+        $this->assertEquals(1, Enrollment::count());
+    }
 }
