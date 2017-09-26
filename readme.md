@@ -11,13 +11,13 @@
 
 ## About Swap
 
-Swap is a project that simplifies the control of enrollments and shifts exchanges for both students and teachers. The project is developed with considering the following features:
+Swap simplifies the control of enrollments and shifts exchanges for both students and teachers. The project is developed considering the following features:
 
 - Students enroll in the available courses;
 - Shifts are assigned to enrollments by teachers;
 - Students propose and confirm shift exchanges among them.
 
-This project was entirely developed to the Department of Informatics of University of Minho and counts on several developers of Hackathonners who either studied or currently study there.
+This project was developed with the Board of Directors of the University of Minho Informatics Engineering Integrated Masters  and counts on several Hackathonners who either concluded the aforementioned Masters or are in the process of doing so.
 
 ## Requirements
 
