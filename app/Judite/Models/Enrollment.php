@@ -83,7 +83,7 @@ class Enrollment extends Model
     }
 
     /**
-     * Exchange shifts with the given enrollment.
+     * DirectExchange shifts with the given enrollment.
      *
      * @param \App\Judite\Models\Enrollment $enrollment
      *
@@ -108,7 +108,7 @@ class Enrollment extends Model
      */
     public function exchangesAsSource()
     {
-        return $this->hasMany(Exchange::class, 'from_enrollment_id');
+        return $this->hasMany(DirectExchange::class, 'from_enrollment_id');
     }
 
     /**

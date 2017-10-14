@@ -4,7 +4,7 @@ namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use App\Judite\Models\Exchange;
+use App\Judite\Models\DirectExchange;
 use Illuminate\Queue\SerializesModels;
 
 class ConfirmedExchangeNotification extends Mailable
@@ -21,9 +21,9 @@ class ConfirmedExchangeNotification extends Mailable
     /**
      * Create a new message instance.
      *
-     * @param \App\Judite\Models\Exchange $exchange
+     * @param \App\Judite\Models\DirectExchange $exchange
      */
-    public function __construct(Exchange $exchange)
+    public function __construct(DirectExchange $exchange)
     {
         $this->exchange = $exchange;
     }

@@ -5,7 +5,7 @@ namespace Tests\Unit;
 use Mockery as m;
 use Tests\TestCase;
 use App\Judite\Models\Course;
-use App\Judite\Models\Exchange;
+use App\Judite\Models\DirectExchange;
 use App\Judite\Models\Enrollment;
 use App\Judite\Contracts\Registry\ExchangeRegistry;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -39,7 +39,7 @@ class ExchangeTest extends TestCase
         $toEnrollment = factory(Enrollment::class)->make(['course_id' => $course->id]);
 
         // Execute
-        $exchange = new Exchange();
+        $exchange = new DirectExchange();
         $actualReturn = $exchange->setExchangeEnrollments($fromEnrollment, $toEnrollment);
 
         // Assert
@@ -57,11 +57,11 @@ class ExchangeTest extends TestCase
         $fromEnrollment = factory(Enrollment::class)->create(['course_id' => $course->id]);
         $otherFromEnrollment = factory(Enrollment::class)->create(['course_id' => $course->id]);
         $toEnrollment = factory(Enrollment::class)->create(['course_id' => $course->id]);
-        $exchange = factory(Exchange::class)->create([
+        $exchange = factory(DirectExchange::class)->create([
             'from_enrollment_id' => $fromEnrollment->id,
             'to_enrollment_id' => $toEnrollment->id,
         ]);
-        factory(Exchange::class)->create([
+        factory(DirectExchange::class)->create([
             'from_enrollment_id' => $otherFromEnrollment->id,
             'to_enrollment_id' => $fromEnrollment->id,
         ]);
@@ -74,7 +74,7 @@ class ExchangeTest extends TestCase
 
         // Assert
         $this->assertSame($exchange, $actualReturn);
-        $this->assertEquals(0, Exchange::count());
+        $this->assertEquals(0, DirectExchange::count());
         $actualFromEnrollment = Enrollment::find($fromEnrollment->id);
         $actualToEnrollment = Enrollment::find($toEnrollment->id);
         $this->assertEquals($toShiftId, $actualFromEnrollment->shift_id);
@@ -87,17 +87,17 @@ class ExchangeTest extends TestCase
         $course = factory(Course::class)->create();
         $fromEnrollment = factory(Enrollment::class)->create(['course_id' => $course->id]);
         $toEnrollment = factory(Enrollment::class)->create(['course_id' => $course->id]);
-        $existingExchange = factory(Exchange::class)->create([
+        $existingExchange = factory(DirectExchange::class)->create([
             'from_enrollment_id' => $toEnrollment->id,
             'to_enrollment_id' => $fromEnrollment->id,
         ]);
 
         // Execute
-        $actualReturn = Exchange::findMatchingExchange($fromEnrollment, $toEnrollment);
+        $actualReturn = DirectExchange::findMatchingExchange($fromEnrollment, $toEnrollment);
 
         // Assert
         $this->assertNotNull($actualReturn);
-        $this->assertEquals(Exchange::class, get_class($actualReturn));
+        $this->assertEquals(DirectExchange::class, get_class($actualReturn));
         $this->assertEquals($existingExchange->id, $actualReturn->id);
     }
 
@@ -107,14 +107,14 @@ class ExchangeTest extends TestCase
         $course = factory(Course::class)->create();
         $fromEnrollment = factory(Enrollment::class)->create(['course_id' => $course->id]);
         $toEnrollment = factory(Enrollment::class)->create(['course_id' => $course->id]);
-        $ownedExchange = factory(Exchange::class)->create([
+        $ownedExchange = factory(DirectExchange::class)->create([
             'from_enrollment_id' => $fromEnrollment->id,
             'to_enrollment_id' => $toEnrollment->id,
         ]);
-        factory(Exchange::class)->create();
+        factory(DirectExchange::class)->create();
 
         // Execute
-        $actualReturn = Exchange::ownedBy($fromEnrollment->student)->get();
+        $actualReturn = DirectExchange::ownedBy($fromEnrollment->student)->get();
 
         // Assert
         $this->assertEquals(1, $actualReturn->count());
@@ -126,18 +126,18 @@ class ExchangeTest extends TestCase
         // Prepare
         $fromEnrollment = factory(Enrollment::class)->create();
         $otherFromEnrollment = factory(Enrollment::class)->create();
-        $fromEnrollmentExchanges = factory(Exchange::class, 2)->create([
+        $fromEnrollmentExchanges = factory(DirectExchange::class, 2)->create([
             'from_enrollment_id' => $fromEnrollment->id,
         ]);
-        $otherFromEnrollmentExchanges = factory(Exchange::class, 2)->create([
+        $otherFromEnrollmentExchanges = factory(DirectExchange::class, 2)->create([
             'from_enrollment_id' => $otherFromEnrollment->id,
         ]);
-        factory(Exchange::class)->create(['to_enrollment_id' => $fromEnrollment->id]);
-        factory(Exchange::class)->create(['to_enrollment_id' => $otherFromEnrollment->id]);
+        factory(DirectExchange::class)->create(['to_enrollment_id' => $fromEnrollment->id]);
+        factory(DirectExchange::class)->create(['to_enrollment_id' => $otherFromEnrollment->id]);
 
         // Execute
         $enrollments = collect([$fromEnrollment, $otherFromEnrollment]);
-        $actualReturn = Exchange::whereFromEnrollmentIn($enrollments->pluck('id'))->get();
+        $actualReturn = DirectExchange::whereFromEnrollmentIn($enrollments->pluck('id'))->get();
 
         // Assert
         $expectedExchanges = $fromEnrollmentExchanges->merge($otherFromEnrollmentExchanges);
@@ -149,18 +149,18 @@ class ExchangeTest extends TestCase
         // Prepare
         $toEnrollment = factory(Enrollment::class)->create();
         $otherToEnrollment = factory(Enrollment::class)->create();
-        $toEnrollmentExchanges = factory(Exchange::class, 2)->create([
+        $toEnrollmentExchanges = factory(DirectExchange::class, 2)->create([
             'to_enrollment_id' => $toEnrollment->id,
         ]);
-        $otherToEnrollmentExchanges = factory(Exchange::class, 2)->create([
+        $otherToEnrollmentExchanges = factory(DirectExchange::class, 2)->create([
             'to_enrollment_id' => $otherToEnrollment->id,
         ]);
-        factory(Exchange::class)->create(['from_enrollment_id' => $toEnrollment->id]);
-        factory(Exchange::class)->create(['from_enrollment_id' => $otherToEnrollment->id]);
+        factory(DirectExchange::class)->create(['from_enrollment_id' => $toEnrollment->id]);
+        factory(DirectExchange::class)->create(['from_enrollment_id' => $otherToEnrollment->id]);
 
         // Execute
         $enrollments = collect([$toEnrollment, $otherToEnrollment]);
-        $actualReturn = Exchange::whereToEnrollmentIn($enrollments->pluck('id'))->get();
+        $actualReturn = DirectExchange::whereToEnrollmentIn($enrollments->pluck('id'))->get();
 
         // Assert
         $expectedExchanges = $toEnrollmentExchanges->merge($otherToEnrollmentExchanges);
@@ -170,7 +170,7 @@ class ExchangeTest extends TestCase
     public function testGetCourse()
     {
         // Prepare
-        $exchange = factory(Exchange::class)->create();
+        $exchange = factory(DirectExchange::class)->create();
 
         // Assert
         $fromEnrollment = $exchange->fromEnrollment()->first();
@@ -180,7 +180,7 @@ class ExchangeTest extends TestCase
     public function testGetFromShift()
     {
         // Prepare
-        $exchange = factory(Exchange::class)->create();
+        $exchange = factory(DirectExchange::class)->create();
 
         // Assert
         $fromEnrollment = $exchange->fromEnrollment()->first();
@@ -190,7 +190,7 @@ class ExchangeTest extends TestCase
     public function testGetToShift()
     {
         // Prepare
-        $exchange = factory(Exchange::class)->create();
+        $exchange = factory(DirectExchange::class)->create();
 
         // Assert
         $toEnrollment = $exchange->toEnrollment()->first();
@@ -200,7 +200,7 @@ class ExchangeTest extends TestCase
     public function testGetFromStudent()
     {
         // Prepare
-        $exchange = factory(Exchange::class)->create();
+        $exchange = factory(DirectExchange::class)->create();
 
         // Assert
         $fromEnrollment = $exchange->fromEnrollment()->first();
@@ -210,7 +210,7 @@ class ExchangeTest extends TestCase
     public function testGetToStudent()
     {
         // Prepare
-        $exchange = factory(Exchange::class)->create();
+        $exchange = factory(DirectExchange::class)->create();
 
         // Assert
         $toEnrollment = $exchange->toEnrollment()->first();
@@ -226,7 +226,7 @@ class ExchangeTest extends TestCase
         $toEnrollment = factory(Enrollment::class)->make();
 
         // Execute
-        $exchange = new Exchange();
+        $exchange = new DirectExchange();
         $exchange->setExchangeEnrollments($fromEnrollment, $toEnrollment);
     }
 
@@ -235,13 +235,13 @@ class ExchangeTest extends TestCase
         $this->expectException(EnrollmentCannotBeExchangedException::class);
 
         // Prepare
-        $existingExchange = factory(Exchange::class)->create();
+        $existingExchange = factory(DirectExchange::class)->create();
         $toEnrollment = factory(Enrollment::class)->create([
             'course_id' => $existingExchange->course()->id,
         ]);
 
         // Execute
-        $exchange = Exchange::make();
+        $exchange = DirectExchange::make();
         $exchange->setExchangeEnrollments($existingExchange->fromEnrollment, $toEnrollment);
     }
 
@@ -257,7 +257,7 @@ class ExchangeTest extends TestCase
         ]);
 
         // Execute
-        $exchange = Exchange::make();
+        $exchange = DirectExchange::make();
         $exchange->setExchangeEnrollments($fromEnrollment, $toEnrollment);
     }
 }

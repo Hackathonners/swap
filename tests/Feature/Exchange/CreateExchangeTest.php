@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Judite\Models\Student;
-use App\Judite\Models\Exchange;
+use App\Judite\Models\DirectExchange;
 use App\Judite\Models\Enrollment;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
@@ -34,8 +34,8 @@ class CreateExchangeTest extends TestCase
             ->post(route('exchanges.store', $this->fromEnrollment->id), $requestData);
 
         $response->assertRedirect();
-        $this->assertEquals(1, Exchange::count());
-        $actualExchange = Exchange::first();
+        $this->assertEquals(1, DirectExchange::count());
+        $actualExchange = DirectExchange::first();
         $this->assertEquals($this->fromEnrollment->id, $actualExchange->from_enrollment_id);
         $this->assertEquals($this->toEnrollment->id, $actualExchange->to_enrollment_id);
     }
@@ -50,7 +50,7 @@ class CreateExchangeTest extends TestCase
             ->post(route('exchanges.store', $this->fromEnrollment->id), $requestData);
 
         $response->assertStatus(404);
-        $this->assertEquals(0, Exchange::count());
+        $this->assertEquals(0, DirectExchange::count());
     }
 
     /** @test */
@@ -61,6 +61,6 @@ class CreateExchangeTest extends TestCase
         $response = $this->post(route('exchanges.store', $this->fromEnrollment->id), $requestData);
 
         $response->assertRedirect(route('login'));
-        $this->assertEquals(0, Exchange::count());
+        $this->assertEquals(0, DirectExchange::count());
     }
 }

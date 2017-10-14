@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Judite\Models\Exchange;
+use App\Judite\Models\DirectExchange;
 use App\Judite\Models\Enrollment;
 use Illuminate\Support\Facades\DB;
 use App\Events\ExchangeWasConfirmed;
@@ -85,14 +85,14 @@ class EnrollmentExchangeController extends Controller
                 // Firstly check if the inverse exchange for the same enrollments
                 // already exists. If the inverse record is found then we will
                 // exchange and update both enrollments of this exchange.
-                if ($exchange = Exchange::findMatchingExchange($fromEnrollment, $toEnrollment)) {
+                if ($exchange = DirectExchange::findMatchingExchange($fromEnrollment, $toEnrollment)) {
                     return $exchange->perform();
                 }
 
                 // Otherwise, we create a new exchange between both enrollments
                 // so the user that owns the target enrollment can confirm the
                 // exchange and allow the other user to enroll on the shift.
-                $exchange = Exchange::make();
+                $exchange = DirectExchange::make();
                 $exchange->setExchangeEnrollments($fromEnrollment, $toEnrollment);
                 $exchange->save();
 

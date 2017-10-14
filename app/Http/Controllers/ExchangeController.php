@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Judite\Models\Exchange;
+use App\Judite\Models\DirectExchange;
 use Illuminate\Support\Facades\DB;
 use App\Events\ExchangeWasDeclined;
 use App\Events\ExchangeWasConfirmed;
