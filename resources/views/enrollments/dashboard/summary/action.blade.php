@@ -2,7 +2,7 @@
     {{-- Exchange action --}}
     @if ($settings->withinExchangePeriod() && $enrollment->availableForExchange())
         <a
-            href="{{ route('exchanges.create', $enrollment->id )}}"
+            href="{{ route('exchanges.create', ["enrollment_id" => $enrollment->id] )}}"
             class="btn btn-outline-secondary btn-sm">
             Exchange shift
         </a>

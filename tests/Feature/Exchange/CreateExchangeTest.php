@@ -28,7 +28,7 @@ class CreateExchangeTest extends TestCase
     /** @test */
     public function a_student_can_propose_a_shift_exchange()
     {
-        $requestData = ['to_enrollment_id' => $this->toEnrollment->id];
+        $requestData = ['enrollment_id' => $this->toEnrollment->id];
 
         $response = $this->actingAs($this->fromEnrollment->student->user)
             ->post(route('exchanges.store', $this->fromEnrollment->id), $requestData);
@@ -44,7 +44,7 @@ class CreateExchangeTest extends TestCase
     public function a_student_may_not_propose_a_shift_exchange_of_a_third_party_enrollment()
     {
         $unauthorizedStudent = factory(Student::class)->create();
-        $requestData = ['to_enrollment_id' => $this->toEnrollment->id];
+        $requestData = ['enrollment_id' => $this->toEnrollment->id];
 
         $response = $this->actingAs($unauthorizedStudent->user)
             ->post(route('exchanges.store', $this->fromEnrollment->id), $requestData);
@@ -56,7 +56,7 @@ class CreateExchangeTest extends TestCase
     /** @test */
     public function unauthenticated_users_may_not_create_exchanges()
     {
-        $requestData = ['to_enrollment_id' => $this->toEnrollment->id];
+        $requestData = ['enrollment_id' => $this->toEnrollment->id];
 
         $response = $this->post(route('exchanges.store', $this->fromEnrollment->id), $requestData);
 
