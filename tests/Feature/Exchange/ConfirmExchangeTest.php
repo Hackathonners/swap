@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Judite\Models\User;
 use App\Judite\Models\Student;
-use App\Judite\Models\Exchange;
+use App\Judite\Models\DirectExchange;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ConfirmedExchangeNotification;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -23,7 +23,7 @@ class ConfirmExchangeTest extends TestCase
         parent::setUp();
         Mail::fake();
         $this->enableExchangesPeriod();
-        $this->exchange = factory(Exchange::class)->create();
+        $this->exchange = factory(DirectExchange::class)->create();
         $this->fromEnrollment = $this->exchange->fromEnrollment;
         $this->toEnrollment = $this->exchange->toEnrollment;
     }

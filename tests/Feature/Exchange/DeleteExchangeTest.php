@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Judite\Models\Student;
-use App\Judite\Models\Exchange;
+use App\Judite\Models\DirectExchange;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class DeleteExchangeTest extends TestCase
@@ -19,7 +19,7 @@ class DeleteExchangeTest extends TestCase
     {
         parent::setUp();
         $this->enableExchangesPeriod();
-        $this->exchange = factory(Exchange::class)->create();
+        $this->exchange = factory(DirectExchange::class)->create();
         $this->fromEnrollment = $this->exchange->fromEnrollment;
         $this->toEnrollment = $this->exchange->toEnrollment;
     }
@@ -31,7 +31,7 @@ class DeleteExchangeTest extends TestCase
             ->delete(route('exchanges.destroy', $this->exchange->id));
 
         $response->assertRedirect();
-        $this->assertEquals(0, Exchange::count());
+        $this->assertEquals(0, DirectExchange::count());
     }
 
     /** @test */
@@ -43,7 +43,7 @@ class DeleteExchangeTest extends TestCase
             ->delete(route('exchanges.destroy', $this->exchange->id));
 
         $response->assertStatus(404);
-        $this->assertEquals(1, Exchange::count());
+        $this->assertEquals(1, DirectExchange::count());
     }
 
     /** @test */
@@ -52,6 +52,6 @@ class DeleteExchangeTest extends TestCase
         $response = $this->delete(route('exchanges.destroy', $this->exchange->id));
 
         $response->assertRedirect(route('login'));
-        $this->assertEquals(1, Exchange::count());
+        $this->assertEquals(1, DirectExchange::count());
     }
 }

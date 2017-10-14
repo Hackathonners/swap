@@ -1,12 +1,12 @@
 <?php
 
 use App\Judite\Models\Course;
-use App\Judite\Models\Exchange;
+use App\Judite\Models\DirectExchange;
 use App\Judite\Models\Enrollment;
 
 /*
 |--------------------------------------------------------------------------
-| Exchange Model Factories
+| DirectExchange Model Factories
 |--------------------------------------------------------------------------
 |
 | Here you may define all of your model factories. Model factories give
@@ -16,7 +16,7 @@ use App\Judite\Models\Enrollment;
 */
 
 /* @var \Illuminate\Database\Eloquent\Factory $factory */
-$factory->define(Exchange::class, function (Faker\Generator $faker) {
+$factory->define(DirectExchange::class, function (Faker\Generator $faker) {
     $course = factory(Course::class)->create();
 
     return [

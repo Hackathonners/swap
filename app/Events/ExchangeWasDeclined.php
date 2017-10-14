@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Judite\Models\Exchange;
+use App\Judite\Models\DirectExchange;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 
@@ -13,14 +13,14 @@ class ExchangeWasDeclined
     /**
      * The declined exchange.
      *
-     * @var \App\Judite\Models\Exchange
+     * @var \App\Judite\Models\DirectExchange
      */
     public $exchange;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(Exchange $exchange)
+    public function __construct(DirectExchange $exchange)
     {
         $this->exchange = $exchange;
     }

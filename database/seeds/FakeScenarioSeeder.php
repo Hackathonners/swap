@@ -3,7 +3,7 @@
 use App\Judite\Models\Shift;
 use App\Judite\Models\Course;
 use App\Judite\Models\Student;
-use App\Judite\Models\Exchange;
+use App\Judite\Models\DirectExchange;
 use Illuminate\Database\Seeder;
 use App\Judite\Models\Enrollment;
 use Illuminate\Support\Collection;
@@ -62,7 +62,7 @@ class FakeScenarioSeeder extends Seeder
                         ->first();
 
                     if (! is_null($matchingEnrollment)) {
-                        Exchange::create([
+                        DirectExchange::create([
                             'from_enrollment_id' => $enrollment->id,
                             'to_enrollment_id' => $matchingEnrollment->id,
                         ]);

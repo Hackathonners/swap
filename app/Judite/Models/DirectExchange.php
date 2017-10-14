@@ -8,7 +8,7 @@ use App\Judite\Contracts\Registry\ExchangeRegistry;
 use App\Exceptions\EnrollmentCannotBeExchangedException;
 use App\Exceptions\ExchangeEnrollmentsOnDifferentCoursesException;
 
-class Exchange extends Model
+class DirectExchange extends Model
 {
     /**
      * The relations to eager load on every query.
@@ -32,7 +32,7 @@ class Exchange extends Model
     private $performed = false;
 
     /**
-     * Create a new Exchange model instance.
+     * Create a new DirectExchange model instance.
      *
      * @param array $attributes
      */
@@ -70,7 +70,7 @@ class Exchange extends Model
      *
      * @return $this
      */
-    public function setExchangeEnrollments(Enrollment $from, Enrollment $to) : Exchange
+    public function setExchangeEnrollments(Enrollment $from, Enrollment $to) : DirectExchange
     {
         if (! $from->availableForExchange() || is_null($to->shift)) {
             throw new EnrollmentCannotBeExchangedException();
@@ -92,13 +92,13 @@ class Exchange extends Model
      * @param \App\Judite\Models\Enrollment $from
      * @param \App\Judite\Models\Enrollment $to
      *
-     * @return \App\Judite\Models\Exchange|null
+     * @return \App\Judite\Models\DirectExchange|null
      */
-    public static function findMatchingExchange(Enrollment $from, Enrollment $to): ?Exchange
+    public static function findMatchingExchange(Enrollment $from, Enrollment $to): ?DirectExchange
     {
         $inverseMatch = [
             'from_enrollment_id' => $to->id,
-            'to_enrollment_id' => $from->id,
+            'to_enrollment_id' => $from->id,    
         ];
 
         return self::where($inverseMatch)->first();
@@ -135,7 +135,7 @@ class Exchange extends Model
      *
      * @return $this
      */
-    public function perform(): Exchange
+    public function perform(): DirectExchange
     {
         $fromEnrollmentCopy = clone $this->fromEnrollment;
         $toEnrollmentCopy = clone $this->toEnrollment;

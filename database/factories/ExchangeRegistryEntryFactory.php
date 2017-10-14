@@ -1,6 +1,6 @@
 <?php
 
-use App\Judite\Models\Exchange;
+use App\Judite\Models\DirectExchange;
 use App\Judite\Models\ExchangeRegistryEntry;
 
 /*
@@ -16,7 +16,7 @@ use App\Judite\Models\ExchangeRegistryEntry;
 
 /* @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(ExchangeRegistryEntry::class, function (Faker\Generator $faker) {
-    $exchange = factory(Exchange::class)->create();
+    $exchange = factory(DirectExchange::class)->create();
 
     return [
         'from_shift_id' => $exchange->fromShift(),

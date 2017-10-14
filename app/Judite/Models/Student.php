@@ -46,7 +46,7 @@ class Student extends Model
             ->select($enrollmentsKeyName)
             ->getBaseQuery();
 
-        return Exchange::whereFromEnrollmentIn($enrollmentsIdsQuery);
+        return DirectExchange::whereFromEnrollmentIn($enrollmentsIdsQuery);
     }
 
     /**
@@ -62,7 +62,7 @@ class Student extends Model
             ->select($enrollmentsKeyName)
             ->getBaseQuery();
 
-        return Exchange::whereToEnrollmentIn($enrollmentsIdsQuery);
+        return DirectExchange::whereToEnrollmentIn($enrollmentsIdsQuery);
     }
 
     /**
