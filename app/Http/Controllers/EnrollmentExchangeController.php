@@ -76,11 +76,11 @@ class EnrollmentExchangeController extends Controller
         try {
             $exchange = DB::transaction(function () use ($id, $request) {
                 $this->validate($request, [
-                    'to_enrollment_id' => 'exists:enrollments,id',
+                    'enrollment_id' => 'exists:enrollments,id',
                 ]);
 
                 $fromEnrollment = Auth::student()->enrollments()->findOrFail($id);
-                $toEnrollment = Enrollment::find($request->input('to_enrollment_id'));
+                $toEnrollment = Enrollment::find($request->input('enrollment_id'));
 
                 // Firstly check if the inverse exchange for the same enrollments
                 // already exists. If the inverse record is found then we will

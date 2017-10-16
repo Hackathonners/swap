@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Judite\Models\Exchange;
+use App\Judite\Models\Enrollment;
 use Illuminate\Support\Facades\DB;
 use App\Events\ExchangeWasDeclined;
 use App\Events\ExchangeWasConfirmed;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Exchange\CreateRequest;
 
 class ExchangeController extends Controller
 {
@@ -40,6 +42,56 @@ class ExchangeController extends Controller
         event(new ExchangeWasConfirmed($exchange));
 
         return redirect()->back();
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @param  $request
+     *
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     */
+    public function create(CreateRequest $request)
+    {
+        try {
+            $id = $request->input('enrollment_id');
+            $data = DB::transaction(function () use ($id) {
+                $enrollment = Auth::student()->enrollments()->findOrFail($id);
+
+                if (! $enrollment->availableForExchange()) {
+                    throw new \LogicException('The enrollment is not available for exchange.');
+                }
+
+                $matchingEnrollments = Enrollment::similarEnrollments($enrollment)
+                    ->orderByStudent()
+                    ->get();
+
+                $course = $enrollment->course;
+
+                $shiftsAvailable = $course->shifts()
+                    ->orderBy('tag')
+                    ->get()
+                    ->except([
+                        'id' => $enrollment->shift->id,
+                    ])
+                    ->pluck('tag');
+
+                return compact('enrollment', 'matchingEnrollments', 'shiftsAvailable');
+            });
+
+            $data['matchingEnrollments'] = $data['matchingEnrollments']->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    '_toString' => $item->present()->inlineToString(),
+                ];
+            });
+
+            return view('exchanges.create', $data);
+        } catch (\LogicException $e) {
+            flash($e->getMessage())->error();
+
+            return redirect()->route('dashboard');
+        }
     }
 
     /**

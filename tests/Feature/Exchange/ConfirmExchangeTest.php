@@ -45,7 +45,7 @@ class ConfirmExchangeTest extends TestCase
     /** @test */
     public function an_exchange_is_performed_when_student_creates_a_matching_exchange_proposal()
     {
-        $requestData = ['to_enrollment_id' => $this->fromEnrollment->id];
+        $requestData = ['enrollment_id' => $this->fromEnrollment->id];
 
         $response = $this->actingAs($this->toEnrollment->student->user)
             ->post(route('exchanges.store', $this->toEnrollment->id), $requestData);
