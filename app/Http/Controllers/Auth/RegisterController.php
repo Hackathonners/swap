@@ -65,9 +65,10 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         $user = DB::transaction(function () use ($data) {
+            $lowerUserEmail = strtolower($data['student_number']);
             $user = User::make([
                 'name' => $data['name'],
-                'email' => $data['student_number'].'@alunos.uminho.pt',
+                'email' => $lowerUserEmail.'@alunos.uminho.pt',
                 'password' => bcrypt($data['password']),
             ]);
             $user->verification_token = str_random(32);
