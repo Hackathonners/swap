@@ -18,10 +18,7 @@ class RegistrationTest extends TestCase
         Mail::fake();
     }
 
-    /**
-     * @test
-     * @group bug7
-     * */
+    /** @test */
     public function user_email_is_stored_as_lower_case()
     {
         $this->post('/register', [

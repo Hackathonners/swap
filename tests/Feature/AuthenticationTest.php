@@ -10,10 +10,7 @@ class AuthenticationTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /**
-     * @test
-     * @group bug7
-     **/
+    /** @test **/
     public function user_email_login_check_is_case_insensitve()
     {
         $user = factory(User::class)->create([
