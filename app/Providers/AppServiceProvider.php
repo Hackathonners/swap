@@ -21,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Validator::extend('student_number', function ($attribute, $value, $parameters, $validator) {
-            return preg_match('/^(a|pg)[0-9]+$/', $value) === 1;
+            return preg_match('/^(a|pg)[0-9]+$/i', $value) === 1;
         });
     }
 

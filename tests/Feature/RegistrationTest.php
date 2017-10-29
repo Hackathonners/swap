@@ -19,9 +19,24 @@ class RegistrationTest extends TestCase
     }
 
     /** @test */
+    public function user_email_is_stored_as_lower_case()
+    {
+        $this->post(route('register'), [
+            'name' => 'John Doe',
+            'student_number' => 'pG12345',
+            'password' => 'secret',
+            'password_confirmation' => 'secret',
+        ]);
+
+        $expectedEmail = 'pg12345@alunos.uminho.pt';
+        $actualEmail = User::first()->email;
+        $this->assertEquals(0, strcmp($expectedEmail, $actualEmail));
+    }
+
+    /** @test */
     public function a_confirmation_email_is_sent_after_registration()
     {
-        $this->post('/register', [
+        $this->post(route('register'), [
             'name' => 'John Doe',
             'student_number' => 'pg12345',
             'password' => 'secret',
