@@ -70,7 +70,7 @@ class Exchange extends Model
      *
      * @return $this
      */
-    public function setExchangeEnrollments(Enrollment $from, Enrollment $to) : Exchange
+    public function setExchangeEnrollments(Enrollment $from, Enrollment $to) : self
     {
         if (! $from->availableForExchange() || is_null($to->shift)) {
             throw new EnrollmentCannotBeExchangedException();
@@ -94,7 +94,7 @@ class Exchange extends Model
      *
      * @return \App\Judite\Models\Exchange|null
      */
-    public static function findMatchingExchange(Enrollment $from, Enrollment $to): ?Exchange
+    public static function findMatchingExchange(Enrollment $from, Enrollment $to): ?self
     {
         $inverseMatch = [
             'from_enrollment_id' => $to->id,
@@ -135,7 +135,7 @@ class Exchange extends Model
      *
      * @return $this
      */
-    public function perform(): Exchange
+    public function perform(): self
     {
         $fromEnrollmentCopy = clone $this->fromEnrollment;
         $toEnrollmentCopy = clone $this->toEnrollment;
