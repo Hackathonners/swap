@@ -16,7 +16,7 @@ class RegistrationConfirmation extends Mailable
      *
      * @var string
      */
-    private $user;
+    public $user;
 
     /**
      * Create a new message instance.

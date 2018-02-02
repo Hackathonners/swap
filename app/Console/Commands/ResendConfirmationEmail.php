@@ -2,7 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Judite\Models\Student;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\RegistrationConfirmation;
 
 class ResendConfirmationEmail extends Command
 {
@@ -22,8 +26,6 @@ class ResendConfirmationEmail extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -37,6 +39,16 @@ class ResendConfirmationEmail extends Command
      */
     public function handle()
     {
-        //
+        DB::transaction(function () {
+            $students = Student::with('user')->get();
+            $students->each(function ($student) {
+                $user = $student->user;
+                if ($user->verified) {
+                    return;
+                }
+
+                Mail::to($user)->send(new RegistrationConfirmation($user));
+            });
+        });
     }
 }

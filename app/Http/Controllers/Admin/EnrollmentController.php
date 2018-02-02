@@ -76,12 +76,12 @@ class EnrollmentController extends Controller
                         if ($student === null) {
                             $user = User::make([
                                 'name' => $row->student_name ?? $row->student_id,
-                                'email' => $row->student_email ?? $row->student_id.'@alunos.uminho.pt',
+                                'email' => strtolower($row->student_email ?? $row->student_id.'@alunos.uminho.pt'),
                                 'password' => bcrypt(str_random(8)),
                             ]);
                             $user->verification_token = str_random(32);
                             $user->save();
-                            $student = $user->student()->create(['student_number' => $row->student_id]);
+                            $student = $user->student()->create(['student_number' => strtolower($row->student_id)]);
                         }
 
                         // Check if the given course id exists
