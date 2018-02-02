@@ -87,9 +87,10 @@ class ImportEnrollmentsFileTest extends TestCase
     }
 
     /** @test */
-    public function enrollments_are_not_imported_when_student_is_invalid()
+    public function enrollments_are_imported_with_new_students()
     {
         // Prepare
+        $this->withoutExceptionHandling();
         $admin = factory(User::class)->states('admin')->create();
         $student = factory(Student::class)->create();
         $otherStudent = factory(Student::class)->create();
@@ -108,7 +109,9 @@ class ImportEnrollmentsFileTest extends TestCase
 
         // Remove student from database
         $enrollment->student()->associate($otherStudent)->save();
+        $user = $student->user;
         $student->delete();
+        $user->delete();
 
         // Execute
         $response = $this->actingAs($admin)
@@ -119,10 +122,11 @@ class ImportEnrollmentsFileTest extends TestCase
 
         // Assert
         $response->assertRedirect(route('enrollments.import'));
-        $this->assertEquals(1, Enrollment::count());
-        $actualEnrollment = Enrollment::first();
-        $this->assertEquals($enrollment->id, $actualEnrollment->id);
-        $this->assertEquals(null, $actualEnrollment->shift_id);
+        $this->assertEquals(2, Enrollment::count());
+        $this->assertEquals(2, Student::count());
+        $actualEnrollment = Enrollment::latest('id')->first();
+        $this->assertEquals($student->student_number, $actualEnrollment->student->student_number);
+        $this->assertEquals($enrollmentWithShift->shift_id, $actualEnrollment->shift_id);
     }
 
     /** @test */

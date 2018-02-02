@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Judite\Models\User;
 use App\Judite\Models\Shift;
 use App\Judite\Models\Course;
 use App\Judite\Models\Student;
@@ -73,9 +74,14 @@ class EnrollmentController extends Controller
                         // Check if the given student number exists
                         $student = Student::whereNumber($row->student_id)->first();
                         if ($student === null) {
-                            $exception = new InvalidFieldValueException();
-                            $exception->setField('Student ID', $row->student_id, "The student {$row->student_id} does not exist. (at line {$index})");
-                            throw $exception;
+                            $user = User::make([
+                                'name' => $row->student_name ?? $row->student_id,
+                                'email' => $row->student_email ?? $row->student_id.'@alunos.uminho.pt',
+                                'password' => bcrypt(str_random(8)),
+                            ]);
+                            $user->verification_token = str_random(32);
+                            $user->save();
+                            $student = $user->student()->create(['student_number' => $row->student_id]);
                         }
 
                         // Check if the given course id exists
