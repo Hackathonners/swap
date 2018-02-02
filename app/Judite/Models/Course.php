@@ -58,7 +58,7 @@ class Course extends Model
      *
      * @return $this
      */
-    public function addShift(Shift $shift): Course
+    public function addShift(Shift $shift): self
     {
         $this->shifts()->save($shift);
 

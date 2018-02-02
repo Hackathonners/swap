@@ -61,7 +61,7 @@ class Enrollment extends Model
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeSimilarEnrollments($query, Enrollment $enrollment)
+    public function scopeSimilarEnrollments($query, self $enrollment)
     {
         return $query->where('enrollments.id', '!=', $enrollment->id)
             ->where('course_id', $enrollment->course->id)
@@ -89,7 +89,7 @@ class Enrollment extends Model
      *
      * @return $this
      */
-    public function exchange(Enrollment $enrollment): Enrollment
+    public function exchange(self $enrollment): self
     {
         $fromShiftId = $this->shift_id;
         $this->shift()->associate($enrollment->shift_id);
