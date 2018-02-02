@@ -48,6 +48,8 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        $data['student_number'] = is_null($data['student_number']) ?: strtolower($data['student_number']);
+        
         return Validator::make($data, [
             'name' => 'required|string|max:255',
             'student_number' => 'required|string|unique:students,student_number|student_number',
