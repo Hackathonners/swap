@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Judite\Models\Settings;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
