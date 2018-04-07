@@ -38,16 +38,6 @@ class GroupController extends Controller
         $group->save();
     }
 
-    public function edit()
-    {
-        //
-    }
-
-    public function update()
-    {
-        //
-    }
-
     public function invite($groupId, $studentId)
     {
         $group = Group::whereId($groupId);
@@ -63,16 +53,22 @@ class GroupController extends Controller
 
     public function confirm($groupId)
     {
-        //
+        DB::table('groups')
+            ->whereId($groupId)
+            ->update(['effective' => true]);
     }
 
-    public function decline()
+    public function decline($groupId)
     {
-        //
+        DB::table('groups')
+            ->whereId($groupId)
+            ->delete();
     }
 
     public function leave()
     {
-        //
+        DB::table('groups')
+            ->whereId($groupId)
+            ->delete();
     }
 }
