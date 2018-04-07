@@ -21,7 +21,7 @@ class CreateGroupsTable extends Migration
             $table->integer('course_id')->unsigned();
             $table->timestamps();
 
-            $table->unique('group_number','course_id','student_id');
+            $table->unique(['group_number','course_id','student_id']);
             $table->foreign('student_id')->references('id')->on('students');
             $table->foreign('course_id')->references('id')->on('courses');
         });
