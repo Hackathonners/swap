@@ -31,18 +31,15 @@ Route::delete('/exchanges/{id}', 'ExchangeController@destroy')->name('exchanges.
 Route::get('/registrations/confirm/{token}', 'Auth\AccountVerificationController@store')->name('register.confirm');
 Route::post('/registrations/email', 'Auth\AccountVerificationController@sendEmail')->name('register.resend_confirmation');
 
+Route::get('/groups/index', 'GroupController@index')->name('groups.index');
+Route::get('/groups/show/{courseId}', 'GroupController@show')->name('groups.show');
+Route::get('/groups/store/{courseId}', 'GroupController@store')->name('groups.store');
 
-Route::get('/groups/{courseId}', 'GroupController@show')->name('groups.show');
-Route::get('/groups/{courseId}/store', 'GroupController@store')->name('groups.store');
+Route::get('/groups/invite/{groupId}/{userId}', 'GroupController@invite')->name('groups.invite');
+Route::get('/groups/confirm/{groupId}', 'GroupController@confirm')->name('groups.confirm');
+Route::get('/groups/decline/{groupId}', 'GroupController@decline')->name('groups.decline');
 
-Route::get('/groups/{groupId}/edit', 'GroupController@edit')->name('groups.edit');
-Route::post('/groups/{groupId}/edit', 'GroupController@update')->name('groups.update');
-
-Route::get('/groups/{groupId}/invite/{userId}', 'GroupController@invite')->name('groups.invite');
-Route::get('/groups/{groupId}/confirm', 'GroupController@confirm')->name('groups.confirm');
-Route::get('/groups/{groupId}/decline', 'GroupController@decline')->name('groups.decline');
-
-Route::delete('/groups/{groupId}/leave', 'GroupController@leave')->name('groups.leave');
+Route::get('/groups/leave/{groupId}', 'GroupController@leave')->name('groups.leave');
 
 /*
  * Admin routes
@@ -57,3 +54,8 @@ Route::get('/exchanges', 'Admin\ExchangeController@index')->name('exchanges.inde
 
 Route::get('/settings/edit', 'Admin\SettingsController@edit')->name('settings.edit');
 Route::put('/settings', 'Admin\SettingsController@update')->name('settings.update');
+
+Route::get('/groups/all/{courseId}', 'Admin\GroupController@course')->name('groups.course');
+Route::get('/groups/all', 'Admin\GroupController@all')->name('groups.all');
+
+Route::post('/groups/all/{courseId}', 'Admin\GroupController@update')->name('groups.update');
