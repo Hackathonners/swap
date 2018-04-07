@@ -159,4 +159,14 @@ class Student extends Model
     {
         return $query->where('student_number', $studentNumber);
     }
+
+    /**
+     * Get groups of this student.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function groups()
+    {
+        return $this->hasMany(Group::class);
+    }
 }
