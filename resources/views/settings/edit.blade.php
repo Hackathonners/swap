@@ -30,6 +30,17 @@
                     @endif
                 </div>
 
+                <div class="form-group">
+                    <label>Period of groups enrollments</label>
+                    <calendar-exchanges :date="['{{ old('group_enrollments_start_at') ?: $settings->group_enrollments_start_at }}', '{{ old('group_enrollments_end_at') ?: $settings->group_enrollments_end_at }}']"></calendar-exchanges>
+                    @if (str_contains($errors->first('exchanges_end_at'), 'required'))
+                        <div class="form-text text-danger">The group enrollment period field is required.</div>
+                    @else
+                        <div class="form-text text-danger">{{ $errors->first('group_enrollments_start_at') }}</div>
+                        <div class="form-text text-danger">{{ $errors->first('group_enrollments_end_at') }}</div>
+                    @endif
+                </div>
+
                 <button type="submit" class="btn btn-primary">
                     Update settings
                 </button>
