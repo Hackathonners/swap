@@ -15,7 +15,7 @@ class CreateGroupsTable extends Migration
     {
         Schema::create('groups', function (Blueprint $table) {
             $table->increments('id');
-            $table->boolean('efetivo')->default(false);
+            $table->boolean('effective')->default(false);
             $table->integer('student_id')->unsigned();
             $table->integer('course_id')->unsigned();
             $table->timestamps();
