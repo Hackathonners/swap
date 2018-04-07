@@ -32,8 +32,8 @@ Route::get('/registrations/confirm/{token}', 'Auth\AccountVerificationController
 Route::post('/registrations/email', 'Auth\AccountVerificationController@sendEmail')->name('register.resend_confirmation');
 
 
-Route::get('/groups/{courseId}', 'GroupController@index')->name('groups.index');
-Route::get('/groups/{courseId}/create', 'GroupController@store')->name('groups.store');
+Route::get('/groups/{courseId}', 'GroupController@show')->name('groups.show');
+Route::get('/groups/{courseId}/store', 'GroupController@store')->name('groups.store');
 
 Route::get('/groups/{groupId}/edit', 'GroupController@edit')->name('groups.edit');
 Route::post('/groups/{groupId}/edit', 'GroupController@update')->name('groups.update');
