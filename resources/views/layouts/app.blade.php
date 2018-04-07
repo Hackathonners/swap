@@ -51,11 +51,17 @@
                                         <a class="nav-link {{ Route::is('exchanges.index') ? 'active': '' }}" href="{{ route('exchanges.index') }}">Exchanges</a>
                                     </li>
                                     <li class="nav-item">
+                                        <a class="nav-link" href="/groups/all">Groups</a>
+                                    </li>
+                                    <li class="nav-item">
                                         <a class="nav-link {{ Route::is('settings.edit') ? 'active': '' }}" href="{{ route('settings.edit') }}">Settings</a>
                                     </li>
                                 @else
                                     <li class="nav-item">
                                         <a class="nav-link {{ Route::is('courses.index') ? 'active': '' }}" href="{{ route('courses.index') }}">Courses</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/groups/index">Groups</a>
                                     </li>
                                 @endif
                             @endif

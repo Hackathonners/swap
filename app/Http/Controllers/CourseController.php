@@ -34,4 +34,26 @@ class CourseController extends Controller
 
         return view('courses.index', compact('courses'));
     }
+
+    /**
+     * Change the minimum group size for the given course
+     *
+     * @param int $course_id
+     * @param int $min
+     */
+    public function setGroupMin($course_id, $min){
+        Course::whereCourseId($course_id)
+            ->update(['group_min' => $min]);
+    }
+
+    /**
+     * Change the maximum group size for the given course
+     *
+     * @param int $course_id
+     * @param int $max
+     */
+    public function setGroupMax($course_id, $max){
+        Course::whereCourseId($course_id)
+            ->update(['group_max' => $max]);
+    }
 }
