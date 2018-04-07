@@ -29,9 +29,12 @@ class GroupController extends Controller
     {
         $student = Auth::user();
         $group = new Group;
+        $group->effective = true;
+        $group->group_number =
+            DB::table('groups')->max('group_number') + 1;
         $group->student_id = $student->id;
         $group->course_id = $course_id;
-        $group->effective = true;
+        
         $group->save();
     }
 
@@ -45,12 +48,20 @@ class GroupController extends Controller
         //
     }
 
-    public function invite($userId)
+    public function invite($groupId, $studentId)
     {
-        //
+        $group = Group::whereId($groupId);
+        $invite = new Group;
+        $invite->effective = false;
+        $invite->group_number = $group->group_number;
+        $invite->student_id = $studentId;
+        $invite->course_id = $group->course_id;
+
+        $invite->save();
+        
     }
 
-    public function confirm()
+    public function confirm($groupId)
     {
         //
     }
