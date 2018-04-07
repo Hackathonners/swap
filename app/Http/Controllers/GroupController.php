@@ -25,9 +25,14 @@ class GroupController extends Controller
         return view('groups.show', compact($users));
     }
 
-    public function store()
+    public function store($course_id)
     {
-        //
+        $student = Auth::user();
+        $group = new Group;
+        $group->student_id = $student->id;
+        $group->course_id = $course_id;
+        $group->effective = true;
+        $group->save();
     }
 
     public function edit()
