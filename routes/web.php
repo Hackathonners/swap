@@ -35,7 +35,7 @@ Route::get('/groups/index', 'GroupController@index')->name('groups.index');
 Route::get('/groups/show/{courseId}', 'GroupController@show')->name('groups.show');
 Route::get('/groups/store/{courseId}', 'GroupController@store')->name('groups.store');
 
-Route::get('/groups/invite/{groupId}/{userId}', 'GroupController@invite')->name('groups.invite');
+Route::post('/groups/invite/{groupId}', 'GroupController@invite')->name('groups.invite');
 Route::get('/groups/confirm/{groupId}', 'GroupController@confirm')->name('groups.confirm');
 Route::get('/groups/decline/{groupId}', 'GroupController@decline')->name('groups.decline');
 
@@ -55,7 +55,7 @@ Route::get('/exchanges', 'Admin\ExchangeController@index')->name('exchanges.inde
 Route::get('/settings/edit', 'Admin\SettingsController@edit')->name('settings.edit');
 Route::put('/settings', 'Admin\SettingsController@update')->name('settings.update');
 
-Route::get('/groups/all/{courseId}', 'Admin\GroupController@course')->name('groups.course');
+Route::post('/groups/all/{courseId}', 'Admin\GroupController@store')->name('groups.store');
 Route::get('/groups/all', 'Admin\GroupController@all')->name('groups.all');
 
 Route::post('/groups/all/{courseId}', 'Admin\GroupController@update')->name('groups.update');
