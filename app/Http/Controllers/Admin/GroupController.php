@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Judite\Models\Group;
 use App\Judite\Models\Student;
+use App\Http\Controllers\Controller;
 
 class GroupController extends Controller
 {
