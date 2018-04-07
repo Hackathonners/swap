@@ -8,6 +8,14 @@ use App\Judite\Models\Student;
 
 class GroupController extends Controller
 {
+
+    public function __contruct()
+    {
+        $this->middleware('auth');
+        $this->middleware('can.student');
+        $this->middleware('student.verified');
+    }
+
     public function index()
     {
         $courses = Auth::student()
@@ -28,6 +36,7 @@ class GroupController extends Controller
     public function store($course_id)
     {
         $student = Auth::user();
+
         $group = new Group;
         $group->effective = true;
         $group->group_number =
@@ -38,13 +47,18 @@ class GroupController extends Controller
         $group->save();
     }
 
-    public function invite($groupId, $studentId)
+    public function invite($groupId, Request $request)
     {
+        $data = $request->validate([
+            'student_number' => 'required'
+        ]);
         $group = Group::whereId($groupId);
+        
         $invite = new Group;
         $invite->effective = false;
         $invite->group_number = $group->group_number;
-        $invite->student_id = $studentId;
+        $invite->student_id = 
+            Student::whereStudentNumber($data['student_number'])->select('id')->first();
         $invite->course_id = $group->course_id;
 
         $invite->save();
