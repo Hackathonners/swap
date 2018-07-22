@@ -2,31 +2,31 @@
 
 @section('content')
     <div class="card card--section mb-5">
-        @if (count($groupsUsers) == 0)
+        @if (count($groups) == 0)
             @include('admin.groups.empty')
         @else
             <div class="card-header">Groups</div>
-                <table class="card-table table table-responsive">
-                    <tbody>
-                        @foreach ($groupsUsers as $users)
+            <table class="card-table table table-responsive">
+                <tbody>
+                    @foreach ($groups as $group)
+                        <tr>
+                            <th colspan="3" class="table-active">
+                                Group
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Name</th>
+                            <th>Number</th>
+                        </tr>
+                        @foreach ($group->students as $student)
                             <tr>
-                                <th colspan="3" class="table-active">
-                                </th>
+                                <td class="d-none d-sm-table-cell">{{ $student->name }}</td>
+                                <td>{{ $student->student_number }}</td>
                             </tr>
-                            <tr>
-                                <th class="d-none d-sm-table-cell">Name</th>
-                                <th>Number</th>
-                            </tr>
-                            @foreach ($users as $user)
-                                <tr>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $user->student_number }}</td>
-                                </tr>
-                            @endforeach
                         @endforeach
-                    </tbody>
-                </table>
-            </div>
+                    @endforeach
+                </tbody>
+            </table>
         @endif
     </div>
 @endsection

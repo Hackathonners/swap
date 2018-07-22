@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Invitation extends Model
 {
     /**
-     * Get the student of this invitation
+     * Get the student of this invitation.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -17,7 +17,7 @@ class Invitation extends Model
     }
 
     /**
-     * Get the group of this invitation
+     * Get the group of this invitation.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

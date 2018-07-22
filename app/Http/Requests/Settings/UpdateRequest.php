@@ -28,8 +28,8 @@ class UpdateRequest extends FormRequest
             'enrollments_end_at' => 'required|date|after:enrollments_start_at',
             'exchanges_start_at' => 'required|date|after_or_equal:enrollments_start_at',
             'exchanges_end_at' => 'required|date|after:exchanges_start_at',
-            'groups_creation_start_at' => 'required|date|after_or_equal:exchanges_end_at',
-            'groups_creation_end_at' => 'required|date|after:groups_creation_start_at',
+            //'groups_creation_start_at' => 'required|date|after_or_equal:exchanges_end_at',
+            //'groups_creation_end_at' => 'required|date|after:groups_creation_start_at',
         ];
     }
 

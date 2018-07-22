@@ -4,9 +4,9 @@ namespace App\Judite\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\EnrollmentCannotBeDeleted;
+use App\Exceptions\UserHasAlreadyGroupInCourseException;
 use App\Exceptions\StudentIsNotEnrolledInCourseException;
 use App\Exceptions\UserIsAlreadyEnrolledInCourseException;
-use App\Exceptions\UserHasAlreadyGroupInCourseException;
 
 class Student extends Model
 {
@@ -141,7 +141,7 @@ class Student extends Model
             throw new StudentIsNotEnrolledInCourseException($course);
         }
 
-        if (! $enrollment->isDeletable()) {
+        if (! ($enrollment->isDeletable())) {
             throw new EnrollmentCannotBeDeleted($enrollment);
         }
 
@@ -165,8 +165,6 @@ class Student extends Model
      * Get memberships of this student.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     *
-     * @return \App\Judite\Models\Membership
      */
     public function memberships()
     {

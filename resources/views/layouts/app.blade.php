@@ -51,7 +51,7 @@
                                         <a class="nav-link {{ Route::is('exchanges.index') ? 'active': '' }}" href="{{ route('exchanges.index') }}">Exchanges</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="/groups/all">Groups</a>
+                                            <a class="nav-link {{ Route::is('admin.groups.index') ? 'active': '' }}" href="{{ route('admin.groups.index') }}">Groups</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link {{ Route::is('settings.edit') ? 'active': '' }}" href="{{ route('settings.edit') }}">Settings</a>
@@ -61,7 +61,7 @@
                                         <a class="nav-link {{ Route::is('courses.index') ? 'active': '' }}" href="{{ route('courses.index') }}">Courses</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="/groups/index">Groups</a>
+                                        <a class="nav-link {{ Route::is('groups.index') ? 'active': '' }}" href="{{ route('groups.index') }}">Groups</a>
                                     </li>
                                 @endif
                             @endif

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Http\Request;
 use App\Judite\Models\Course;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -42,8 +43,9 @@ class CourseController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -53,8 +55,9 @@ class CourseController extends Controller
         $min = $request->input('min');
         $max = $request->input('max');
 
-        if ($min > $max)
+        if ($min > $max) {
             $max = $min;
+        }
 
         $course->group_min = $min;
         $course->group_max = $max;

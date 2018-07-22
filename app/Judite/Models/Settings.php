@@ -16,6 +16,8 @@ class Settings extends Model
         'exchanges_end_at',
         'enrollments_start_at',
         'enrollments_end_at',
+        'groups_creation_start_at',
+        'groups_creation_end_at',
     ];
 
     /**
@@ -30,6 +32,8 @@ class Settings extends Model
         'exchanges_end_at',
         'enrollments_start_at',
         'enrollments_end_at',
+        'groups_creation_start_at',
+        'groups_creation_end_at',
     ];
 
     /**
@@ -58,5 +62,19 @@ class Settings extends Model
         }
 
         return $this->enrollments_start_at->isPast() && ! $this->enrollments_end_at->isPast();
+    }
+
+    /**
+     * Checks whether today's date is within the group creation period.
+     *
+     * @return bool
+     */
+    public function withinGroupCreationPeriod(): bool
+    {
+        if (is_null($this->groups_creation_start_at) || is_null($this->groups_creation_end_at)) {
+            return false;
+        }
+
+        return $this->groups_creation_start_at->isPast() && ! $this->groups_creation_end_at->isPast();
     }
 }

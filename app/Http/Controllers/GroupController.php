@@ -2,152 +2,218 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Judite\Models\Group;
+use App\Judite\Models\Course;
 use App\Judite\Models\Student;
+use App\Judite\Models\Invitation;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use App\Exceptions\UserHasAlreadyGroupInCourseException;
 
 class GroupController extends Controller
 {
-
-    public function __contruct()
+    /**
+     * Create a new controller instance.
+     */
+    public function __construct()
     {
         $this->middleware('auth');
         $this->middleware('can.student');
         $this->middleware('student.verified');
+        $this->middleware('can.group');
     }
 
     /**
-     * @deprecated UNUSED
-     * Shows the courses where the authenticated user has groups.
+     * Display a listing of the resource.
      *
-     * @return \Illuminate\View\View
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $enrollments = Auth::student()
-            ->enrollments()
-            ->join('courses','courses.id','=','enrollments.course_id')
-            ->where('group_min','>',0);
+        $student = Auth::student();
 
-        return view('groups.index', compact($enrollments));
+        $enrollments = $student
+            ->enrollments()
+            ->orderByCourse()
+            ->get();
+
+        foreach ($enrollments as $enrollmentKey => $enrollment) {
+            $course = Course::whereId($enrollment->course_id)->first();
+
+            if ($course->group_max <= 0) {
+                unset($enrollments[$enrollmentKey]);
+                continue;
+            }
+
+            $membership = $student->memberships()
+                ->whereCourseId($course->id)
+                ->first();
+
+            if (is_null($membership)) {
+                $enrollment->group_status = 0;
+            } else {
+                $group = Group::whereId($membership->group_id)->first();
+                $enrollment->group_status =
+                    $group->memberships()->count();
+            }
+
+            $enrollment->name = $course->name;
+            $enrollment->group_min = $course->group_min;
+            $enrollment->group_max = $course->group_max;
+
+            $enrollment->number_invitations = $this->numberInvitations(
+                $enrollment->course_id,
+                $student->student_number
+            );
+        }
+
+        return view('groups.index', compact('enrollments'));
     }
 
     /**
-     * Shows the users group for the given course.
-     * If the user does not have a group redirects to the group
-     * create view.
+     * Store a newly created resource in storage.
      *
-     * @param int $course_id
+     * @param $courseId
      *
-     * @return \Illuminate\View\View
+     * @return \Illuminate\Http\Response
+     */
+    public function store($courseId)
+    {
+        $group = new Group();
+        $group->course_id = $courseId;
+        $group->save();
+
+        try {
+            Auth::student()->join($group);
+
+            flash('You have successfully joined a group.')
+                ->success();
+        } catch (UserHasAlreadyGroupInCourseException $e) {
+            flash('You already have a group.')
+                ->error();
+            $group->delete();
+        }
+
+        return redirect()->route('groups.show', compact('courseId'));
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param int $courseId
+     *
+     * @return \Illuminate\Http\Response
      */
     public function show($courseId)
     {
-        $user_id = Auth::student()->id;
-        $group_number = Group::where([
-                ['course_id', '=', $courseId],
-                ['student_id','=', $user_id],
-            ])
-            ->select('group_number')
-            ->first()
-            ->group_number;
+        $student = Auth::student();
 
-        if(is_null($group_number)){
-            return redirect('/groups/create/');
+        $course = Course::whereId($courseId)->first();
+
+        $course->numberInvitations = $this->numberInvitations(
+            $courseId,
+            $student->student_number
+        );
+
+        $membership = $student
+            ->memberships()
+            ->whereCourseId($courseId)
+            ->first();
+
+        $students = [];
+        $group = 0;
+        if (! is_null($membership)) {
+            $group = $membership->group()->first();
+            $memberships = $group->memberships()->get();
+
+            foreach ($memberships as $membership) {
+                $student = $membership->student()->first();
+
+                $student->name = $student->user()->first()->name;
+
+                array_push($students, $student);
+            }
         }
-        $userIds = Group::whereGroupNumber($group_number)
-            ->select('student_id')
-            ->get();
 
-        $users = Student::whereIn('id', $userIds)->get();
-
-        return view('groups.show', compact($users));
+        return view('groups.show', compact('course', 'students', 'group'));
     }
 
     /**
-     * Stores a new group with the authenticated user.
+     * Update the specified resource in storage.
      *
-     * @param int $course_id
+     * @param int $inviteId
+     *
+     * @return \Illuminate\Http\Response
      */
-    public function store($course_id)
+    public function update($inviteId)
     {
-        $student = Auth::user();
+        $invitation = Invitation::whereId($inviteId)->first();
 
-        $group = new Group;
-        $group->effective = true;
-        $group->group_number =
-            DB::table('groups')->max('group_number') + 1;
-        $group->student_id = $student->id;
-        $group->course_id = $course_id;
+        $group = Group::whereId($invitation->group_id)->first();
 
-        $group->save();
+        $courseMax = Course::whereId($invitation->course_id)
+            ->first()
+            ->group_max;
+
+        if ($group->memberships()->count() >= $courseMax) {
+            flash('Course group limit exceeded')->error();
+
+            return redirect()->back();
+        }
+
+        try {
+            Auth::student()->join($group);
+
+            flash('You have successfully joined the group.')
+                ->success();
+
+            return redirect()->route('invitations.destroy', compact('inviteId'));
+        } catch (UserHasAlreadyGroupInCourseException $e) {
+            flash('You already have a group.')
+                ->error();
+
+            $courseId = $invitation->course_id;
+
+            return redirect()->route('groups.show', compact('courseId'));
+        }
     }
 
     /**
-     * Registers an invite to a group of the authenticated user.
+     * Remove the specified resource from storage.
      *
-     * @param int $groupId
-     * @param Request $request
+     * @param int $id
+     *
+     * @return \Illuminate\Http\Response
      */
-    public function invite($groupId, Request $request)
+    public function destroy($courseId)
     {
-        $data = $request->validate([
-            'student_number' => 'required'
-        ]);
-        $group = Group::whereId($groupId);
+        $group = Auth::student()->memberships()->get()
+            ->where('course_id', '=', $courseId)->first()
+            ->group()->first();
 
-        $invite = new Group;
-        $invite->effective = false;
-        $invite->group_number = $group->group_number;
-        $invite->student_id =
-            Student::whereStudentNumber($data['student_number'])->select('id')->first();
-        $invite->course_id = $group->course_id;
+        Auth::student()->leave($group);
 
-        $invite->save();
+        if (! ($group->memberships()->count())) {
+            $invitations = Invitation::whereGroupId($group->id)->get();
 
+            foreach ($invitations as $invitation) {
+                $invitation->delete();
+            }
+
+            $group->delete();
+            flash('Group deleted.')->success();
+        } else {
+            flash('You have successfully left the group.')->success();
+        }
+
+        return redirect()->route('groups.show', compact('courseId'));
     }
 
-    /**
-     * Accepts a group invitation.
-     *
-     * $groupId is the primary key and not the group number.
-     *
-     * @param int $groupId
-     */
-    public function confirm($groupId)
+    private function numberInvitations($courseId, $studentNumber)
     {
-        DB::table('groups')
-            ->whereId($groupId)
-            ->update(['effective' => true]);
-    }
-
-    /**
-     * Declines a group invitation.
-     *
-     * $groupId is the primary key and not the group number.
-     *
-     * @param int $groupId
-     */
-    public function decline($groupId)
-    {
-        DB::table('groups')
-            ->whereId($groupId)
-            ->delete();
-    }
-
-    /**
-     * Removes the authenticated user from a group.
-     *
-     * $groupId is the primary key and not the group number.
-     *
-     * @param int $groupId
-     */
-    public function leave($groupId)
-    {
-        DB::table('groups')
-            ->whereId($groupId)
-            ->delete();
+        return Invitation::where([
+            ['course_id', '=', $courseId],
+            ['student_number', '=', $studentNumber],
+            ])
+            ->count();
     }
 }

@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use App\Judite\Models\Invitation;
 use App\Judite\Models\Group;
+use Illuminate\Http\Request;
+use App\Judite\Models\Invitation;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 
 class InvitationController extends Controller
@@ -31,7 +30,7 @@ class InvitationController extends Controller
     {
         $invitations = Invitation::where([
             ['student_number', '=', Auth::student()->student_number],
-            ['course_id', '=', $courseId]
+            ['course_id', '=', $courseId],
         ])->get();
 
         foreach ($invitations as $invitation) {
@@ -53,7 +52,7 @@ class InvitationController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @param $groupId
      * @param $courseId
      *
@@ -70,7 +69,7 @@ class InvitationController extends Controller
             return redirect()->back();
         }
 
-        $invitation = new Invitation;
+        $invitation = new Invitation();
         $invitation->student_number = $studentNumber;
         $invitation->group_id = $groupId;
         $invitation->course_id = $courseId;
@@ -79,8 +78,7 @@ class InvitationController extends Controller
             $invitation->save();
             flash('Invitation successfully sent.')
                 ->success();
-        }
-        catch (QueryException $e) {
+        } catch (QueryException $e) {
             flash('User already invited.')
                 ->error();
         }
@@ -91,7 +89,7 @@ class InvitationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      */
     public function destroy($id)
     {
@@ -101,6 +99,6 @@ class InvitationController extends Controller
 
         $invitation->delete();
 
-        return redirect()->route('invitations.index', compact('courseId'));
+        return redirect()->route('groups.show', compact('courseId'));
     }
 }

@@ -17,7 +17,7 @@ class Group extends Model
     }
 
     /**
-     * Get the course of this group
+     * Get the course of this group.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

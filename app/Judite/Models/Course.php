@@ -32,6 +32,21 @@ class Course extends Model
     }
 
     /**
+     * Scope a query to order courses with groups by year, semester and name.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeGroupOrderedList($query)
+    {
+        return $query->where('group_min', '>', '0')
+            ->orderBy('year', 'asc')
+            ->orderBy('semester', 'asc')
+            ->orderBy('name', 'asc');
+    }
+
+    /**
      * Get shifts of this course.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
