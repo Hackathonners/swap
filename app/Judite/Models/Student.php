@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\EnrollmentCannotBeDeleted;
 use App\Exceptions\StudentIsNotEnrolledInCourseException;
 use App\Exceptions\UserIsAlreadyEnrolledInCourseException;
+use App\Exceptions\UserHasAlreadyGroupInCourseException;
 
 class Student extends Model
 {
@@ -161,12 +162,85 @@ class Student extends Model
     }
 
     /**
-     * Get groups of this student.
+     * Get memberships of this student.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     *
+     * @return \App\Judite\Models\Membership
+     */
+    public function memberships()
+    {
+        return $this->hasMany(Membership::class);
+    }
+
+    /**
+     * Make this student member of a given group.
+     *
+     * @param \App\Judite\Models\Group $group
+     *
+     * @throws \App\Exceptions\UserHasAlreadyGroupInCourseException
+     *
+     * @return \App\Judite\Models\Group
+     */
+    public function join(Group $group): Membership
+    {
+        if ($this->isMemberOfGroupInCourse($group->course_id)) {
+            throw new UserHasAlreadyGroupInCourseException();
+        }
+
+        $membership = $this->memberships()->make();
+        $membership->group()->associate($group);
+        $membership->course_id = $group->course_id;
+        $membership->save();
+
+        return $membership;
+    }
+
+    /**
+     * Check if this student is member of a group in a course.
+     *
+     * @param $course_id
+     *
+     * @return bool
+     */
+    public function isMemberOfGroupInCourse($courseId): bool
+    {
+        return $this->memberships()->where('course_id', $courseId)->exists();
+    }
+
+    /**
+     * Remove membership in the given group.
+     *
+     * @param \App\Judite\Models\Group $group
+     *
+     * @return bool
+     */
+    public function leave(Group $group): bool
+    {
+        return $this->getMembershipInGroup($group)->delete();
+    }
+
+    /**
+     * Get membership of this student in a given course.
+     *
+     * @param \App\Judite\Models\Group $group
+     *
+     * @return \App\Judite\Models\Membership|null
+     */
+    public function getMembershipInGroup(Group $group)
+    {
+        return $this->memberships()
+            ->where('group_id', $group->id)
+            ->first();
+    }
+
+    /**
+     * Get invitations of this student.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function groups()
+    public function invitations()
     {
-        return $this->hasMany(Group::class);
+        return $this->hasMany(Invitation::class);
     }
 }
