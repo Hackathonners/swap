@@ -7,23 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Group extends Model
 {
     /**
-     * Check if a group is invite
+     * Get students of this group.
      *
-     * @return bool
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function isInvite()
+    public function memberships()
     {
-        return $this->efetivo;
-    }
-
-    /**
-     * Get the student of this group
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function student()
-    {
-        return $this->belongsTo(Student::class);
+        return $this->hasMany(Membership::class);
     }
 
     /**
@@ -36,4 +26,13 @@ class Group extends Model
         return $this->belongsTo(Course::class);
     }
 
+    /**
+     * Get invitations of this group.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function invitations()
+    {
+        return $this->hasMany(Invitation::class);
+    }
 }

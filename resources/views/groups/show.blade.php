@@ -5,23 +5,34 @@
         <div class="card-header">
             <div class="row">
                 <div class="col">
-                    Sistemas Operativos
+                    {{ $course->name }}
                 </div>
             </div>
         </div>
-        @if(0)
+        @if (!$students)
             <div align="center" class="card-header">
                 <p> You are not a member of any group</p>
-                <a href="/groups/store/3" class="btn btn-success btn-sm">Create group</a>
+                <a href="/groups/{{ $course->id }}/store" class="btn btn-success btn-sm">Create group</a>
+                @if ($course->numberInvitations)
+                    <a href="/groups/{{ $course->id }}/invitations" class="btn btn-primary btn-sm">View invitations ({{ $course->numberInvitations }})</a>
+                @endif
             </div>
         @else
-            <div align="center" class="card-header">
-                <form method="POST" action="/groups/invite/3"> <!-- add groupId and-->
-                    Group Size: 3 - 8 students&emsp;
-                    {{ csrf_field() }}
-                    <input class="btn" id="number" pattern="[0-9.]+" placeholder="student number" type="text">
-                    <input class="btn btn-success btn-sm" type="submit" value="Invite">
-                </form>
+            <div style="text-align:center" class="card-header">
+                <div style="display:inline-flex">
+                    @if ($course->group_min == $course->group_max)
+                        Group Size: {{ $course->group_min }} students&emsp;
+                    @else
+                        Group Size: {{ $course->group_min }} to {{ $course->group_max }} students&emsp;
+                    @endif
+                    @if (count($students) < $course->group_max)
+                        <form method="POST" action="/groups/{{ $group->id }}/invitations/{{ $course->id }}/store">
+                            {{ csrf_field() }}
+                            <input class="btn" name="student_number" pattern="a[0-9.]{5-6}" placeholder="Student Number" type="text">
+                            <input class="btn btn-success" type="submit" value="Invite">
+                        </form>
+                    @endif
+                </div>
             </div>
             <table class="card-table table">
                 <tbody>
@@ -34,18 +45,19 @@
                         <th>Name</th>
                         <th>Number</th>
                     </tr>
-                        <tr>
-                            <td>João Vilaça</td>
-                            <td>a82339</a></td>
-                        </tr>
-                        <tr>
-                            <td>Pedro Machado</td>
-                            <td>a82338</a></td>
-                        </tr>
+                        @foreach ($students as $student)
+                            <tr>
+                                <td>{{ $student->name }}</td>
+                                <td>{{ $student->student_number }}</a></td>
+                            </tr>
+                        @endforeach
                 </tbody>
             </table>
             <div align="center" class="card-header">
-                <a href="/groups/leave/3" class="btn btn-info btn-sm">Leave group</a>
+                <a href="/groups/{{ $course->id }}/destroy" class="btn btn-info btn-sm">Leave group</a>
+                @if ($course->numberInvitations)
+                    <a href="/groups/{{ $course->id }}/invitations" class="btn btn-primary btn-sm">View invitations ({{ $course->numberInvitations }})</a>
+                @endif
             </div>
         @endif
     </div>

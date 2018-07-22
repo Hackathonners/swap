@@ -61,5 +61,6 @@ class Kernel extends HttpKernel
         'student.verified' => \App\Http\Middleware\ShowStudentVerificationIsRequired::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'can.group' => \App\Http\Middleware\AuthorizeGroupCreationActions::class,
     ];
 }
