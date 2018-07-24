@@ -30,11 +30,15 @@ class SettingsTest extends TestCase
         $enrollmentsEnd = Carbon::tomorrow()->addDays(1);
         $exchangesStart = Carbon::tomorrow()->addDays(2);
         $exchangesEnd = Carbon::tomorrow()->addDays(3);
+        $groupsCreationStart = Carbon::tomorrow()->addDays(4);
+        $groupsCreationEnd = Carbon::tomorrow()->addDays(5);
         $requestData = [
             'exchanges_start_at' => $exchangesStart,
             'exchanges_end_at' => $exchangesEnd,
             'enrollments_start_at' => $enrollmentsStart,
             'enrollments_end_at' => $enrollmentsEnd,
+            'groups_creation_start_at' => $groupsCreationStart,
+            'groups_creation_end_at' => $groupsCreationEnd,
         ];
 
         $response = $this->actingAs($this->admin)
@@ -46,6 +50,8 @@ class SettingsTest extends TestCase
         $this->assertEquals($exchangesEnd, $this->settings->exchanges_end_at);
         $this->assertEquals($enrollmentsStart, $this->settings->enrollments_start_at);
         $this->assertEquals($enrollmentsEnd, $this->settings->enrollments_end_at);
+        $this->assertEquals($groupsCreationStart, $this->settings->groups_creation_start_at);
+        $this->assertEquals($groupsCreationEnd, $this->settings->groups_creation_end_at);
     }
 
     /** @test */
@@ -56,6 +62,8 @@ class SettingsTest extends TestCase
             'exchanges_end_at' => Carbon::tomorrow(),
             'enrollments_start_at' => Carbon::tomorrow(),
             'enrollments_end_at' => Carbon::tomorrow()->addDays(5),
+            'groups_creation_start_at' => Carbon::tomorrow(),
+            'groups_creation_end_at' => Carbon::tomorrow(),
         ];
 
         $response = $this->actingAs($this->admin)
@@ -73,11 +81,15 @@ class SettingsTest extends TestCase
         $exchangesEnd = Carbon::tomorrow()->addDays(3);
         $enrollmentsStart = Carbon::tomorrow();
         $enrollmentsEnd = Carbon::tomorrow()->addDays(5);
+        $groupsCreationStart = Carbon::tomorrow()->addDays(10);
+        $groupsCreationEnd = Carbon::tomorrow()->addDays(11);
         $requestData = [
             'exchanges_start_at' => $exchangesStart,
             'exchanges_end_at' => $exchangesEnd,
             'enrollments_start_at' => $enrollmentsStart,
             'enrollments_end_at' => $enrollmentsEnd,
+            'groups_creation_start_at' => $groupsCreationStart,
+            'groups_creation_end_at' => $groupsCreationEnd,
         ];
 
         $response = $this->actingAs($this->admin)
@@ -90,6 +102,8 @@ class SettingsTest extends TestCase
         $this->assertEquals($exchangesEnd, $this->settings->exchanges_end_at);
         $this->assertEquals($enrollmentsStart, $this->settings->enrollments_start_at);
         $this->assertEquals($enrollmentsEnd, $this->settings->enrollments_end_at);
+        $this->assertEquals($groupsCreationStart, $this->settings->groups_creation_start_at);
+        $this->assertEquals($groupsCreationEnd, $this->settings->groups_creation_end_at);
     }
 
     /** @test */
@@ -100,6 +114,8 @@ class SettingsTest extends TestCase
             'exchanges_end_at' => Carbon::tomorrow()->addDays(3),
             'enrollments_start_at' => Carbon::tomorrow()->addDays(5),
             'enrollments_end_at' => Carbon::tomorrow()->addDays(1),
+            'groups_creation_start_at' => Carbon::tomorrow(),
+            'groups_creation_end_at' => Carbon::tomorrow()->addDays(1),
         ];
 
         $response = $this->actingAs($this->admin)
@@ -107,6 +123,26 @@ class SettingsTest extends TestCase
 
         $response->assertRedirect();
         $response->assertSessionHasErrors(['enrollments_end_at']);
+        $this->assertSettingsRemainUnchanged();
+    }
+
+    /** @test */
+    public function settings_may_not_be_updated_with_an_invalid_groups_creation_period()
+    {
+        $requestData = [
+            'exchanges_start_at' => Carbon::tomorrow(),
+            'exchanges_end_at' => Carbon::tomorrow()->addDays(3),
+            'enrollments_start_at' => Carbon::tomorrow()->addDays(10),
+            'enrollments_end_at' => Carbon::tomorrow()->addDays(20),
+            'groups_creation_start_at' => Carbon::tomorrow()->addDays(35),
+            'groups_creation_end_at' => Carbon::tomorrow()->addDays(25),
+        ];
+
+        $response = $this->actingAs($this->admin)
+            ->put(route('settings.update'), $requestData);
+
+        $response->assertRedirect();
+        $response->assertSessionHasErrors(['groups_creation_end_at']);
         $this->assertSettingsRemainUnchanged();
     }
 
@@ -130,6 +166,8 @@ class SettingsTest extends TestCase
             'exchanges_end_at' => Carbon::tomorrow(),
             'enrollments_start_at' => Carbon::tomorrow()->addDays(2),
             'enrollments_end_at' => Carbon::tomorrow()->addDays(3),
+            'groups_creation_start_at' => Carbon::tomorrow()->addDays(10),
+            'groups_creation_end_at' => Carbon::tomorrow()->addDays(11),
         ];
 
         $response = $this->actingAs($student->user)
@@ -147,6 +185,8 @@ class SettingsTest extends TestCase
             'exchanges_end_at' => Carbon::tomorrow(),
             'enrollments_start_at' => Carbon::tomorrow()->addDays(2),
             'enrollments_end_at' => Carbon::tomorrow()->addDays(3),
+            'groups_creation_start_at' => Carbon::tomorrow()->addDays(10),
+            'groups_creation_end_at' => Carbon::tomorrow()->addDays(20),
         ];
 
         $response = $this->put(route('settings.update'), $requestData);
@@ -165,5 +205,7 @@ class SettingsTest extends TestCase
         $this->assertEquals($this->settings->exchanges_end_at, $actualSettings->exchanges_end_at);
         $this->assertEquals($this->settings->enrollments_start_at, $actualSettings->enrollments_start_at);
         $this->assertEquals($this->settings->enrollments_end_at, $actualSettings->enrollments_end_at);
+        $this->assertEquals($this->settings->groups_creation_start_at, $actualSettings->groups_creation_start_at);
+        $this->assertEquals($this->settings->groupsCreationEnd, $actualSettings->groupsCreationEnd);
     }
 }

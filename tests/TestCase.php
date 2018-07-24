@@ -30,4 +30,15 @@ abstract class TestCase extends BaseTestCase
         $settings->exchanges_end_at = Carbon::tomorrow();
         $settings->save();
     }
+
+    /*
+     * Enable group creation period.
+     */
+    protected function enableGroupCreationPeriod()
+    {
+        $settings = app('settings');
+        $settings->groups_creation_start_at = Carbon::yesterday();
+        $settings->groups_creation_end_at = Carbon::tomorrow();
+        $settings->save();
+    }
 }

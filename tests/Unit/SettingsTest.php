@@ -106,4 +106,52 @@ class SettingsTest extends TestCase
         // Assert
         $this->assertFalse($settings->withinExchangePeriod());
     }
+
+    public function testGroupCreationPeriodIsActive()
+    {
+        // Prepare
+        $settings = new Settings();
+
+        // Execute
+        $settings->groups_creation_start_at = Carbon::yesterday();
+        $settings->groups_creation_end_at = Carbon::tomorrow();
+
+        //Assert
+        $this->assertTrue($settings->withinGroupCreationPeriod());
+    }
+
+    public function testGroupCreationPeriodIsNotActive()
+    {
+        // Prepare
+        $settings = new Settings();
+
+        // Execute
+        $settings->groups_creation_start_at = Carbon::tomorrow();
+        $settings->groups_creation_end_at = Carbon::tomorrow()->addDays(2);
+
+        // Assert
+        $this->assertFalse($settings->withinGroupCreationPeriod());
+    }
+
+    public function testGroupCreationPeriodExpired()
+    {
+        // Prepare
+        $settings = new Settings();
+
+        // Execute
+        $settings->groups_creation_start_at = Carbon::yesterday()->subDays(2);
+        $settings->groups_creation_end_at = Carbon::yesterday();
+
+        // Assert
+        $this->assertFalse($settings->withinGroupCreationPeriod());
+    }
+
+    public function testGroupCreationPeriodIsNotActiveWhenDatesAreNotSpecified()
+    {
+        // Prepare
+        $settings = new Settings();
+
+        // Assert
+        $this->assertFalse($settings->withinGroupCreationPeriod());
+    }
 }
