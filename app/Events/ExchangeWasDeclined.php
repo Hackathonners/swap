@@ -31,6 +31,6 @@ class ExchangeWasDeclined implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('exchange-declined');
+        return new Channel('exchange');
     }
 }

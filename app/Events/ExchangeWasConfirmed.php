@@ -31,6 +31,6 @@ class ExchangeWasConfirmed implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('exchange-confirmed');
+        return new Channel('exchange');
     }
 }
