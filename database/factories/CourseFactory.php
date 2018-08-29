@@ -15,10 +15,14 @@ use App\Judite\Models\Course;
 
 /* @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(Course::class, function (Faker\Generator $faker) {
+    $groupNumber = $faker->randomElement([0, 1]);
+
     return [
         'code' => $faker->unique()->numerify('H###N#'),
         'year' => $faker->randomElement([1, 2, 3, 4, 5]),
         'name' => $faker->unique()->word(),
         'semester' => $faker->randomElement([1, 2]),
+        'group_min' => $groupNumber,
+        'group_max' => $groupNumber,
     ];
 });

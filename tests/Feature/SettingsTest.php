@@ -183,10 +183,10 @@ class SettingsTest extends TestCase
         $requestData = [
             'exchanges_start_at' => Carbon::today(),
             'exchanges_end_at' => Carbon::tomorrow(),
-            'enrollments_start_at' => Carbon::tomorrow()->addDays(2),
-            'enrollments_end_at' => Carbon::tomorrow()->addDays(3),
-            'groups_creation_start_at' => Carbon::tomorrow()->addDays(10),
-            'groups_creation_end_at' => Carbon::tomorrow()->addDays(20),
+            'enrollments_start_at' => Carbon::tomorrow()->addDays(10),
+            'enrollments_end_at' => Carbon::tomorrow()->addDays(20),
+            'groups_creation_start_at' => Carbon::tomorrow()->addDays(2),
+            'groups_creation_end_at' => Carbon::tomorrow()->addDays(3),
         ];
 
         $response = $this->put(route('settings.update'), $requestData);

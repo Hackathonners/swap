@@ -38,21 +38,4 @@ class InvitationTest extends TestCase
             $this->assertTrue(true);
         }
     }
-
-    public function testInvitationIsDeletable()
-    {
-        $student = factory(Student::class)->create();
-        $course = factory(Course::class)->create();
-        $group = factory(Group::class)->create();
-
-        $invitation = factory(Invitation::class)->create([
-            'student_number' => $student->student_number,
-            'course_id' => $course->id,
-            'group_id' => $group->id,
-        ]);
-
-        $deletableReturn = $invitation->isDeletable();
-
-        $this->assertTrue($deletableReturn);
-    }
 }
