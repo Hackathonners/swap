@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Judite\Models\Shift;
+use App\Judite\Models\Exchange;
 use Illuminate\Console\Command;
 use App\Judite\Models\Enrollment;
 use Illuminate\Support\Facades\DB;
