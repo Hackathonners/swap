@@ -92,30 +92,31 @@ class EnrollmentController extends Controller
                             throw $exception;
                         }
 
-                        // Check if the given shift tag exists in the associated course
-                        if ($row->shift === null) {
-                            $exception = new InvalidFieldValueException();
-                            $exception->setField('Shift', $row->shift, "The shift field is required on imported enrollments. (at line {$index})");
-                            throw $exception;
-                        }
-
-                        $shift = $course->getShiftByTag($row->shift);
-                        if ($shift === null) {
-                            $shift = Shift::make(['tag' => $row->shift]);
-                            $course->addShift($shift);
-                        }
-
                         // Check if the enrollment exists
                         $enrollment = Enrollment::where([
                             'course_id' => $course->id,
                             'student_id' => $student->id,
                         ])->first();
+
                         if ($enrollment === null) {
                             $enrollment = $student->enroll($course);
                         }
 
+                        // Check if the given shift tag exists in the associated course
+                        if ($row->shift !== null) {
+                            $shift = $course->getShiftByTag($row->shift);
+
+                            if ($shift === null) {
+                                $shift = Shift::make(['tag' => $row->shift]);
+                                $course->addShift($shift);
+                            }
+
+                            $enrollment->shift()->associate($shift);
+                        } else {
+                            $enrollment->shift()->dissociate();
+                        }
+
                         // Add the shift to the enrollment
-                        $enrollment->shift()->associate($shift);
                         $enrollment->save();
                     });
                 });
