@@ -28,4 +28,12 @@ class EloquentExchangeRegistry implements ExchangeRegistry
     {
         return ExchangeRegistryEntry::latest('id')->paginate();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function truncate()
+    {
+        ExchangeRegistryEntry::getQuery()->delete();
+    }
 }

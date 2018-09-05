@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \App\Console\Commands\ResendConfirmationEmail::class,
+        \App\Console\Commands\ResetEnrollments::class,
     ];
 
     /**

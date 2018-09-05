@@ -20,4 +20,9 @@ interface ExchangeRegistry
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function paginate();
+
+    /**
+     * Truncate registry.
+     */
+    public function truncate();
 }
