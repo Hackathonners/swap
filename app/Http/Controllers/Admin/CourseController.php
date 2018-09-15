@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Judite\Models\Course;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Course\UpdateRequest;
 
 class CourseController extends Controller
 {
@@ -43,26 +44,21 @@ class CourseController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int                      $id
+     * @param \App\Http\Requests\Course\UpdateRequest $request
+     * @param int                                     $id
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
-        $course = Course::find($id);
+        DB::transaction(function () use ($request, $id) {
+            $course = Course::findOrFail($id);
 
-        $min = $request->input('min');
-        $max = $request->input('max');
+            $course->fill($request->all());
+            $course->save();
 
-        if ($min > $max) {
-            $max = $min;
-        }
-
-        $course->group_min = $min;
-        $course->group_max = $max;
-
-        $course->save();
+            flash($course->name . ' groups size were successfully updated.')->success();
+        });
 
         return redirect()->route('admin.groups.index');
     }

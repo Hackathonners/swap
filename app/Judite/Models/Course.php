@@ -91,4 +91,14 @@ class Course extends Model
     {
         return $this->shifts()->where('tag', $tag)->first();
     }
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'group_min',
+        'group_max',
+    ];
 }
