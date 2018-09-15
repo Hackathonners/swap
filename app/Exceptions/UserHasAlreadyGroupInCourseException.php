@@ -13,8 +13,7 @@ class UserHasAlreadyGroupInCourseException extends Exception
      * @param \App\Judite\Models\Course $course
      * @param string                    $message
      */
-    public function __construct(
-        $message = 'User has already a group in course.')
+    public function __construct($message = 'User has already a group in course.')
     {
         parent::__construct($message);
     }
