@@ -178,7 +178,7 @@ class Student extends Model
      *
      * @throws \App\Exceptions\UserHasAlreadyGroupInCourseException
      *
-     * @return \App\Judite\Models\Group
+     * @return \App\Judite\Models\Membership
      */
     public function join(Group $group): Membership
     {

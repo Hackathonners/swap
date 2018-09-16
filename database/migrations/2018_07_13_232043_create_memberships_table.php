@@ -13,11 +13,9 @@ class CreateMembershipsTable extends Migration
     {
         Schema::create('memberships', function (Blueprint $table) {
             $table->increments('id');
-
             $table->integer('student_id')->unsigned();
             $table->integer('group_id')->unsigned();
             $table->integer('course_id')->unsigned();
-
             $table->timestamps();
 
             $table->foreign('student_id')->references('id')->on('students');
@@ -31,6 +29,6 @@ class CreateMembershipsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('membership');
+        Schema::dropIfExists('memberships');
     }
 }

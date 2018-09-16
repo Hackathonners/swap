@@ -13,18 +13,16 @@ class CreateInvitationsTable extends Migration
     {
         Schema::create('invitations', function (Blueprint $table) {
             $table->increments('id');
-
             $table->string('student_number');
             $table->integer('group_id')->unsigned();
             $table->integer('course_id')->unsigned();
+            $table->timestamps();
 
             $table->foreign('student_number')->references('student_number')->on('students');
             $table->foreign('group_id')->references('id')->on('groups');
             $table->foreign('course_id')->references('id')->on('courses');
 
             $table->unique(['student_number', 'group_id']);
-
-            $table->timestamps();
         });
     }
 

@@ -27,7 +27,7 @@ class Membership extends Model
     }
 
     /**
-     * Scope a query to order memberships by students.
+     * Scope a query to order memberships by students number.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
