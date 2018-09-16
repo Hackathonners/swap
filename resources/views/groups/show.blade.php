@@ -9,12 +9,12 @@
                 </div>
             </div>
         </div>
-        @if (!$students)
+        @if (!$membership)
             <div align="center" class="card-header">
                 <p> You are not a member of any group</p>
                 <a href="/groups/{{ $course->id }}/store" class="btn btn-success btn-sm">Create group</a>
-                @if ($course->numberInvitations)
-                    <a href="/groups/{{ $course->id }}/invitations" class="btn btn-primary btn-sm">View invitations ({{ $course->numberInvitations }})</a>
+                @if ($course->number_invitations)
+                    <a href="/groups/{{ $course->id }}/invitations" class="btn btn-primary btn-sm">View invitations ({{ $course->number_invitations }})</a>
                 @endif
             </div>
         @else
@@ -25,8 +25,8 @@
                     @else
                         Group Size: {{ $course->group_min }} to {{ $course->group_max }} students&emsp;
                     @endif
-                    @if (count($students) < $course->group_max)
-                        <form method="POST" action="/groups/{{ $group->id }}/invitations/{{ $course->id }}/store">
+                    @if (count($membership->group->memberships) < $course->group_max)
+                        <form method="POST" action="/groups/{{ $membership->group->id }}/invitations/{{ $course->id }}/store">
                             {{ csrf_field() }}
                             <input class="btn" name="student_number" pattern="a[0-9.]{5-6}" placeholder="Student Number" type="text">
                             <input class="btn btn-success" type="submit" value="Invite">
@@ -45,18 +45,18 @@
                         <th>Name</th>
                         <th>Number</th>
                     </tr>
-                        @foreach ($students as $student)
+                        @foreach ($membership->group->memberships as $member)
                             <tr>
-                                <td>{{ $student->name }}</td>
-                                <td>{{ $student->student_number }}</a></td>
+                                <td>{{ $member->student->user->name }}</td>
+                                <td>{{ $member->student->student_number }}</a></td>
                             </tr>
                         @endforeach
                 </tbody>
             </table>
             <div align="center" class="card-header">
                 <a href="/groups/{{ $course->id }}/destroy" class="btn btn-info btn-sm">Leave group</a>
-                @if ($course->numberInvitations)
-                    <a href="/groups/{{ $course->id }}/invitations" class="btn btn-primary btn-sm">View invitations ({{ $course->numberInvitations }})</a>
+                @if ($course->number_invitations)
+                    <a href="/groups/{{ $course->id }}/invitations" class="btn btn-primary btn-sm">View invitations ({{ $course->number_invitations }})</a>
                 @endif
             </div>
         @endif

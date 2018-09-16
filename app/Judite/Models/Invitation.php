@@ -25,4 +25,21 @@ class Invitation extends Model
     {
         return $this->belongsTo(Group::class);
     }
+
+    /**
+     * Scope a query to get the student amount of invitations in a given course.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $studentNumber
+     * @param int $courseId
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOfStudentInCourse($query, $studentNumber, $courseId)
+    {
+        return $query->where([
+            ['course_id', '=', $courseId],
+            ['student_number', '=', $studentNumber],
+            ]);
+    }
 }

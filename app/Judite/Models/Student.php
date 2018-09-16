@@ -241,4 +241,11 @@ class Student extends Model
     {
         return $this->hasMany(Invitation::class);
     }
+
+    public function findMembershipByCourse($courseId)
+    {
+        return $this->memberships()
+            ->whereCourseId($courseId)
+            ->first();
+    }
 }
