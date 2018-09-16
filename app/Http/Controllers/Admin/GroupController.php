@@ -45,19 +45,9 @@ class GroupController extends Controller
      */
     public function show($courseId)
     {
-        $groups = Group::whereCourseId($courseId)->get();
-
-        foreach ($groups as $group) {
-            $memberships = $group->memberships()->get();
-
-            $students = [];
-            foreach ($memberships as $membershipKey => $membership) {
-                $student = $membership->student()->first();
-                $student->name = $student->user()->first()->name;
-                array_push($students, $student);
-            }
-            $group->students = $students;
-        }
+        $groups = DB::transaction(function () use ($courseId) {
+            return Group::with('memberships.student.user')->whereCourseId($courseId)->get();
+        });
 
         return view('admin.groups.show', compact('groups'));
     }

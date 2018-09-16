@@ -18,10 +18,10 @@
                             <th>Name</th>
                             <th>Number</th>
                         </tr>
-                        @foreach ($group->students as $student)
+                        @foreach ($group->memberships as $membership)
                             <tr>
-                                <td class="d-none d-sm-table-cell">{{ $student->name }}</td>
-                                <td>{{ $student->student_number }}</td>
+                                <td class="d-none d-sm-table-cell">{{ $membership->student->user->name }}</td>
+                                <td>{{ $membership->student->student_number }}</td>
                             </tr>
                         @endforeach
                     @endforeach
