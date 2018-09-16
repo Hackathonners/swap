@@ -88,9 +88,9 @@ class GroupController extends Controller
                 return redirect()->back();
             }
 
-        $group = new Group();
-        $group->course_id = $courseId;
-        $group->save();
+            $group = new Group();
+            $group->course_id = $courseId;
+            $group->save();
 
             return $group;
         });
@@ -195,7 +195,7 @@ class GroupController extends Controller
 
         Auth::student()->leave($group);
 
-        if (! ($group->memberships()->count())) {
+        if (! $group->memberships()->count()) {
             $invitations = Invitation::whereGroupId($group->id)->get();
 
             foreach ($invitations as $invitation) {

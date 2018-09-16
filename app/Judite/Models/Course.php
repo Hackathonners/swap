@@ -18,6 +18,16 @@ class Course extends Model
     protected $presenter = CoursePresenter::class;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'group_min',
+        'group_max',
+    ];
+
+    /**
      * Scope a query to order courses by year, semester and name.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
@@ -91,14 +101,4 @@ class Course extends Model
     {
         return $this->shifts()->where('tag', $tag)->first();
     }
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'group_min',
-        'group_max',
-    ];
 }

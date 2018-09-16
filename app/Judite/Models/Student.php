@@ -141,7 +141,7 @@ class Student extends Model
             throw new StudentIsNotEnrolledInCourseException($course);
         }
 
-        if (! ($enrollment->isDeletable())) {
+        if (! $enrollment->isDeletable()) {
             throw new EnrollmentCannotBeDeleted($enrollment);
         }
 

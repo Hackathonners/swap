@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
 use App\Judite\Models\Course;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -57,7 +56,7 @@ class CourseController extends Controller
             $course->fill($request->all());
             $course->save();
 
-            flash($course->name . ' groups size were successfully updated.')->success();
+            flash($course->name.' groups size were successfully updated.')->success();
         });
 
         return redirect()->route('admin.groups.index');

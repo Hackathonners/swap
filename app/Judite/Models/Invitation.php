@@ -30,8 +30,8 @@ class Invitation extends Model
      * Scope a query to get the student amount of invitations in a given course.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string $studentNumber
-     * @param int $courseId
+     * @param string                                $studentNumber
+     * @param int                                   $courseId
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
