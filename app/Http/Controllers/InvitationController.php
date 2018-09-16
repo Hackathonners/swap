@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Judite\Models\Group;
-use Illuminate\Http\Request;
 use App\Judite\Models\Invitation;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\QueryException;
+use App\Http\Requests\Invitation\UpdateRequest;
+use App\Exceptions\UserHasAlreadyAnInviteInGroupException;
 
 class InvitationController extends Controller
 {
@@ -24,27 +25,18 @@ class InvitationController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function index($courseId)
     {
-        $invitations = Invitation::where([
-            ['student_number', '=', Auth::student()->student_number],
-            ['course_id', '=', $courseId],
-        ])->get();
-
-        foreach ($invitations as $invitation) {
-            $group = Group::whereId($invitation->group_id)->first();
-            $memberships = $group->memberships()->get();
-
-            $students = [];
-            foreach ($memberships as $membershipKey => $membership) {
-                $student = $membership->student()->first();
-                $student->name = $student->user()->first()->name;
-                array_push($students, $student);
-            }
-            $invitation->students = $students;
-        }
+        $invitations = DB::transaction(function () use ($courseId) {
+            return Invitation::with('group.memberships.student.user')
+                ->where([
+                    ['student_number', Auth::student()->student_number],
+                    ['course_id', $courseId],
+                ])
+                ->get();
+        });
 
         return view('invitations.index', compact('invitations'));
     }
@@ -52,19 +44,18 @@ class InvitationController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\Invitation\UpdateRequest $request
      * @param $groupId
      * @param $courseId
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request, $groupId, $courseId)
+    public function store(UpdateRequest $request, $groupId, $courseId)
     {
         $studentNumber = $request->input('student_number');
 
         if ($studentNumber == Auth::student()->student_number) {
-            flash('You can not invite yourself.')
-                ->error();
+            flash('You can not invite yourself.')->error();
 
             return redirect()->back();
         }
@@ -75,12 +66,10 @@ class InvitationController extends Controller
         $invitation->course_id = $courseId;
 
         try {
-            $invitation->save();
-            flash('Invitation successfully sent.')
-                ->success();
-        } catch (QueryException $e) {
-            flash('User already invited.')
-                ->error();
+            $invitation->create($studentNumber, $groupId, $courseId);
+            flash('Invitation successfully sent.')->success();
+        } catch (UserHasAlreadyAnInviteInGroupException $e) {
+            flash($e->getMessage())->error();
         }
 
         return redirect()->back();
@@ -90,15 +79,35 @@ class InvitationController extends Controller
      * Remove the specified resource from storage.
      *
      * @param int $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($id)
     {
-        $invitation = Invitation::whereId($id)->first();
+        $courseId = 0;
 
-        $courseId = $invitation->course_id;
+        $remainingInvitations = DB::transaction(function () use ($id, &$courseId) {
+            $invitation = Invitation::whereId($id)->first();
 
-        $invitation->delete();
+            $courseId = $invitation->course_id;
+            $studentNumber = $invitation->student_number;
 
-        return redirect()->route('groups.show', compact('courseId'));
+            $invitation->delete();
+
+            return Invitation::with('group.memberships.student.user')
+                ->where([
+                    ['student_number', $studentNumber],
+                    ['course_id', $courseId],
+                ])
+                ->count();
+        });
+
+        flash('Invitation destroyed.')->success();
+
+        if ($remainingInvitations > 0) {
+            return redirect()->back();
+        } else {
+            return redirect()->route('groups.show', compact('courseId'));
+        }
     }
 }

@@ -18,10 +18,10 @@
                         <th>Name</th>
                         <th>Number</th>
                     </tr>
-                    @foreach ($invitation->students as $student)
+                    @foreach ($invitation->group->memberships as $member)
                         <tr>
-                            <td>{{ $student->name }}</td>
-                            <td>{{ $student->student_number }}</a></td>
+                            <td>{{ $member->student->user->name }}</td>
+                            <td>{{ $member->student->student_number }}</a></td>
                         </tr>
                     @endforeach
                 </tbody>

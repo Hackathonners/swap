@@ -2,7 +2,9 @@
 
 namespace App\Judite\Models;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use App\Exceptions\UserHasAlreadyAnInviteInGroupException;
 
 class Invitation extends Model
 {
@@ -41,5 +43,30 @@ class Invitation extends Model
             ['course_id', '=', $courseId],
             ['student_number', '=', $studentNumber],
             ]);
+    }
+
+    /**
+     * Saves new invitation.
+     *
+     * @param $studentNumber
+     * @param $groupId
+     * @param $courseId
+     *
+     * @throws \App\Exceptions\UserHasAlreadyAnInviteInGroupException
+     */
+    public function create($studentNumber, $groupId, $courseId)
+    {
+        $invitation = DB::transaction(function () use ($studentNumber, $courseId) {
+            return Invitation::where([
+                    ['student_number', $studentNumber],
+                    ['course_id', $courseId],
+                ]);
+        });
+
+        if ($invitation->exists()) {
+            throw new UserHasAlreadyAnInviteInGroupException();
+        }
+
+        $this->save();
     }
 }
