@@ -6,9 +6,12 @@ use Tests\TestCase;
 use App\Judite\Models\Group;
 use App\Judite\Models\Student;
 use App\Judite\Models\Membership;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class MembershipTest extends TestCase
 {
+    use DatabaseTransactions;
+
     public function testOrderByStudent()
     {
         // Prepare
