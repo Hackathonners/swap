@@ -53,20 +53,29 @@ class Invitation extends Model
      * @param $courseId
      *
      * @throws \App\Exceptions\UserHasAlreadyAnInviteInGroupException
+     *
+     * @return invitation
      */
-    public function create($studentNumber, $groupId, $courseId)
+    public static function create($studentNumber, $groupId, $courseId)
     {
-        $invitation = DB::transaction(function () use ($studentNumber, $courseId) {
-            return Invitation::where([
+        $findAnyInvitation = DB::transaction(function () use ($studentNumber, $groupId) {
+            return self::where([
                     ['student_number', $studentNumber],
-                    ['course_id', $courseId],
+                    ['group_id', $groupId],
                 ]);
         });
 
-        if ($invitation->exists()) {
+        if ($findAnyInvitation->exists()) {
             throw new UserHasAlreadyAnInviteInGroupException();
         }
 
-        $this->save();
+        $invitation = new self();
+        $invitation->student_number = $studentNumber;
+        $invitation->group_id = $groupId;
+        $invitation->course_id = $courseId;
+
+        $invitation->save();
+
+        return $invitation;
     }
 }

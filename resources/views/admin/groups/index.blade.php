@@ -30,7 +30,7 @@
                                 <td>{{ $course->name }}</td>
                             @endif
                             <td>
-                                <form method="POST" action="/course/{{ $course->id }}">
+                                <form method="POST" action="/courses/{{ $course->id }}">
                                     {{ csrf_field() }}
                                     <input name="group_min" class="btn btn-outline-secondary"
                                         type="number" min="0" max="30" step="1"

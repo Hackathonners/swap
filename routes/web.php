@@ -59,4 +59,4 @@ Route::put('/settings', 'Admin\SettingsController@update')->name('settings.updat
 Route::get('/admin/groups', 'Admin\GroupController@index')->name('admin.groups.index');
 Route::get('/admin/{id}/groups', 'Admin\GroupController@show')->name('admin.groups.show');
 
-Route::post('/course/{id}', 'Admin\CourseController@update')->name('course.update');
+Route::post('/courses/{id}', 'Admin\CourseController@update')->name('courses.update');

@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
+use App\Judite\Models\User;
 use App\Judite\Models\Shift;
 use App\Judite\Models\Course;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -73,5 +74,29 @@ class CourseTest extends TestCase
             ->orderBy('name', 'asc')
             ->get();
         $this->assertEquals($expectedOrderedCourses, $actualReturn);
+    }
+
+    public function testUpdateGroupSize()
+    {
+        $admin = factory(User::class)->states('admin')->create();
+
+        $course = factory(Course::class)->create([
+            'group_min' => 0,
+            'group_max' => 0,
+        ]);
+
+        $requestData = [
+            'group_min' => 1,
+            'group_max' => 1,
+        ];
+
+        $response = $this->actingAs($admin)
+            ->post(route('courses.update', $course->id), $requestData);
+
+        $course = Course::find($course->id);
+
+        $response->assertRedirect();
+        $this->assertEquals(1, $course->group_min);
+        $this->assertEquals(1, $course->group_max);
     }
 }

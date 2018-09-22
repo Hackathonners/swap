@@ -84,8 +84,10 @@ class GroupController extends Controller
     public function store($courseId)
     {
         $group = DB::transaction(function () use ($courseId) {
-            if (! Course::find($courseId)->exists()) {
-                return redirect()->back();
+            $course = Course::find($courseId);
+
+            if ($course == null) {
+                return $course;
             }
 
             $group = new Group();
@@ -94,6 +96,10 @@ class GroupController extends Controller
 
             return $group;
         });
+
+        if ($group == null) {
+            return redirect()->back();
+        }
 
         try {
             Auth::student()->join($group);
@@ -151,8 +157,15 @@ class GroupController extends Controller
         $invitation = DB::transaction(function () use ($inviteId) {
             return Invitation::with(['group.memberships', 'group.course'])
                 ->whereId($inviteId)
+                ->whereStudentNumber(Auth::student()->student_number)
                 ->first();
         });
+
+        if ($invitation == null) {
+            flash('Invalid invitation.')->error();
+
+            return redirect()->back();
+        }
 
         $numberOfGroupMembers = $invitation->group->memberships->count();
         $groupMaxSize = $invitation->group->course->group_max;

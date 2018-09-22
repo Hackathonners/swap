@@ -7,34 +7,29 @@ use App\Judite\Models\Group;
 use App\Judite\Models\Course;
 use App\Judite\Models\Student;
 use App\Judite\Models\Invitation;
-use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use App\Exceptions\UserHasAlreadyAnInviteInGroupException;
 
 class InvitationTest extends TestCase
 {
     use DatabaseTransactions;
 
+    /** @test */
     public function testStudentHasOnlyOneInvitationToEachGroup()
     {
         $student = factory(Student::class)->create();
         $course = factory(Course::class)->create();
         $group = factory(Group::class)->create();
 
-        $validInvitation = factory(Invitation::class)->create([
-            'student_number' => $student->student_number,
-            'course_id' => $course->id,
-            'group_id' => $group->id,
-        ]);
+        Invitation::create($student->student_number, $group->id, $course->id);
+
+        $this->assertEquals(1, Invitation::count());
 
         try {
-            $invalidInvitation = factory(Invitation::class)->create([
-                'student_number' => $student->student_number,
-                'course_id' => $course->id,
-                'group_id' => $group->id,
-            ]);
+            Invitation::create($student->student_number, $group->id, $course->id);
 
             $this->assertTrue(false);
-        } catch (QueryException $e) {
+        } catch (UserHasAlreadyAnInviteInGroupException $e) {
             $this->assertTrue(true);
         }
     }

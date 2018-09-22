@@ -60,13 +60,8 @@ class InvitationController extends Controller
             return redirect()->back();
         }
 
-        $invitation = new Invitation();
-        $invitation->student_number = $studentNumber;
-        $invitation->group_id = $groupId;
-        $invitation->course_id = $courseId;
-
         try {
-            $invitation->create($studentNumber, $groupId, $courseId);
+            Invitation::create($studentNumber, $groupId, $courseId);
             flash('Invitation successfully sent.')->success();
         } catch (UserHasAlreadyAnInviteInGroupException $e) {
             flash($e->getMessage())->error();
@@ -87,7 +82,9 @@ class InvitationController extends Controller
         $courseId = 0;
 
         $remainingInvitations = DB::transaction(function () use ($id, &$courseId) {
-            $invitation = Invitation::whereId($id)->first();
+            $invitation = Invitation::find($id)
+                ->whereStudentNumber(Auth::student()->student_number)
+                ->first();
 
             $courseId = $invitation->course_id;
             $studentNumber = $invitation->student_number;

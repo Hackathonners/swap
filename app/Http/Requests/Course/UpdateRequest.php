@@ -26,7 +26,7 @@ class UpdateRequest extends FormRequest
     {
         return [
             'group_min' => 'required|numeric|min:0',
-            'group_max' => 'required|numeric|greater_than_field:group_min',
+            'group_max' => 'required|numeric|greater_or_equal_than_field:group_min',
         ];
     }
 
