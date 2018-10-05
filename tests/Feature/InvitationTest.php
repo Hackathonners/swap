@@ -104,6 +104,7 @@ class InvitationTest extends TestCase
                 $requestData);
 
         $this->assertEquals(0, Invitation::count());
+        $response->assertStatus(302);
     }
 
     /** @test */

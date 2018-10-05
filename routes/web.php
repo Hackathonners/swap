@@ -36,7 +36,7 @@ Route::get('/groups/{id}', 'GroupController@show')->name('groups.show');
 Route::get('/groups/{id}/store', 'GroupController@store')->name('groups.store');
 Route::get('/groups/{id}/destroy', 'GroupController@destroy')->name('groups.destroy');
 
-Route::get('/groups/invitations/{id}/accept', 'GroupController@update')->name('groups.update');
+Route::get('/groups/invitations/{id}/accept', 'InvitationController@update')->name('invitations.update');
 
 Route::get('/groups/{id}/invitations', 'InvitationController@index')->name('invitations.index');
 Route::post('/groups/{groupId}/invitations/{courseId}/store', 'InvitationController@store')->name('invitations.store');

@@ -30,46 +30,18 @@ class GroupController extends Controller
      */
     public function index()
     {
-        $student = Auth::student();
+        $enrollments = DB::transaction(function () {
+            $student = Auth::student();
 
-        $enrollments = $student
-            ->enrollments()
-            ->orderByCourse()
-            ->get();
+            $enrollments = $student
+                ->enrollments()
+                ->orderByCourse()
+                ->get();
 
-        foreach ($enrollments as $enrollmentKey => $enrollment) {
-            $course = DB::transaction(function () use ($enrollment) {
-                return Course::whereId($enrollment->course_id)->first();
-            });
+            $this->addStudentGroupInfoToEachEnrollment($student, $enrollments);
 
-            if ($course->group_max <= 0) {
-                unset($enrollments[$enrollmentKey]);
-                continue;
-            }
-
-            $membership = $student->findMembershipByCourse($course->id);
-
-            if (is_null($membership)) {
-                $enrollment->group_status = 0;
-            } else {
-                $group = DB::transaction(function () use ($membership) {
-                    return Group::with('memberships')
-                        ->whereId($membership->group_id)
-                        ->first();
-                });
-
-                $enrollment->group_status = $group->memberships->count();
-            }
-
-            $enrollment->name = $course->name;
-            $enrollment->group_min = $course->group_min;
-            $enrollment->group_max = $course->group_max;
-
-            $enrollment->number_invitations = Invitation::ofStudentInCourse(
-                    $student->student_number,
-                    $enrollment->course_id
-                )->count();
-        }
+            return $enrollments;
+        });
 
         return view('groups.index', compact('enrollments'));
     }
@@ -84,11 +56,7 @@ class GroupController extends Controller
     public function store($courseId)
     {
         $group = DB::transaction(function () use ($courseId) {
-            $course = Course::find($courseId);
-
-            if ($course == null) {
-                return $course;
-            }
+            $course = Course::findOrFail($courseId);
 
             $group = new Group();
             $group->course_id = $courseId;
@@ -146,54 +114,6 @@ class GroupController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param int $inviteId
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function update($inviteId)
-    {
-        $invitation = DB::transaction(function () use ($inviteId) {
-            return Invitation::with(['group.memberships', 'group.course'])
-                ->whereId($inviteId)
-                ->whereStudentNumber(Auth::student()->student_number)
-                ->first();
-        });
-
-        if ($invitation == null) {
-            flash('Invalid invitation.')->error();
-
-            return redirect()->back();
-        }
-
-        $numberOfGroupMembers = $invitation->group->memberships->count();
-        $groupMaxSize = $invitation->group->course->group_max;
-
-        if ($numberOfGroupMembers >= $groupMaxSize) {
-            flash('Course group limit exceeded')->error();
-
-            return redirect()->back();
-        }
-
-        try {
-            Auth::student()->join($invitation->group);
-
-            flash('You have successfully joined the group.')
-                ->success();
-
-            return redirect()->route('invitations.destroy', compact('inviteId'));
-        } catch (UserHasAlreadyGroupInCourseException $e) {
-            flash('You already have a group.')
-                ->error();
-
-            $courseId = $invitation->course_id;
-
-            return redirect()->route('groups.show', compact('courseId'));
-        }
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
      * @param int $courseId
@@ -222,5 +142,44 @@ class GroupController extends Controller
         }
 
         return redirect()->route('groups.show', compact('courseId'));
+    }
+
+    /**
+     * Foreach student enrollment adds groups and invites information about the respective course.
+     *
+     * @param Student    $student
+     * @param Collection $enrollments
+     */
+    private function addStudentGroupInfoToEachEnrollment($student, $enrollments)
+    {
+        foreach ($enrollments as $enrollmentKey => $enrollment) {
+            $course = Course::whereId($enrollment->course_id)->first();
+
+            if ($course->group_max <= 0) {
+                unset($enrollments[$enrollmentKey]);
+                continue;
+            }
+
+            $membership = $student->findMembershipByCourse($course->id);
+
+            if (is_null($membership)) {
+                $enrollment->group_status = 0;
+            } else {
+                $group = Group::with('memberships')
+                    ->whereId($membership->group_id)
+                    ->first();
+
+                $enrollment->group_status = $group->memberships->count();
+            }
+
+            $enrollment->name = $course->name;
+            $enrollment->group_min = $course->group_min;
+            $enrollment->group_max = $course->group_max;
+
+            $enrollment->number_invitations = Invitation::ofStudentInCourse(
+                    $student->student_number,
+                    $enrollment->course_id
+                )->count();
+        }
     }
 }

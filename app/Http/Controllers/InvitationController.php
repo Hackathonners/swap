@@ -64,10 +64,58 @@ class InvitationController extends Controller
             Invitation::create($studentNumber, $groupId, $courseId);
             flash('Invitation successfully sent.')->success();
         } catch (UserHasAlreadyAnInviteInGroupException $e) {
-            flash("This student was already invited.")->error();
+            flash('This student was already invited.')->error();
         }
 
         return redirect()->back();
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param int $inviteId
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update($inviteId)
+    {
+        $invitation = DB::transaction(function () use ($inviteId) {
+            return Invitation::with(['group.memberships', 'group.course'])
+                ->whereId($inviteId)
+                ->whereStudentNumber(Auth::student()->student_number)
+                ->first();
+        });
+
+        if ($invitation == null) {
+            flash('Invalid invitation.')->error();
+
+            return redirect()->back();
+        }
+
+        $numberOfGroupMembers = $invitation->group->memberships->count();
+        $groupMaxSize = $invitation->group->course->group_max;
+
+        if ($numberOfGroupMembers >= $groupMaxSize) {
+            flash('Course group limit exceeded')->error();
+
+            return redirect()->back();
+        }
+
+        $courseId = $invitation->course_id;
+
+        try {
+            Auth::student()->join($invitation->group);
+
+            flash('You have successfully joined the group.')
+                ->success();
+
+            $invitation->delete();
+        } catch (UserHasAlreadyGroupInCourseException $e) {
+            flash('You already have a group.')
+                ->error();
+        }
+
+        return redirect()->route('groups.show', compact('courseId'));
     }
 
     /**

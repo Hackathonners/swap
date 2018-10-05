@@ -39,7 +39,7 @@ class GroupController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param int $id
+     * @param int $courseId
      *
      * @return \Illuminate\View\View
      */

@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Exceptions;
-use App\Judite\Models\Group;
 
 use Exception;
+use App\Judite\Models\Group;
 
 class UserHasAlreadyAnInviteInGroupException extends Exception
 {
