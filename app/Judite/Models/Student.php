@@ -2,6 +2,7 @@
 
 namespace App\Judite\Models;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\EnrollmentCannotBeDeleted;
 use App\Exceptions\UserHasAlreadyGroupInCourseException;
@@ -182,8 +183,14 @@ class Student extends Model
      */
     public function join(Group $group): Membership
     {
-        if ($this->isMemberOfGroupInCourse($group->course_id)) {
-            throw new UserHasAlreadyGroupInCourseException();
+        $exception = DB::transaction(function () use ($group) {
+            if ($this->isMemberOfGroupInCourse($group->course_id)) {
+                return new UserHasAlreadyGroupInCourseException(Course::find($group->course_id));
+            }
+        });
+
+        if ($exception) {
+            throw $exception;
         }
 
         $membership = $this->memberships()->make();

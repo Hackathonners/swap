@@ -58,15 +58,19 @@ class Invitation extends Model
      */
     public static function create($studentNumber, $groupId, $courseId)
     {
-        $findAnyInvitation = DB::transaction(function () use ($studentNumber, $groupId) {
-            return self::where([
+        $exception = DB::transaction(function () use ($studentNumber, $groupId) {
+            $findAnyInvitation = self::where([
                     ['student_number', $studentNumber],
                     ['group_id', $groupId],
                 ]);
+
+            if ($findAnyInvitation->exists()) {
+                return new UserHasAlreadyAnInviteInGroupException(Group::find($groupId));
+            }
         });
 
-        if ($findAnyInvitation->exists()) {
-            throw new UserHasAlreadyAnInviteInGroupException();
+        if ($exception) {
+            throw $exception;
         }
 
         $invitation = new self();

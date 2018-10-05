@@ -64,7 +64,7 @@ class InvitationController extends Controller
             Invitation::create($studentNumber, $groupId, $courseId);
             flash('Invitation successfully sent.')->success();
         } catch (UserHasAlreadyAnInviteInGroupException $e) {
-            flash($e->getMessage())->error();
+            flash("This student was already invited.")->error();
         }
 
         return redirect()->back();
