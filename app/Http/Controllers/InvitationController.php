@@ -52,16 +52,20 @@ class InvitationController extends Controller
      */
     public function store(UpdateRequest $request, $groupId, $courseId)
     {
-        $studentNumber = $request->input('student_number');
+        $inputStudentNumber = $request->input('student_number');
 
-        if ($studentNumber == Auth::student()->student_number) {
+        $authStudentNumber = DB::transaction(function () {
+            return Auth::student()->student_number;
+        });
+
+        if ($inputStudentNumber == $authStudentNumber) {
             flash('You can not invite yourself.')->error();
 
             return redirect()->back();
         }
 
         try {
-            Invitation::create($studentNumber, $groupId, $courseId);
+            Invitation::create($inputStudentNumber, $groupId, $courseId);
             flash('Invitation successfully sent.')->success();
         } catch (UserHasAlreadyAnInviteInGroupException $e) {
             flash('This student was already invited.')->error();
