@@ -110,7 +110,7 @@
                 <div class="col">
                     Developed with love by <a target="_blank" href="//hackathonners.org">Hackathonners</a>.
                     <br>
-                    Follow us on <a target="_blank" href="//twitter.com/Hackathonners">Twitter</a> / <a target="_blank" href="//github.com/Hackathonners">Github</a> / <a target="_blank" href="//blog.hackathonners.org">Medium</a>.
+                    Follow us on <a target="_blank" href="//twitter.com/Hackathonners">Twitter</a> / <a target="_blank" href="//github.com/Hackathonners">Github</a> / <a target="_blank" href="//facebook.com/Hackathonners">Facebook</a> / <a target="_blank" href="//blog.hackathonners.org">Medium</a>.
                 </div>
                 <div class="col-2 text-center">
                     <img alt="Brand" height="28" src="{{ asset('images/logo-icon.svg') }}">
