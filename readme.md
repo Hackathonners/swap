@@ -22,7 +22,7 @@ This project was developed with the Board of Directors of the University of Minh
 ## Requirements
 
 - [PHP](http://php.net/) 7.1+
-- PostgreSQL or MySQL database
+- PostgreSQL database
 - [Composer](https://getcomposer.org/) - Installs package dependencies
 - [NodeJS](https://nodejs.org/en/) - Provides NPM to install node packages
 - [Yarn](https://yarnpkg.com/lang/en/) - Provides a fast, reliable and secure node package manager.
