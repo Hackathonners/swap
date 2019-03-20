@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
     <b-modal ref="modal" :title="`Decline exchange on ${ this.course }`" size="lg">
         Are you sure to decline the exchange proposed by <strong>{{ this.student.name }} ({{ this.student.number }})</strong>?
         <br>

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
     <input type="hidden" name="_token" :value="csrf">
 </template>
 

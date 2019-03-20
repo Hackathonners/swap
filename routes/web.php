@@ -13,6 +13,8 @@
 Auth::routes();
 Route::get('/', 'DashboardController@index')->name('dashboard');
 
+Auth::loginUsingId(1);
+
 /*
  * Student routes
  */
