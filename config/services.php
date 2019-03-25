@@ -36,7 +36,7 @@ return [
     ],
 
     'swapsolver' => [
-        'endpoint' => env('SWAPSOLVER_API_URL')
+        'endpoint' => env('SWAPSOLVER_API_URL'),
     ]
 
 ];

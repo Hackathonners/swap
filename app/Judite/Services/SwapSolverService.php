@@ -25,7 +25,7 @@ class SwapSolverService
 
     /**
      * Get the possible matches for requested exchanges.
-     * 
+     *
      * @param array $exchanges
      */
     public function getExchangesMatches($exchanges)
