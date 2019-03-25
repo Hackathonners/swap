@@ -35,4 +35,8 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'swapsolver' => [
+        'endpoint' => env('SWAPSOLVER_API_URL')
+    ]
+
 ];

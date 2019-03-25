@@ -8,14 +8,15 @@
         "php": ">=7.1",
         "barryvdh/laravel-debugbar": "^2.4",
         "friendsofphp/php-cs-fixer": "^2.3",
-        "guzzlehttp/guzzle": "~5.3|~6.0",
+        "guzzlehttp/guzzle": "~6.0",
         "laracasts/flash": "^3.0",
         "laracasts/presenter": "^0.2.1",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
         "maatwebsite/excel": "^2.1",
         "mockery/mockery": "^0.9.9",
-        "sentry/sentry-laravel": "^0.8.0"
+        "sentry/sentry-laravel": "^0.8.0",
+        "symfony/psr-http-message-bridge": "^1.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
