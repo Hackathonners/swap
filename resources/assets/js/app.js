@@ -37,7 +37,7 @@ import ElementUI from 'element-ui';
 import CalendarEnrollments from './components/CalendarEnrollments.vue';
 import CalendarExchanges from './components/CalendarExchanges.vue';
 import FileInput from './components/FileInput.vue';
-import 'element-ui/lib/theme-chalk/index.css';
+import 'element-ui/lib/theme-default/index.css';
 import locale from 'element-ui/lib/locale/lang/en'
 
 Vue.use(ElementUI, { locale });
