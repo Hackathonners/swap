@@ -24,8 +24,7 @@ before_script:
   - psql -c 'create database judite_testing;' -U postgres
   - php artisan migrate
   - nvm install --lts
-  - npm install -g yarn
-  - yarn install
+  - npm install
 
 script:
   - composer ci-test
