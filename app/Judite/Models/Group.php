@@ -4,6 +4,7 @@ namespace App\Judite\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\GroupIsFullException;
+use App\Exceptions\StudentIsNotEnrolledInCourseException;
 
 class Group extends Model
 {
@@ -69,7 +70,7 @@ class Group extends Model
      */
     public function isEmpty()
     {
-        return $this->students()->exists();
+        return ! $this->students()->exists();
     }
 
     /**
@@ -92,15 +93,21 @@ class Group extends Model
      * @param \App\Judite\Models\Student $student
      *
      * @throws \App\Exceptions\GroupIsFullException
-     * 
+     *
      * @return bool
      */
     public function addMember(Student $student)
     {
-        if ($student->isMemberOfGroup($this) === $this->id) {
+        throw_if($this->isFull(), new GroupIsFullException('The group is full.'));
+        
+        throw_unless(
+            $student->isEnrolledInCourse($this->course), 
+            new StudentIsNotEnrolledInCourseException($this->course)
+        );
+
+        if ($student->isMemberOfGroup($this)) {
             return true;
         }
-        throw_if($this->isFull(), new GroupIsFullException('The group is full.'));
 
         return $this->students()->save($student);
     }
@@ -108,7 +115,7 @@ class Group extends Model
     /**
      * Remove the given member from this group.
      *
-     * @param  \App\Judite\Models\Student  $member
+     * @param \App\Judite\Models\Student $member
      *
      * @return $this
      */
@@ -117,7 +124,7 @@ class Group extends Model
         if (! $member->isMemberOfGroup($this)) {
             return $this;
         }
-        
+
         $this->students()->detach($member->id);
         $this->save();
 

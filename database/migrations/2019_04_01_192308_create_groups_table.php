@@ -13,7 +13,7 @@ class CreateGroupsTable extends Migration
     {
         Schema::create('groups', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('course_id');
+            $table->unsignedInteger('course_id')->nullable();
             $table->string('name')->nullable();
             $table->timestamps();
 
