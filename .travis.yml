@@ -23,7 +23,7 @@ install:
 before_script:
   - psql -c 'create database judite_testing;' -U postgres
   - php artisan migrate
-  - nvm install --lts
+  - nvm install --lts=carbon
   - npm install -g yarn
   - yarn install
 
