@@ -58,6 +58,7 @@ class Kernel extends HttpKernel
         'can.student' => \App\Http\Middleware\AuthorizeStudent::class,
         'can.enroll' => \App\Http\Middleware\AuthorizeEnrollmentActions::class,
         'can.exchange' => \App\Http\Middleware\AuthorizeExchangeActions::class,
+        'can.group' => \App\Http\Middleware\AuthorizeGroupActions::class,
         'student.verified' => \App\Http\Middleware\ShowStudentVerificationIsRequired::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,

@@ -52,6 +52,16 @@ class Course extends Model
     }
 
     /**
+     * Get groups of this course.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function groups()
+    {
+        return $this->hasMany(Group::class);
+    }
+
+    /**
      * Add shift to this course.
      *
      * @param \App\Judite\Models\Shift $shift

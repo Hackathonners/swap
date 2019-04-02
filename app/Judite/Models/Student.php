@@ -76,6 +76,16 @@ class Student extends Model
     }
 
     /**
+     * Get groups for this student.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class)->as('invitation')->withPivot('accepted_at');
+    }
+
+    /**
      * Get enrollment of this student in a given course.
      *
      * @param \App\Judite\Models\Course $course
@@ -85,6 +95,20 @@ class Student extends Model
     public function getEnrollmentInCourse(Course $course)
     {
         return $this->enrollments()
+            ->where('course_id', $course->id)
+            ->first();
+    }
+
+    /**
+     * Get group of this student in a given course.
+     *
+     * @param \App\Judite\Models\Course $course
+     *
+     * @return \App\Judite\Models\Group|null
+     */
+    public function getGroupInCourse(Course $course)
+    {
+        return $this->groups()
             ->where('course_id', $course->id)
             ->first();
     }
@@ -145,6 +169,43 @@ class Student extends Model
         }
 
         return $enrollment->delete();
+    }
+
+    /**
+     * Check if this student has a group in the given course.
+     *
+     * @param \App\Judite\Models\Course $course
+     *
+     * @return bool
+     */
+    public function hasGroupInCourse(Course $course): bool
+    {
+        return $this->groups()->where('course_id', $course->id)->exists();
+    }
+
+    /**
+     * Check if this student is a member in the given course.
+     *
+     * @param \App\Judite\Models\Group $group
+     *
+     * @return bool
+     */
+    public function isMemberOfGroup(Group $group): bool
+    {
+        return $this->groups()->where('group_id', $group->id)->exists();
+    }
+
+    /**
+     * Check if this student has an eligible group in the given course.
+     *
+     * @param \App\Judite\Models\Course $course
+     *
+     * @return bool
+     */
+    public function hasAvailableGroupInCourse(Course $course)
+    {
+        return $this->hasGroupInCourse($course) &&
+        $this->getGroupInCourse($course)->isAvailableToJoin();
     }
 
     /**
