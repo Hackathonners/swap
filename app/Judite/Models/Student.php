@@ -4,6 +4,8 @@ namespace App\Judite\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\EnrollmentCannotBeDeleted;
+use App\Exceptions\StudentIsNotMemberOfGroupException;
+use App\Exceptions\StudentIsNotInvitedToGroupException;
 use App\Exceptions\StudentIsNotEnrolledInCourseException;
 use App\Exceptions\UserIsAlreadyEnrolledInCourseException;
 
@@ -82,7 +84,29 @@ class Student extends Model
      */
     public function groups()
     {
-        return $this->belongsToMany(Group::class)->as('invitation')->withPivot('accepted_at');
+        return $this->belongsToMany(Group::class)
+                    ->as('invitation')
+                    ->withPivot('confirmed_at');
+    }
+
+    /**
+     * Get pending groups for this student.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function pendingGroups()
+    {
+        return $this->groups()->wherePivot('confirmed_at', '=', null);
+    }
+
+    /**
+     * Get confirmed groups for this student.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function confirmedGroups()
+    {
+        return $this->groups()->wherePivot('confirmed_at', '!=', null);
     }
 
     /**
@@ -172,6 +196,67 @@ class Student extends Model
     }
 
     /**
+     * Confirm this student with a given group.
+     *
+     * @param \App\Judite\Models\Group $group
+     *
+     * @return \App\Judite\Models\Student
+     */
+    public function confirmGroup(Group $group): self
+    {
+        throw_unless(
+            $this->isInvitedToGroup($group),
+            new StudentIsNotMemberOfGroupException()
+        );
+
+        $atributtes = [
+            'confirmed_at' => now(),
+        ];
+
+        $this->groups()->updateExistingPivot($group->id, $atributtes);
+
+        return $this;
+    }
+
+    /**
+     * Decline this student with a given group.
+     *
+     * @param \App\Judite\Models\Group $group
+     *
+     * @return \App\Judite\Models\Student
+     */
+    public function declineGroup(Group $group): self
+    {
+        throw_unless(
+            $this->isInvitedToGroup($group),
+            new StudentIsNotInvitedToGroupException()
+        );
+
+        $group->removeMember($this);
+
+        return $this;
+    }
+
+    /**
+     * Leave the given group.
+     *
+     * @param \App\Judite\Models\Group $group
+     *
+     * @return \App\Judite\Models\Student
+     */
+    public function leaveGroup(Group $group): self
+    {
+        throw_unless(
+            $this->isMemberOfGroup($group),
+            new StudentIsNotMemberOfGroupException()
+        );
+
+        $group->removeMember($this);
+
+        return $this;
+    }
+
+    /**
      * Check if this student has a group in the given course.
      *
      * @param \App\Judite\Models\Course $course
@@ -180,19 +265,7 @@ class Student extends Model
      */
     public function hasGroupInCourse(Course $course): bool
     {
-        return $this->groups()->where('course_id', $course->id)->exists();
-    }
-
-    /**
-     * Check if this student is a member in the given course.
-     *
-     * @param \App\Judite\Models\Group $group
-     *
-     * @return bool
-     */
-    public function isMemberOfGroup(Group $group): bool
-    {
-        return $this->groups()->where('group_id', $group->id)->exists();
+        return $this->confirmedGroups()->where('course_id', $course->id)->exists();
     }
 
     /**
@@ -206,6 +279,42 @@ class Student extends Model
     {
         return $this->hasGroupInCourse($course) &&
         $this->getGroupInCourse($course)->isAvailableToJoin();
+    }
+
+    /**
+     * Check if this student is attached to the given group.
+     *
+     * @param \App\Judite\Models\Group $group
+     *
+     * @return bool
+     */
+    public function isAssociatedToGroup(Group $group): bool
+    {
+        return $this->groups()->where('group_id', $group->id)->exists();
+    }
+
+    /**
+     * Check if this student is invited to the given group.
+     *
+     * @param \App\Judite\Models\Group $group
+     *
+     * @return bool
+     */
+    public function isInvitedToGroup(Group $group): bool
+    {
+        return $this->pendingGroups()->where('group_id', $group->id)->exists();
+    }
+
+    /**
+     * Check if this student is a member of the given group.
+     *
+     * @param \App\Judite\Models\Group $group
+     *
+     * @return bool
+     */
+    public function isMemberOfGroup(Group $group): bool
+    {
+        return $this->confirmedGroups()->where('group_id', $group->id)->exists();
     }
 
     /**

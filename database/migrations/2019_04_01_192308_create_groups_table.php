@@ -23,7 +23,7 @@ class CreateGroupsTable extends Migration
         Schema::create('group_student', function (Blueprint $table) {
             $table->unsignedInteger('group_id');
             $table->unsignedInteger('student_id');
-            $table->timestamp('accepted_at')->nullable();
+            $table->timestamp('confirmed_at')->nullable();
             $table->timestamps();
 
             $table->primary(['group_id', 'student_id']);

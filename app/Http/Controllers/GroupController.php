@@ -2,89 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Group;
-use Illuminate\Http\Request;
+use App\Judite\Models\Group;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class GroupController extends Controller
 {
     /**
+     * Create a new controller instance.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('can.student');
+        $this->middleware('student.verified');
+    }
+
+    /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function index()
     {
-        //
-    }
+        $student = DB::transaction(function () {
+            return Auth::user()->student;
+        });
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+        $pendingGroups = DB::transaction(function () use ($student) {
+            return $student->pendingGroups()->get();
+        });
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        $confirmedGroups = DB::transaction(function () use ($student) {
+            return $student->confirmedGroups()->get();
+        });
 
-    /**
-     * Display the specified resource.
-     *
-     * @param \App\Group $group
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Group $group)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param \App\Group $group
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Group $group)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Group               $group
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Group $group)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param \App\Group $group
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Group $group)
-    {
-        //
+        return view('groups.index', compact('pendingGroups', 'confirmedGroups'));
     }
 }

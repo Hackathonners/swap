@@ -31,6 +31,12 @@ Route::delete('/exchanges/{id}', 'ExchangeController@destroy')->name('exchanges.
 Route::get('/registrations/confirm/{token}', 'Auth\AccountVerificationController@store')->name('register.confirm');
 Route::post('/registrations/email', 'Auth\AccountVerificationController@sendEmail')->name('register.resend_confirmation');
 
+Route::get('/groups', 'GroupController@index')->name('groups.index');
+Route::get('/groups/create', 'GroupController@create')->name('groups.create');
+
+Route::post('/groups/{group}/confirm', 'GroupStudentController@confirm')->name('groups.confirm');
+Route::post('/groups/{group}/decline', 'GroupStudentController@decline')->name('groups.decline');
+
 /*
  * Admin routes
  */

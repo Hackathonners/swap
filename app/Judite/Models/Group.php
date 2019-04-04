@@ -5,6 +5,7 @@ namespace App\Judite\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\GroupIsFullException;
 use App\Exceptions\StudentIsNotEnrolledInCourseException;
+use App\Exceptions\StudentHasAlreadyGroupInCourseException;
 
 class Group extends Model
 {
@@ -32,7 +33,29 @@ class Group extends Model
      */
     public function students()
     {
-        return $this->belongsToMany(Student::class)->as('invitations')->withPivot('accepted_at');
+        return $this->belongsToMany(Student::class)
+                    ->as('invitation')
+                    ->withPivot('confirmed_at');
+    }
+
+    /**
+     * Get confirmed students for this group.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function confirmedStudents()
+    {
+        return $this->students()->wherePivot('confirmed_at', '!=', null);
+    }
+
+    /**
+     * Get pending students for this group.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function pendingStudents()
+    {
+        return $this->students()->wherePivot('confirmed_at', '=', null);
     }
 
     /**
@@ -57,7 +80,7 @@ class Group extends Model
     public function isFull()
     {
         $currentStudentsCount = $this->relationLoaded('students')
-            ? $this->students->count()
+            ? $this->stisEligibleForAcceptanceudents->count()
             : $this->students()->count();
 
         return $currentStudentsCount === app('settings')->max_group_members;
@@ -100,12 +123,17 @@ class Group extends Model
     {
         throw_if($this->isFull(), new GroupIsFullException('The group is full.'));
         
+        // throw_if(
+        //     $student->hasGroupInCourse($this->course),
+        //     new StudentHasAlreadyGroupInCourseException()
+        // );
+
         throw_unless(
             $student->isEnrolledInCourse($this->course), 
             new StudentIsNotEnrolledInCourseException($this->course)
         );
 
-        if ($student->isMemberOfGroup($this)) {
+        if ($student->isAssociatedToGroup($this)) {
             return true;
         }
 
@@ -121,7 +149,7 @@ class Group extends Model
      */
     public function removeMember(Student $member)
     {
-        if (! $member->isMemberOfGroup($this)) {
+        if (! $member->isAssociatedToGroup($this)) {
             return $this;
         }
 

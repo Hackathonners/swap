@@ -6,8 +6,8 @@ use Tests\TestCase;
 use App\Judite\Models\Group;
 use App\Judite\Models\Course;
 use App\Judite\Models\Student;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Exceptions\GroupIsFullException;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Exceptions\StudentIsNotEnrolledInCourseException;
 
 class GroupTest extends TestCase
@@ -19,30 +19,37 @@ class GroupTest extends TestCase
     public function setUp()
     {
         parent::setUp();
+        // We need this enable here to set min/max group numbers
         $this->enableGroupsPeriod();
         $this->course = factory(Course::class)->create();
     }
 
     public function testGroupIsEligibleForAcceptance()
     {
+        // Prepare
         $eligibleGroup = factory(Group::class)->create();
         $ineligibleGroup = factory(Group::class)->create();
 
+        // Execute
         $eligibleGroup->students()->saveMany(factory(Student::class, 2)->make());
         $ineligibleGroup->students()->saveMany(factory(Student::class, 1)->make());
 
+        // Assert
         $this->assertTrue($eligibleGroup->isEligibleForAcceptance());
         $this->assertFalse($ineligibleGroup->isEligibleForAcceptance());
     }
 
     public function testGroupIsFull()
     {
+        // Prepare
         $fullGroup = factory(Group::class)->create();
         $notFullGroup = factory(Group::class)->create();
 
+        // Execute
         $fullGroup->students()->saveMany(factory(Student::class, 4)->make());
         $notFullGroup->students()->saveMany(factory(Student::class, 3)->make());
 
+        // Assert
         $this->assertTrue($fullGroup->isFull());
         $this->assertFalse($notFullGroup->isFull());
     }
@@ -74,12 +81,12 @@ class GroupTest extends TestCase
     {
         $group = $this->course->groups()->save(factory(Group::class)->make());
         $student = factory(Student::class)->create();
-        $student->enroll($this->course);
 
+        $student->enroll($this->course);
         $group->addMember($student);
 
         $this->assertFalse($group->isEmpty());
-        $this->assertTrue($student->isMemberOfGroup($group));
+        $this->assertTrue($student->isInvitedToGroup($group));
     }
 
     public function testTryToAddMemberNotEnrolledInCourse()
@@ -98,29 +105,38 @@ class GroupTest extends TestCase
 
     public function testTryToAddExistingMember()
     {
+        // Prepare
         $group = $this->course->groups()->save(factory(Group::class)->make());
         $student = factory(Student::class)->create();
         $student->enroll($this->course);
 
+        // Execute
         $group->students()->save($student);
-    
-        $this->assertEquals(1, $group->students()->count());
+        $numOfStudentsBefore = $group->students()->count();
         $group->addMember($student);
-        $this->assertEquals(1, $group->students()->count());
+        $numOfStudentsAfter = $group->students()->count();
+
+        // Assert
+        $this->assertEquals(1, $numOfStudentsBefore);
+        $this->assertEquals(1, $numOfStudentsAfter);
     }
 
     public function testRemoveMember()
     {
+        // Prepare
         $group = factory(Group::class)->create();
         $group->students()->saveMany(factory(Student::class, 2)->make());
         $student = factory(Student::class)->create();
 
+        // Execute
         $group->students()->save($student);
-        $this->assertTrue($student->isMemberOfGroup($group));
-        
+        $studentWasInGroup = $student->isAssociatedToGroup($group);
         $group->removeMember($student);
-        $this->assertEquals(2, $group->students()->count());
+        
+        // Assert
+        $this->assertTrue($studentWasInGroup);
         $this->assertFalse($student->isMemberOfGroup($group));
+        $this->assertEquals(2, $group->students()->count());
     }
 
     public function testGroupIsDeletedWhenLastElementIsRemoved()
@@ -146,5 +162,17 @@ class GroupTest extends TestCase
         } catch (GroupIsFullException $e) {
             $this->assertEquals(4, $group->students()->count());
         }
+    }
+
+    public function testNewMemberIsPendingInGroup()
+    {
+        $group = $this->course->groups()->save(factory(Group::class)->make());
+        $student = factory(Student::class)->create();
+        $student->enroll($this->course);
+
+        $group->addMember($student);
+
+        $this->assertEquals(0, $group->confirmedStudents()->count());
+        $this->assertEquals(1, $group->pendingStudents()->count());
     }
 }
