@@ -123,10 +123,10 @@ class Group extends Model
     {
         throw_if($this->isFull(), new GroupIsFullException('The group is full.'));
         
-        // throw_if(
-        //     $student->hasGroupInCourse($this->course),
-        //     new StudentHasAlreadyGroupInCourseException()
-        // );
+        throw_if(
+            $student->hasGroupInCourse($this->course),
+            new StudentHasAlreadyGroupInCourseException()
+        );
 
         throw_unless(
             $student->isEnrolledInCourse($this->course), 

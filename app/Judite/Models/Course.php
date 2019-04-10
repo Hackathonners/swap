@@ -86,4 +86,18 @@ class Course extends Model
     {
         return $this->shifts()->where('tag', $tag)->first();
     }
+
+    /**
+     * Add group to this course.
+     *
+     * @param \App\Judite\Models\Group $group
+     *
+     * @return $this
+     */
+    public function addGroup(Group $group): self
+    {
+        $this->groups()->save($group);
+
+        return $this;
+    }
 }
