@@ -45,13 +45,27 @@ class EnrollmentExchangeController extends Controller
                     ->orderByStudent()
                     ->get();
 
-                return compact('enrollment', 'matchingEnrollments');
+                $shifts = $enrollment->course->shifts;
+
+                // Can't exchange to same shift
+                $shifts = $shifts->reject(function ($item) use ($enrollment) {
+                    return $item->id == $enrollment->shift_id;
+                })->values();
+
+                return compact('enrollment', 'matchingEnrollments', 'shifts');
             });
 
             $data['matchingEnrollments'] = $data['matchingEnrollments']->map(function ($item) {
                 return [
                     'id' => $item->id,
                     '_toString' => $item->present()->inlineToString(),
+                ];
+            });
+
+            $data['shifts'] = $data['shifts']->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    '_toString' => $item->tag
                 ];
             });
 

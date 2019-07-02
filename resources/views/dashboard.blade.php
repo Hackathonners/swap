@@ -21,6 +21,13 @@
         ['exchanges' => $requestedExchanges]
     )
 
+    {{-- Exchanges waiting confirmation --}}
+    @includeWhen(
+        $settings->withinExchangePeriod(),
+        'exchanges.dashboard.bags.index',
+        ['exchanges' => $queuedExchanges]
+    )
+
     {{-- Enrollments summary --}}
     @include('enrollments.dashboard.summary.index')
 

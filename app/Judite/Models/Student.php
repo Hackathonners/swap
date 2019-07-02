@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\EnrollmentCannotBeDeleted;
 use App\Exceptions\StudentIsNotEnrolledInCourseException;
 use App\Exceptions\UserIsAlreadyEnrolledInCourseException;
+use Illuminate\Support\Facades\Auth;
 
 class Student extends Model
 {
@@ -73,6 +74,16 @@ class Student extends Model
     public function enrollments()
     {
         return $this->hasMany(Enrollment::class);
+    }
+
+    /**
+     * Get exchanges service queue requests of this student.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function queuedExchanges()
+    {
+        return $this->hasMany(ExchangeQueueEntry::class, 'from_student_id');
     }
 
     /**

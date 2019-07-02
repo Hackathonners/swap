@@ -152,7 +152,22 @@ class Enrollment extends Model
             ? $this->exchangesAsSource()->exists()
             : $this->exchanges_as_source_count > 0;
 
-        return ! $isBeingExchanged && ! is_null($this->shift_id);
+        $queuedOnService = $this->student->queuedExchanges()
+                                         ->where('from_shift_id', $this->shift_id)
+                                         ->exists();
+
+        return ! $isBeingExchanged && ! is_null($this->shift_id) && ! $queuedOnService;
+    }
+
+    public function hasQueuedExchangeForEnrollment(Enrollment $enrollment) : bool
+    {
+        $fromShift = $enrollment->shift;
+
+        return $this->queuedExchanges()
+                    ->where([
+                        ['from_student_id', '=', $this->id],
+                        ['from_shift_id', '=', $fromShift->id],
+                    ])->exists();
     }
 
     /**

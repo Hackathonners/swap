@@ -11,9 +11,14 @@ class EloquentExchangeRegistry implements ExchangeRegistry
     /**
      * {@inheritdoc}
      */
-    public function record(Enrollment $fromEnrollment, Enrollment $toEnrollment)
+    public function record(Enrollment $fromEnrollment, Enrollment $toEnrollment, $transactionId = null)
     {
         $logExchange = ExchangeRegistryEntry::make();
+
+        if (! is_null($transactionId)) {
+            $logExchange->transaction_id = $transactionId;
+        }
+
         $logExchange->fromShiftRelation()->associate($fromEnrollment->shift);
         $logExchange->toShiftRelation()->associate($toEnrollment->shift);
         $logExchange->fromStudentRelation()->associate($fromEnrollment->student);

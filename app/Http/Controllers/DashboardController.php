@@ -58,12 +58,13 @@ class DashboardController extends Controller
         $data = DB::transaction(function () {
             $proposedExchanges = Auth::student()->proposedExchanges()->get();
             $requestedExchanges = Auth::student()->requestedExchanges()->get();
+            $queuedExchanges = Auth::student()->queuedExchanges()->get();
             $enrollments = Auth::student()->enrollments()
                 ->withCount('exchangesAsSource')
                 ->orderByCourse()
                 ->get();
 
-            return compact('proposedExchanges', 'requestedExchanges', 'enrollments');
+            return compact('proposedExchanges', 'requestedExchanges', 'queuedExchanges', 'enrollments');
         });
 
         $data['enrollments'] = $data['enrollments']->groupBy(function ($enrollment) {

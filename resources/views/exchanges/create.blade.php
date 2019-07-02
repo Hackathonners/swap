@@ -2,6 +2,35 @@
 
 @section('content')
     <div class="card card--section">
+        <div class="card-header">Submit for automatic exchange</div>
+        <div class="card-body">
+            <form method="post" action="{{ route('exchanges.solver.store', $enrollment->id) }}">
+                {{ csrf_field() }}
+
+                {{-- From enrollment--}}
+                <div class="form-group">
+                    <label>From enrollment</label>
+                    <input type="text"
+                    class="form-control {{ $errors->has('from_shift_id') ? 'is-invalid' : '' }}"
+                    value="{{ $enrollment->present()->inlineToString() }}"
+                    required readonly>
+                    <div class="form-text text-danger">{{ $errors->first('from_shift_id') }}</div>
+                </div>
+                
+                {{-- To shift--}}
+                <div class="form-group">
+                    <label>To shift</label>
+                    <enrollment-select name="to_shift_id" :options="{{ $shifts }}"></enrollment-select>
+                    <div class="form-text text-danger">{{ $errors->first('to_shift_id') }}</div>
+                </div>
+
+                {{-- Submit --}}
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card card--section">
         <div class="card-header">Propose a new shift exchange</div>
         <div class="card-body">
             <form method="post" action="{{ route('exchanges.store', $enrollment->id) }}">

@@ -9,6 +9,9 @@
     <td class="text-muted text-center">
         <h5 class="m-0 p-0">&#8646;</h5>
         <small>{{ $exchange->getDate()->toDayDateTimeString() }}</small>
+        @unless (is_null($exchange->transaction_id))
+            <small>Transaction n. {{ $exchange->transaction_id }}</small>
+        @endunless
     </td>
     <td>
         {{ $exchange->toStudent()->user->name }} <small>({{ $exchange->toStudent()->student_number }})</small>

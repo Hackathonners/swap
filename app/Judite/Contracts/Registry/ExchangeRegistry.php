@@ -11,8 +11,9 @@ interface ExchangeRegistry
      *
      * @param \App\Judite\Models\Enrollment $fromEnrollment
      * @param \App\Judite\Models\Enrollment $toEnrollment
+     * @param mixed|null $transactionId
      */
-    public function record(Enrollment $fromEnrollment, Enrollment $toEnrollment);
+    public function record(Enrollment $fromEnrollment, Enrollment $toEnrollment, $transactionId = null);
 
     /**
      * Get the exchanges history paginator.

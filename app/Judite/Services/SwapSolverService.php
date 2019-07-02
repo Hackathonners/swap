@@ -3,6 +3,7 @@
 namespace App\Judite\Services;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\RequestOptions;
 
 class SwapSolverService
 {
@@ -30,7 +31,8 @@ class SwapSolverService
      */
     public function getExchangesMatches($exchanges)
     {
-        // form_params
-        return $this->client->post('/', ['exchange_requests' => $exchanges]);
+        return $this->client->post('/', [
+            'body' => json_encode(['exchange_requests' => $exchanges])
+        ]);
     }
 }

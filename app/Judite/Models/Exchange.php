@@ -87,6 +87,33 @@ class Exchange extends Model
     }
 
     /**
+     * Set the enrollments of this exchange.
+     *
+     * @param \App\Judite\Models\Enrollment $from
+     * @param \App\Judite\Models\Enrollment $to
+     *
+     * @throws \App\Exceptions\EnrollmentCannotBeExchangedException
+     * @throws \App\Exceptions\ExchangeEnrollmentsOnDifferentCoursesException
+     *
+     * @return $this
+     */
+    public function setAutomaticExchangeEnrollments(Enrollment $from, Enrollment $to) : self
+    {
+        if (is_null($to->shift)) {
+            throw new EnrollmentCannotBeExchangedException();
+        }
+
+        if (! $from->course->is($to->course)) {
+            throw new ExchangeEnrollmentsOnDifferentCoursesException();
+        }
+
+        $this->fromEnrollment()->associate($from);
+        $this->toEnrollment()->associate($to);
+
+        return $this;
+    }
+
+    /**
      * Check if an inverse exchange exists.
      *
      * @param \App\Judite\Models\Enrollment $from
@@ -133,9 +160,11 @@ class Exchange extends Model
     /**
      * Perform the exchange and update the associated enrollments.
      *
+     * @param mixed|null $transactionId
+     *
      * @return $this
      */
-    public function perform(): self
+    public function perform($transactionId = null): self
     {
         $fromEnrollmentCopy = clone $this->fromEnrollment;
         $toEnrollmentCopy = clone $this->toEnrollment;
@@ -145,7 +174,7 @@ class Exchange extends Model
         $exchangedEnrollments = collect([$this->fromEnrollment, $this->toEnrollment]);
         $this->deleteExchangesOfEnrollments($exchangedEnrollments);
 
-        $this->registry->record($fromEnrollmentCopy, $toEnrollmentCopy);
+        $this->registry->record($fromEnrollmentCopy, $toEnrollmentCopy, $transactionId);
 
         $this->performed = true;
 
