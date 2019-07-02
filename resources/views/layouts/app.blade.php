@@ -17,7 +17,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon/favicon-32x32.png') }}">
     <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('favicon/favicon-96x96.png') }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon/favicon-16x16.png') }}">
-    <link rel="manifest" href="{{ asset('favicon/manifest.json') }}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">    <link rel="manifest" href="{{ asset('favicon/manifest.json') }}">
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="{{ asset('favicon/ms-icon-144x144.png') }}">
     <meta name="theme-color" content="#ffffff">
@@ -53,11 +53,18 @@
                                     <li class="nav-item">
                                         <a class="nav-link {{ Route::is('settings.edit') ? 'active': '' }}" href="{{ route('settings.edit') }}">Settings</a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('groups.adminIndex') }}" class="nav-link {{ Route::is('groups.adminIndex') ? 'active': '' }}">Groups</a>
+                                    </li>
                                 @else
                                     <li class="nav-item">
                                         <a class="nav-link {{ Route::is('courses.index') ? 'active': '' }}" href="{{ route('courses.index') }}">Courses</a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('groups.index') }}" class="nav-link {{ Route::is('groups.index') ? 'active': '' }}">Groups</a>
+                                    </li>
                                 @endif
+                                
                             @endif
                         </ul>
                         <ul class="navbar-nav">

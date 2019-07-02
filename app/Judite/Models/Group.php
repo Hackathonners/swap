@@ -16,6 +16,8 @@ class Group extends Model
      */
     protected $fillable = ['name'];
 
+    protected $visible = ['id','course','students'];
+
     /**
      * Get course of this group.
      *
@@ -35,7 +37,7 @@ class Group extends Model
     {
         return $this->belongsToMany(Student::class)
                     ->as('invitation')
-                    ->withPivot('confirmed_at');
+                    ->withPivot('accepted_at');
     }
 
     /**
@@ -45,7 +47,7 @@ class Group extends Model
      */
     public function confirmedStudents()
     {
-        return $this->students()->wherePivot('confirmed_at', '!=', null);
+        return $this->students()->wherePivot('accepted_at', '!=', null);
     }
 
     /**
@@ -55,7 +57,7 @@ class Group extends Model
      */
     public function pendingStudents()
     {
-        return $this->students()->wherePivot('confirmed_at', '=', null);
+        return $this->students()->wherePivot('accepted_at', '=', null);
     }
 
     /**
@@ -162,4 +164,5 @@ class Group extends Model
 
         return $this;
     }
+
 }

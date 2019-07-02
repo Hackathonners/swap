@@ -27,6 +27,8 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    protected $visible = ['id', 'name', 'email'];
+
     /**
      * Get student of this user.
      *

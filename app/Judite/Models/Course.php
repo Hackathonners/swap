@@ -17,6 +17,8 @@ class Course extends Model
      */
     protected $presenter = CoursePresenter::class;
 
+    protected $visible = ['id', 'code', 'name'];
+
     /**
      * Scope a query to order courses by year, semester and name.
      *

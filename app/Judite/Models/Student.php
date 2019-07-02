@@ -25,6 +25,8 @@ class Student extends Model
      */
     protected $fillable = ['student_number'];
 
+    protected $visible = ['user','student_number'];
+
     /**
      * Get user who owns this student.
      *
@@ -86,7 +88,7 @@ class Student extends Model
     {
         return $this->belongsToMany(Group::class)
                     ->as('invitation')
-                    ->withPivot('confirmed_at');
+                    ->withPivot('accepted_at');
     }
 
     /**
@@ -96,7 +98,7 @@ class Student extends Model
      */
     public function pendingGroups()
     {
-        return $this->groups()->wherePivot('confirmed_at', '=', null);
+        return $this->groups()->wherePivot('accepted_at', '=', null);
     }
 
     /**
@@ -106,7 +108,7 @@ class Student extends Model
      */
     public function confirmedGroups()
     {
-        return $this->groups()->wherePivot('confirmed_at', '!=', null);
+        return $this->groups()->wherePivot('accepted_at', '!=', null);
     }
 
     /**
@@ -210,7 +212,7 @@ class Student extends Model
         );
 
         $atributtes = [
-            'confirmed_at' => now(),
+            'accepted_at' => now(),
         ];
 
         $this->groups()->updateExistingPivot($group->id, $atributtes);
@@ -317,6 +319,18 @@ class Student extends Model
         return $this->confirmedGroups()->where('group_id', $group->id)->exists();
     }
 
+    public function getCoursesWithoutGroup()
+    {
+        $enrollments = $this->enrollments()->get();
+        $courses = collect([]);
+        foreach($enrollments as $enrollment) {
+            if(! $this->hasGroupInCourse($enrollment->course()->first())) {
+                $courses->prepend($enrollment->course()->first());
+            }
+        }
+        return $courses;
+    }
+    
     /**
      * Scope a query to only include users with the given student number.
      *

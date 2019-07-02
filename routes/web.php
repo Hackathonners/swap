@@ -31,9 +31,6 @@ Route::delete('/exchanges/{id}', 'ExchangeController@destroy')->name('exchanges.
 Route::get('/registrations/confirm/{token}', 'Auth\AccountVerificationController@store')->name('register.confirm');
 Route::post('/registrations/email', 'Auth\AccountVerificationController@sendEmail')->name('register.resend_confirmation');
 
-Route::get('/groups', 'GroupController@index')->name('groups.index');
-Route::get('/groups/create', 'GroupController@create')->name('groups.create');
-
 Route::post('/groups/{group}/confirm', 'GroupStudentController@confirm')->name('groups.confirm');
 Route::post('/groups/{group}/decline', 'GroupStudentController@decline')->name('groups.decline');
 
@@ -50,3 +47,19 @@ Route::get('/exchanges', 'Admin\ExchangeController@index')->name('exchanges.inde
 
 Route::get('/settings/edit', 'Admin\SettingsController@edit')->name('settings.edit');
 Route::put('/settings', 'Admin\SettingsController@update')->name('settings.update');
+
+Route::get('/admin/groups', 'GroupController@adminIndex')->name('groups.adminIndex');
+
+/*
+* Groups routes
+*/
+
+Route::get('/groups', 'GroupController@index')->name('groups.index');
+Route::get('/groups/create', 'GroupController@create')->name('groups.create');
+Route::post('/groups', 'GroupController@store')->name('groups.store');
+ROUTE::get('/groups/{group}/edit', 'GroupController@edit')->name('groups.edit');
+Route::post('/groups/sendInvite/{group}', 'GroupController@sendInvite')->name('groups.sendInvite');
+Route::delete('/groups/refuse/{group}', 'GroupController@destroy')->name('groups.destroy');
+Route::delete('/groups/leave/{group}', 'GroupController@leave')->name('groups.leave');
+Route::patch('/groups/accept/{group}', 'GroupController@update')->name('groups.update');
+Route::get('/groups/export', 'GroupController@export')->name('groups.export');
