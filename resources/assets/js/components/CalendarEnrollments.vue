@@ -2,14 +2,16 @@
     <div class="form-calendar">
         <div class="block datepicker">
             <el-date-picker
-            v-model="dates"
-            type="datetimerange"
-            range-separator=" to "
-            @change="formatDates"
-            :placeholder="placeholder"
-            :editable="false"
-            :clearable='true'
-            :picker-options="{disabledDate}"
+                v-model="dates"
+                type="datetimerange"
+                range-separator=" to "
+                start-placeholder="Start date"
+                end-placeholder="End date"
+                @change="formatDates"
+                :placeholder="placeholder"
+                :editable="false"
+                :clearable='true'
+                :picker-options="{disabledDate}"
             >
         </el-date-picker>
     </div>
@@ -40,8 +42,8 @@ export default {
     },
     mounted() {
         this.dates = [
-            this.date[0] ? moment.utc(this.date[0]).format() : null,
-            this.date[1] ? moment.utc(this.date[1]).format() : null
+            this.date[0] ? moment.utc(this.date[0]).format() : undefined,
+            this.date[1] ? moment.utc(this.date[1]).format() : undefined
         ];
         this.formatDates();
     },
@@ -50,8 +52,8 @@ export default {
             return this.maxDate ? date > this.maxDate : false;
         },
         formatDates() {
-            this.enrollmentsStart = this.dates[0] ? moment.utc(this.dates[0]).format('YYYY-MM-DD HH:mm:ss') : null;
-            this.enrollmentsEnd = this.dates[1] ? moment.utc(this.dates[1]).format('YYYY-MM-DD HH:mm:ss') : null;
+            this.enrollmentsStart = this.dates[0] ? moment.utc(this.dates[0]).format('YYYY-MM-DD HH:mm:ss') : undefined;
+            this.enrollmentsEnd = this.dates[1] ? moment.utc(this.dates[1]).format('YYYY-MM-DD HH:mm:ss') : undefined;
             eventBus.$emit('set-enrollments-start', this.dates[0]);
         }
     }
