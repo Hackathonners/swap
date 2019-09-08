@@ -1,11 +1,13 @@
 @if ($exchanges->isEmpty())
     @include('exchanges.partials.table.empty')
 @else
-    <table class="card-table table table-responsive">
-        <tbody>
-            @each('exchanges.partials.table.show', $exchanges, 'exchange')
-        </tbody>
-    </table>
+    <div class="card-table table-responsive">
+        <table class="table">
+            <tbody>
+                @each('exchanges.partials.table.show', $exchanges, 'exchange')
+            </tbody>
+        </table>
+    </div>
     <div class="row">
         <div class="col">
             {{ $exchanges->render() }}

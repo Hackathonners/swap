@@ -22,28 +22,30 @@
 
             </div>
         </div>
-        <table class="card-table table">
-            <tbody>
-                @foreach ($courses as $year => $courses)
-                    <tr>
-                        <th colspan="3" class="table-active">
-                            {{ $year }} year
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>Semester</th>
-                        <th>Course</th>
-                        <th>Enrollments</th>
-                    </tr>
-                    @foreach ($courses as $course)
+        <div class="card-table table-responsive">
+            <table class="table">
+                <tbody>
+                    @foreach ($courses as $year => $courses)
                         <tr>
-                            <td>{{ $course->present()->getOrdinalSemester() }}</td>
-                            <td><a href="{{ route('students.index', $course->id) }}">{{ $course->name }}</a></td>
-                            <td>{{ $course->enrollments_count }}</td>
+                            <th colspan="3" class="table-active">
+                                {{ $year }} year
+                            </th>
                         </tr>
+                        <tr>
+                            <th>Semester</th>
+                            <th>Course</th>
+                            <th>Enrollments</th>
+                        </tr>
+                        @foreach ($courses as $course)
+                            <tr>
+                                <td>{{ $course->present()->getOrdinalSemester() }}</td>
+                                <td><a href="{{ route('students.index', $course->id) }}">{{ $course->name }}</a></td>
+                                <td>{{ $course->enrollments_count }}</td>
+                            </tr>
+                        @endforeach
                     @endforeach
-                @endforeach
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
 @endsection

@@ -5,6 +5,8 @@
             v-model="dates"
             type="datetimerange"
             range-separator=" to "
+            start-placeholder="Start date"
+            end-placeholder="End date"
             @change="formatDates"
             :placeholder="placeholder"
             :editable="false"
@@ -40,8 +42,8 @@ export default {
     },
     mounted() {
         this.dates = [
-            this.date[0] ? moment.utc(this.date[0]).format() : null,
-            this.date[1] ? moment.utc(this.date[1]).format() : null
+            this.date[0] ? moment.utc(this.date[0]).format() : undefined,
+            this.date[1] ? moment.utc(this.date[1]).format() : undefined
         ];
         this.formatDates();
         eventBus.$on('set-enrollments-start', (value) => {
@@ -53,8 +55,8 @@ export default {
             return this.minDate ? date < this.minDate : false;
         },
         formatDates() {
-            this.exchangesStart = this.dates[0] ? moment.utc(this.dates[0]).format('YYYY-MM-DD HH:mm:ss') : null;
-            this.exchangesEnd = this.dates[1] ? moment.utc(this.dates[1]).format('YYYY-MM-DD HH:mm:ss') : null;
+            this.exchangesStart = this.dates[0] ? moment.utc(this.dates[0]).format('YYYY-MM-DD HH:mm:ss') : undefined;
+            this.exchangesEnd = this.dates[1] ? moment.utc(this.dates[1]).format('YYYY-MM-DD HH:mm:ss') : undefined;
         }
     }
 }

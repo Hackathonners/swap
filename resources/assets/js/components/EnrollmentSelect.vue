@@ -1,9 +1,16 @@
 <template>
     <div>
-        <v-select :value.sync="value" :options="options" label="_toString" :on-change="onChange" placeholder="Select an enrollment"></v-select>
+        <v-select
+            :value.sync="value"
+            :options="options"
+            label="_toString"
+            :reduce="enrollment => enrollment.id"
+            @input="onChange"
+            placeholder="Select an enrollment"
+        >
+        </v-select>
         <input :name="name" type="hidden" :value="id">
     </div>
-</div>
 </template>
 
 <script>
@@ -29,9 +36,8 @@ export default {
         };
     },
     methods: {
-        onChange(val) {
-            console.log(val);
-            this.id = val.id;
+        onChange(id) {
+            this.id = id;
         },
     },
     components: { VSelect }
