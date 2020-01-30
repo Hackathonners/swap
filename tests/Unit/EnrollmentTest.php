@@ -99,11 +99,10 @@ class EnrollmentTest extends TestCase
         $this->assertEquals($expectedOrder->pluck('id'), $actualReturn->pluck('student.id'));
     }
 
-    /**
-     * @expectedException \App\Exceptions\UserIsAlreadyEnrolledInCourseException
-     */
     public function testThrowsExceptionWhenStudentIsAlreadyEnrolledInCourse()
     {
+        $this->expectException(\App\Exceptions\UserIsAlreadyEnrolledInCourseException::class);
+
         // Prepare
         $student = factory(Student::class)->create();
         $course = factory(Course::class)->create();

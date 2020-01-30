@@ -9,8 +9,10 @@ use App\Judite\Models\Course;
 use App\Judite\Models\Student;
 use App\Judite\Models\Enrollment;
 use Illuminate\Http\UploadedFile;
+use App\Exports\EnrollmentsExport;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
@@ -90,7 +92,6 @@ class ImportEnrollmentsFileTest extends TestCase
     public function enrollments_are_imported_with_new_students()
     {
         // Prepare
-        $this->withoutExceptionHandling();
         $admin = factory(User::class)->states('admin')->create();
         $student = factory(Student::class)->create();
         $otherStudent = factory(Student::class)->create();
@@ -215,22 +216,10 @@ class ImportEnrollmentsFileTest extends TestCase
     private function createEnrollmentsFile($data)
     {
         $data = $data instanceof Collection ? $data : collect([$data]);
+        $filename = 'enrollments.csv';
 
-        $result = Excel::create('enrollments', function ($excel) use ($data) {
-            $excel->sheet('Enrollments', function ($sheet) use ($data) {
-                $rows = collect();
-                $rows->push(['Course ID', 'Student ID', 'Shift']);
-                $data->each(function ($enrollment) use ($rows) {
-                    $rows->push([
-                        $enrollment->course->code,
-                        $enrollment->student->student_number,
-                        $enrollment->shift->tag,
-                    ]);
-                });
-                $sheet->rows($rows);
-            });
-        })->store('csv', false, true);
+        Excel::store(new EnrollmentsExport($data), $filename, 'local');
 
-        return new UploadedFile($result['full'], $result['file'], '.csv', filesize($result['full']), null, true);
+        return new UploadedFile(Storage::path($filename), $filename, '.csv', Storage::size($filename), null, true);
     }
 }

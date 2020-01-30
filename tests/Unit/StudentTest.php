@@ -136,11 +136,10 @@ class StudentTest extends TestCase
         $this->assertEquals(0, Enrollment::count());
     }
 
-    /**
-     * @expectedException App\Exceptions\StudentIsNotEnrolledInCourseException
-     */
     public function testUserMayNotUnenrollNotEnrolledCourse()
     {
+        $this->expectException(\App\Exceptions\StudentIsNotEnrolledInCourseException::class);
+
         // Prepare
         $student = factory(Student::class)->create();
         $course = factory(Course::class)->create();
@@ -154,11 +153,10 @@ class StudentTest extends TestCase
         $this->assertEquals(1, Enrollment::count());
     }
 
-    /**
-     * @expectedException App\Exceptions\EnrollmentCannotBeDeleted
-     */
     public function testUserMayNotUnenrollEnrollmentWithAssociatedShift()
     {
+        $this->expectException(\App\Exceptions\EnrollmentCannotBeDeleted::class);
+
         // Prepare
         $student = factory(Student::class)->create();
         $course = factory(Course::class)->create();

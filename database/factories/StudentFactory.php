@@ -1,6 +1,7 @@
 <?php
 
 use App\Judite\Models\User;
+use Illuminate\Support\Str;
 use App\Judite\Models\Student;
 
 /*
@@ -35,7 +36,7 @@ $factory->state(Student::class, 'unverified', function (Faker\Generator $faker) 
         'user_id' => factory(User::class)->create([
             'is_admin' => false,
             'verified' => false,
-            'verification_token' => str_random(32),
+            'verification_token' => Str::random(32),
         ])->id,
     ];
 });

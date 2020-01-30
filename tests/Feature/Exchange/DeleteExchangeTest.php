@@ -15,7 +15,7 @@ class DeleteExchangeTest extends TestCase
     protected $fromEnrollment;
     protected $toEnrollment;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->enableExchangesPeriod();

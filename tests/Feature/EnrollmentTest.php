@@ -15,7 +15,7 @@ class EnrollmentTest extends TestCase
     protected $student;
     protected $course;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->enableEnrollmentsPeriod();

@@ -18,14 +18,14 @@ class ExchangeTest extends TestCase
 
     private $registryMock;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->registryMock = m::mock(ExchangeRegistry::class);
         $this->app->instance(ExchangeRegistry::class, $this->registryMock);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         m::close();
