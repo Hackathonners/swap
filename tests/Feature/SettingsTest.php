@@ -16,7 +16,7 @@ class SettingsTest extends TestCase
     protected $admin;
     protected $settings;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->admin = factory(User::class)->states('admin')->create();

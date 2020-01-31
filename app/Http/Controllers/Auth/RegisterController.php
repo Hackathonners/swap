@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Judite\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -75,7 +76,7 @@ class RegisterController extends Controller
                 'email' => $data['student_number'].'@alunos.uminho.pt',
                 'password' => bcrypt($data['password']),
             ]);
-            $user->verification_token = str_random(32);
+            $user->verification_token = Str::random(32);
             $user->save();
             $user->student()->create(['student_number' => $data['student_number']]);
 
