@@ -24,7 +24,6 @@ class EnrollmentsImport implements OnEachRow, WithHeadingRow
         $index = $row->getIndex();
         $row = $row->toArray();
 
-        /** @var \App\Judite\Models\Student $student */
         $student = Student::whereNumber($row['student_id'])
             ->firstOrNew(['student_number' => strtolower($row['student_id'])]);
 

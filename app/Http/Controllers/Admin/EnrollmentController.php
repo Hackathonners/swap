@@ -8,6 +8,7 @@ use App\Imports\EnrollmentsImport;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Events\ImportFailed;
 use App\Exceptions\InvalidImportFileException;
 use App\Http\Requests\Enrollment\ImportRequest;
 
@@ -29,7 +30,7 @@ class EnrollmentController extends Controller
      */
     public function export()
     {
-        return (new EnrollmentsExport())->download('invoices.csv', \Maatwebsite\Excel\Excel::CSV, [
+        return (new EnrollmentsExport())->download('enrollments.csv', \Maatwebsite\Excel\Excel::CSV, [
             'Content-Type' => 'text/csv',
         ]);
     }
@@ -44,15 +45,13 @@ class EnrollmentController extends Controller
     public function storeImport(ImportRequest $request)
     {
         try {
-            $imported = DB::transaction(fn () => Excel::import(new EnrollmentsImport(), $request->enrollments->path()));
-
-            if (! $imported) {
-                flash('Could not import the enrollments file. Please try again.')->error();
-            }
+            DB::transaction(fn () => Excel::import(new EnrollmentsImport(), $request->enrollments->path()));
 
             flash('The enrollments file was successfully imported.')->success();
         } catch (InvalidImportFileException $e) {
             flash($e->getMessage())->error();
+        } catch (ImportFailed $e) {
+            flash('Could not import the enrollments file. Please try again.')->error();
         }
 
         return redirect()->route('enrollments.import');
