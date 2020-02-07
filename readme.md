@@ -4,6 +4,7 @@
 
 <p align="center">
     <a href="https://travis-ci.org/Hackathonners/swap?branch=develop"><img src="https://travis-ci.org/Hackathonners/swap.svg?branch=develop" alt="TravisCI Status"></a>
+    <a href='https://coveralls.io/github/Hackathonners/swap?branch=develop'><img src='https://coveralls.io/repos/github/Hackathonners/swap/badge.svg?branch=develop' alt='Coverage Status' /></a>
     <a href="https://scrutinizer-ci.com/g/Hackathonners/swap/"><img src="https://scrutinizer-ci.com/g/Hackathonners/swap/badges/quality-score.png" alt="ScrutinizerCI Status"></a>
 </p>
 
