@@ -8,9 +8,12 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\Exportable;
 
 class EnrollmentsExport implements FromCollection, WithMapping, WithHeadings
 {
+    use Exportable;
+
     /**
      * The enrollments collection.
      *
@@ -25,7 +28,7 @@ class EnrollmentsExport implements FromCollection, WithMapping, WithHeadings
      */
     public function __construct(\Illuminate\Support\Collection $enrollments = null)
     {
-        $this->enrollments = $enrollments;
+        $this->enrollments = is_null($enrollments) ? collect() : $enrollments;
     }
 
     /**
@@ -73,7 +76,7 @@ class EnrollmentsExport implements FromCollection, WithMapping, WithHeadings
      */
     public function collection()
     {
-        if ($this->enrollments) {
+        if (!$this->enrollments->isEmpty()) {
             return $this->enrollments;
         }
 
