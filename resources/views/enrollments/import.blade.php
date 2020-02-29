@@ -13,7 +13,7 @@
                 {{-- File input --}}
                 <div class="form-group">
                     <label for="enrollments">Enrollments file</label>
-                    <file-input id="enrollments" file-types=".csv" state="{{ $errors->has('enrollments') ? 'invalid' : 'null' }}" ></file-input>
+                    <file-input name="enrollments" id="enrollments" file-types=".csv" state="{{ $errors->has('enrollments') ? 'invalid' : 'null' }}" ></file-input>
                     @if ($errors->has('enrollments'))
                         <div class="form-text text-danger">{{ $errors->first('enrollments') }}</div>
                     @else
