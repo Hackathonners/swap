@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use App\Judite\Models\Course;
 use App\Judite\Models\Student;
 use App\Judite\Models\Enrollment;
+use App\Judite\Models\Shift;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use App\Exceptions\InvalidFieldValueException;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
