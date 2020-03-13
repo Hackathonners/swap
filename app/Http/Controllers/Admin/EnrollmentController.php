@@ -45,7 +45,7 @@ class EnrollmentController extends Controller
     public function storeImport(ImportRequest $request)
     {
         try {
-            DB::transaction(fn () => Excel::import(new EnrollmentsImport(), $request->enrollments->path()));
+            DB::transaction(fn () => Excel::import(new EnrollmentsImport(), $request->file('enrollments')));
 
             flash('The enrollments file was successfully imported.')->success();
         } catch (InvalidImportFileException $e) {
