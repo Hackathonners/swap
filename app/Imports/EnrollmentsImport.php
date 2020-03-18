@@ -32,7 +32,7 @@ class EnrollmentsImport implements OnEachRow, WithHeadingRow
             /** @var \App\Judite\Models\User $user */
             $user = User::make([
                 'name' => $row['student_name'] ?? $row['student_id'],
-                'email' => strtolower($row['student_email'] ?? $row['student_id'].'@alunos.uminho.pt'),
+                'email' => strtolower($row['student_email'] ?? $row['student_id'].'@'.config('app.mail_domain')),
                 'password' => bcrypt(Str::random(8)),
             ]);
             $user->verification_token = Str::random(32);

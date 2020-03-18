@@ -35,7 +35,7 @@ class ImportFeatureSeeder extends Seeder
                 'a71220',
             ]);
             $emails = $numbers->map(function ($number) {
-                return $number.'@alunos.uminho.pt';
+                return $number.'@'.config('app.mail_domain');
             });
             $names->each(function ($name, $key) {
                 $user = factory(User::class)->create([

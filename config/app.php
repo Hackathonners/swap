@@ -235,4 +235,18 @@ return [
 
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Institutional Mail Domain
+    |--------------------------------------------------------------------------
+    |
+    | All the students who register on the platform must have an academic mail address.
+    | Set the domain in the .env file, or else defaults to Universidade do Minho's.
+    | Example: Student number: a82343. Institutional domain: alunos.uminho.pt
+    |   Student e-mail that is going to be used: a82343@alunos.uminho.pt
+    |
+    */
+
+    'mail_domain' => env('STUDENT_INSTITUTIONAL_MAIL_DOMAIN', 'alunos.uminho.pt'),
+
 ];

@@ -19,7 +19,7 @@
                     <label for="student_number">E-mail address</label>
                     <div class="input-group {{ $errors->has('student_number') ? 'is-invalid' : '' }}">
                         <input id="student_number" type="text" class="form-control {{ $errors->has('student_number') ? 'is-invalid' : '' }}" name="student_number" value="{{ old('student_number') }}" required>
-                        <span class="input-group-addon">@alunos.uminho.pt</span>
+                        <span class="input-group-addon">{{ '@'.config('app.mail_domain') }}</span>
                     </div>
                     @if ($errors->has('student_number'))
                         <div class="invalid-feedback">{{ $errors->first('student_number') }}</div>

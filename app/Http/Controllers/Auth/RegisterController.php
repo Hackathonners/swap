@@ -73,7 +73,7 @@ class RegisterController extends Controller
             $data['student_number'] = strtolower($data['student_number']);
             $user = User::make([
                 'name' => $data['name'],
-                'email' => $data['student_number'].'@alunos.uminho.pt',
+                'email' => $data['student_number'].'@'.config('app.mail_domain'),
                 'password' => bcrypt($data['password']),
             ]);
             $user->verification_token = Str::random(32);

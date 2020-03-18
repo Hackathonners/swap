@@ -28,7 +28,7 @@ class RegistrationTest extends TestCase
             'password_confirmation' => 'secret',
         ]);
 
-        $expectedEmail = 'pg12345@alunos.uminho.pt';
+        $expectedEmail = 'pg12345@'.config('app.mail_domain');
         $actualEmail = User::first()->email;
         $this->assertEquals(0, strcmp($expectedEmail, $actualEmail));
     }
@@ -43,7 +43,7 @@ class RegistrationTest extends TestCase
             'password_confirmation' => 'secret',
         ]);
 
-        $email = 'pg12345@alunos.uminho.pt';
+        $email = 'pg12345@'.config('app.mail_domain');
         $this->assertEquals(1, User::where('email', $email)->count());
         Mail::assertSent(RegistrationConfirmation::class, function ($mail) use ($email) {
             return $mail->hasTo($email);
