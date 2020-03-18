@@ -22,7 +22,7 @@ $factory->define(Student::class, function (Faker\Generator $faker) {
     return [
         'user_id' => function () use ($studentNumber) {
             return factory(User::class)->create([
-                'email' => "${studentNumber}@alunos.uminho.pt",
+                'email' => "${studentNumber}@".config('app.mail_domain'),
                 'is_admin' => false,
                 'verified' => true,
             ])->id;

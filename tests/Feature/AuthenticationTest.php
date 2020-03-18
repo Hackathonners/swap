@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Feature;
+namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Judite\Models\User;
@@ -14,12 +14,12 @@ class AuthenticationTest extends TestCase
     public function user_email_login_check_is_case_insensitve()
     {
         $user = factory(User::class)->create([
-            'email' => 'a7000@alunos.uminho.pt',
+            'email' => 'a7000@'.config('app.mail_domain'),
             'password' => 'password',
         ]);
 
         $response = $this->post(route('login'), [
-            'email' => 'A7000@alunos.uminho.pt',
+            'email' => 'A7000@'.config('app.mail_domain'),
             'password' => 'password',
         ]);
 
