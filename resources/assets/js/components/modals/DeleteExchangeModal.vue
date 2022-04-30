@@ -32,8 +32,6 @@ export default {
     mounted() {
         eventBus.$on('app:exchange::delete', (data) => {
             this.id = data.id;
-            this.student.name = data.to_enrollment.student.user.name;
-            this.student.number = data.to_enrollment.student.student_number;
             this.fromShift = data.from_enrollment.shift.tag;
             this.toShift = data.to_enrollment.shift.tag;
             this.course = data.from_enrollment.course.name;

@@ -4,7 +4,12 @@
         <a
             href="{{ route('exchanges.create', $enrollment->id )}}"
             class="btn btn-outline-secondary btn-sm">
-            Exchange shift
+            Exchange with someone
+        </a>
+        <a
+                href="{{ route('autoExchanges.create', $enrollment->id )}}"
+                class="btn btn-outline-secondary btn-sm">
+            Auto Exchange shift
         </a>
     @elseif (! $settings->withinEnrollmentPeriod())
     {{-- Enrollment actions --}}
