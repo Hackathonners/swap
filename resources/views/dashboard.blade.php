@@ -8,11 +8,11 @@
     @endif
 
     {{-- Exchanges waiting confirmation --}}
-    {{-- @includeWhen(
+    @includeWhen(
         $settings->withinExchangePeriod(),
         'exchanges.dashboard.proposed.index',
         ['exchanges' => $proposedExchanges]
-    ) --}}
+    )
 
     {{-- Pending requested exchanges --}}
     @includeWhen(

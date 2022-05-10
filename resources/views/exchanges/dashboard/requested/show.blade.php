@@ -4,9 +4,12 @@
         {{ $exchange->course()->name }}
         <br>
         <small class="text-muted">
-            From <strong>{{ $exchange->fromShift()->tag }}</strong>
-            to <strong>{{ $exchange->toShift()->tag }}</strong>
-            {{-- requested to <strong>{{ $exchange->toStudent()->user->name }} ({{ $exchange->toStudent()->student_number }})</strong> --}}
+            @if($exchange->toEnrollment()->first()->student === NULL)
+                From <strong>{{ $exchange->fromShift()->tag }}</strong>
+                to <strong>{{ $exchange->toShift()->tag }}</strong>
+            @else
+                requested to <strong>{{ $exchange->toStudent()->user->name }} ({{ $exchange->toStudent()->student_number }})</strong>
+            @endif
         </small>
     </td>
     <td class="text-right">

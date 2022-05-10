@@ -1999,17 +1999,12 @@ pre code {
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
-.form-control::-webkit-input-placeholder {
+.form-control::-moz-placeholder {
   color: #6c757d;
   opacity: 1;
 }
 
 .form-control:-ms-input-placeholder {
-  color: #6c757d;
-  opacity: 1;
-}
-
-.form-control::-ms-input-placeholder {
   color: #6c757d;
   opacity: 1;
 }
@@ -3930,9 +3925,7 @@ input[type=button].btn-block {
   height: calc(1rem - 4px);
   background-color: #adb5bd;
   border-radius: 0.5rem;
-  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-transform 0.15s ease-in-out;
   transition: transform 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  transition: transform 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-transform 0.15s ease-in-out;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3943,8 +3936,7 @@ input[type=button].btn-block {
 
 .custom-switch .custom-control-input:checked ~ .custom-control-label::after {
   background-color: #fff;
-  -webkit-transform: translateX(0.75rem);
-          transform: translateX(0.75rem);
+  transform: translateX(0.75rem);
 }
 
 .custom-switch .custom-control-input:disabled:checked ~ .custom-control-label::before {
@@ -4939,10 +4931,10 @@ input[type=button].btn-block {
 
 @media (min-width: 576px) {
   .card-columns {
-    -webkit-column-count: 3;
-            column-count: 3;
-    -webkit-column-gap: 1.25rem;
-            column-gap: 1.25rem;
+    -moz-column-count: 3;
+         column-count: 3;
+    -moz-column-gap: 1.25rem;
+         column-gap: 1.25rem;
     orphans: 1;
     widows: 1;
   }
@@ -5950,11 +5942,8 @@ a.close.disabled {
 }
 
 .modal.fade .modal-dialog {
-  transition: -webkit-transform 0.3s ease-out;
   transition: transform 0.3s ease-out;
-  transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
-  -webkit-transform: translate(0, -50px);
-          transform: translate(0, -50px);
+  transform: translate(0, -50px);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -5964,8 +5953,7 @@ a.close.disabled {
 }
 
 .modal.show .modal-dialog {
-  -webkit-transform: none;
-          transform: none;
+  transform: none;
 }
 
 .modal-dialog-scrollable {
@@ -6466,9 +6454,7 @@ a.close.disabled {
   margin-right: -100%;
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
-  transition: -webkit-transform 0.6s ease-in-out;
   transition: transform 0.6s ease-in-out;
-  transition: transform 0.6s ease-in-out, -webkit-transform 0.6s ease-in-out;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -6485,21 +6471,18 @@ a.close.disabled {
 
 .carousel-item-next:not(.carousel-item-left),
 .active.carousel-item-right {
-  -webkit-transform: translateX(100%);
-          transform: translateX(100%);
+  transform: translateX(100%);
 }
 
 .carousel-item-prev:not(.carousel-item-right),
 .active.carousel-item-left {
-  -webkit-transform: translateX(-100%);
-          transform: translateX(-100%);
+  transform: translateX(-100%);
 }
 
 .carousel-fade .carousel-item {
   opacity: 0;
   transition-property: opacity;
-  -webkit-transform: none;
-          transform: none;
+  transform: none;
 }
 
 .carousel-fade .carousel-item.active,
@@ -6635,15 +6618,13 @@ a.close.disabled {
 
 @-webkit-keyframes spinner-border {
   to {
-    -webkit-transform: rotate(360deg);
-            transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
 @keyframes spinner-border {
   to {
-    -webkit-transform: rotate(360deg);
-            transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
@@ -6667,8 +6648,7 @@ a.close.disabled {
 
 @-webkit-keyframes spinner-grow {
   0% {
-    -webkit-transform: scale(0);
-            transform: scale(0);
+    transform: scale(0);
   }
 
   50% {
@@ -6678,8 +6658,7 @@ a.close.disabled {
 
 @keyframes spinner-grow {
   0% {
-    -webkit-transform: scale(0);
-            transform: scale(0);
+    transform: scale(0);
   }
 
   50% {
@@ -10655,8 +10634,6 @@ a.text-dark:focus {
   }
 }
 
-/* Vue Select */
-
 .card-table tr:first-child td,
 .card-table tr:first-child th {
   border-top: none;
@@ -10670,6 +10647,11 @@ a.text-dark:focus {
 
 .card-table .table-active {
   background-color: rgba(247, 247, 249, 0.6);
+}
+
+.card-table .exchange-icon {
+  width: 44px;
+  padding-right: 0px;
 }
 
 .form-text {
@@ -10746,24 +10728,20 @@ body .el-date-range-picker.has-time {
 
 @-webkit-keyframes vSelectSpinner {
   0% {
-    -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
 
   to {
-    -webkit-transform: rotate(1turn);
     transform: rotate(1turn);
   }
 }
 
 @keyframes vSelectSpinner {
   0% {
-    -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
 
   to {
-    -webkit-transform: rotate(1turn);
     transform: rotate(1turn);
   }
 }
@@ -10848,16 +10826,12 @@ body .el-date-range-picker.has-time {
 
 .vs__open-indicator {
   fill: rgba(60, 60, 60, 0.5);
-  -webkit-transform: scale(1);
   transform: scale(1);
-  transition: -webkit-transform 0.15s cubic-bezier(1, -0.115, 0.975, 0.855);
   transition: transform 0.15s cubic-bezier(1, -0.115, 0.975, 0.855);
-  transition: transform 0.15s cubic-bezier(1, -0.115, 0.975, 0.855), -webkit-transform 0.15s cubic-bezier(1, -0.115, 0.975, 0.855);
   transition-timing-function: cubic-bezier(1, -0.115, 0.975, 0.855);
 }
 
 .vs--open .vs__open-indicator {
-  -webkit-transform: rotate(180deg) scale(1);
   transform: rotate(180deg) scale(1);
 }
 
@@ -10984,15 +10958,11 @@ body .el-date-range-picker.has-time {
   flex-grow: 1;
 }
 
-.vs__search::-webkit-input-placeholder {
-  color: inherit;
-}
-
 .vs__search:-ms-input-placeholder {
   color: inherit;
 }
 
-.vs__search::-ms-input-placeholder {
+.vs__search::-moz-placeholder {
   color: inherit;
 }
 
@@ -11020,7 +10990,6 @@ body .el-date-range-picker.has-time {
   overflow: hidden;
   border: 0.9em solid rgba(100, 100, 100, 0.1);
   border-left-color: rgba(60, 60, 60, 0.45);
-  -webkit-transform: translateZ(0);
   transform: translateZ(0);
   -webkit-animation: vSelectSpinner 1.1s linear infinite;
   animation: vSelectSpinner 1.1s linear infinite;
