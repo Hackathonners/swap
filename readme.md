@@ -21,10 +21,11 @@ This project was developed with the Board of Directors of the University of Minh
 ## Requirements
 
 - [PHP](http://php.net/) 7.4+
-- PostgreSQL database
+- [MySQL](https://www.mysql.com/) - Database Management System
 - [Composer](https://getcomposer.org/) - Installs package dependencies
 - [NodeJS](https://nodejs.org/en/) - Provides NPM to install node packages
-- [Yarn](https://yarnpkg.com/lang/en/) - Provides a fast, reliable and secure node package manager.
+- [Vagrant](https://vagrantup.com) - Provides a fast, reliable and secure node package manager.
+- [VirtualBox](https://www.virtualbox.org/) - Virtual machine provider for Vagrant
 
 ## Installation
 
@@ -32,32 +33,46 @@ This project was developed with the Board of Directors of the University of Minh
 - Rename `.env.example` to `.env` and fill the options
 > **Note**: This project sends e-mails. Therefore, ensure that the e-mail driver is specified.
 
-- Install project dependencies:
+### Setting up Vagrant
+
+- To configure the Vagrant VM run 
 ```
-composer install
-yarn install
+vagrant up
+vagrant ssh
 ```
 
-- Generate application key:
+- In the VM run
 ```
-php artisan key:generate
-```
-
-- Migrate and seed the database:
-```
-php artisan migrate
-php artisan db:seed
+cd /vagrant
+bash bootstrap.sh
 ```
 
-- Build assets (e.g. in development environment)
+> **Note**: If the prespecified IP in ```Vagrantfile``` is already in use, you need to change it before running ```vagrant up```
+
+- Install node packages (in host machine)
+```
+npm install
+```
+
+
+## Building and running
+
+- Build assets (in your host machine)
 ```
 npm run dev
 ```
 
-- Start local server
+- SSH into the VM
 ```
-php artisan serve
+vagrant ssh
 ```
 
+- Start the server
+```
+cd /vagrant
+php artisan serve --host=0.0.0.0 # We specifiy the host IP to be able to access server outside VM
+```
+
+- In your browser, open http://192.168.56.21:8000 
 ## License
 The Swap project is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).

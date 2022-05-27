@@ -72,10 +72,16 @@ class ExchangeController extends Controller
     public function destroy($id)
     {
         DB::transaction(function () use ($id) {
-            Auth::student()->requestedExchanges()->findOrFail($id)->delete();
+            $exchange=Auth::student()->requestedExchanges()->findOrFail($id);
+            $enrollment=$exchange->toEnrollment;
+            $exchange->delete();
+            if ($enrollment->student==null){
+                $enrollment->delete();
+            }
         });
         flash('The shift exchange request was successfully deleted.')->success();
 
         return redirect()->back();
     }
+
 }

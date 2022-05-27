@@ -16,7 +16,7 @@ class CreateLogExchangesTable extends Migration
             $table->integer('from_shift_id')->unsigned();
             $table->integer('to_shift_id')->unsigned();
             $table->integer('from_student_id')->unsigned();
-            $table->integer('to_student_id')->unsigned();
+            $table->integer('to_student_id')->unsigned()->nullable();
             $table->timestamps();
 
             $table->foreign('from_shift_id')->references('id')->on('shifts');

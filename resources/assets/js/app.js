@@ -18,9 +18,11 @@ import ConfirmExchangeModal from './components/modals/ConfirmExchangeModal';
 import DeclineExchangeModal from './components/modals/DeclineExchangeModal';
 import DeleteExchangeModal from './components/modals/DeleteExchangeModal';
 import EnrollmentSelect from './components/EnrollmentSelect';
+import ShiftSelect from "./components/ShiftSelect";
 import ConfirmExchange from './directives/ConfirmExchange';
 import DeclineExchange from './directives/DeclineExchange';
 import DeleteExchange from './directives/DeleteExchange';
+
 
 // Setup VueJS components and directives
 export const eventBus = new Vue({});
@@ -29,6 +31,7 @@ Vue.component('csrfField', CsrfField);
 Vue.component('confirm-exchange-modal', ConfirmExchangeModal);
 Vue.component('decline-exchange-modal', DeclineExchangeModal);
 Vue.component('delete-exchange-modal', DeleteExchangeModal);
+Vue.component('shift-select', ShiftSelect);
 Vue.component('enrollment-select', EnrollmentSelect);
 Vue.directive('confirm-exchange', ConfirmExchange);
 Vue.directive('decline-exchange', DeclineExchange);

@@ -1,8 +1,8 @@
 <template>
     <b-modal ref="modal" :title="`Delete exchange request on ${this.course}`" size="lg">
         Are you sure to delete the exchange request to <strong>{{ this.toShift }}</strong> on <strong>{{ this.course }}</strong>?
-        <br>
-        This exchange was proposed to <strong>{{ this.student.name }} ({{ this.student.number }})</strong>.
+        <!-- <br>
+        This exchange was proposed to <strong>{{ this.student.name }} ({{ this.student.number }})</strong>. -->
         <form slot="modal-footer" :action="`/exchanges/${ this.id }`" method="post">
             <csrf-field></csrf-field>
             <input type="hidden" name="_method" value="DELETE">
@@ -32,8 +32,6 @@ export default {
     mounted() {
         eventBus.$on('app:exchange::delete', (data) => {
             this.id = data.id;
-            this.student.name = data.to_enrollment.student.user.name;
-            this.student.number = data.to_enrollment.student.student_number;
             this.fromShift = data.from_enrollment.shift.tag;
             this.toShift = data.to_enrollment.shift.tag;
             this.course = data.from_enrollment.course.name;

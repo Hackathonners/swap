@@ -139,6 +139,9 @@ class Exchange extends Model
     {
         $fromEnrollmentCopy = clone $this->fromEnrollment;
         $toEnrollmentCopy = clone $this->toEnrollment;
+        if ($toEnrollmentCopy->student==null){
+            $toEnrollmentCopy->student=$fromEnrollmentCopy->student;
+        }
 
         $this->fromEnrollment->exchange($this->toEnrollment);
 
@@ -256,5 +259,6 @@ class Exchange extends Model
         self::whereIn('from_enrollment_id', $enrollmentIds)
             ->orWhereIn('to_enrollment_id', $enrollmentIds)
             ->delete();
+        Enrollment::whereIn('id',$enrollmentIds)->whereNull('student_id')->delete();
     }
 }

@@ -2,11 +2,14 @@
 
 namespace Tests\Unit;
 
+use App\Judite\Models\Student;
 use Mockery as m;
 use Tests\TestCase;
 use App\Judite\Models\Course;
 use App\Judite\Models\Exchange;
 use App\Judite\Models\Enrollment;
+use App\Judite\Models\Solver;
+use App\Judite\Models\Shift;
 use App\Judite\Contracts\Registry\ExchangeRegistry;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Exceptions\EnrollmentCannotBeExchangedException;
@@ -80,6 +83,46 @@ class ExchangeTest extends TestCase
         $this->assertEquals($toShiftId, $actualFromEnrollment->shift_id);
         $this->assertEquals($fromShiftId, $actualToEnrollment->shift_id);
     }
+
+    public function testPerformAutoExchange()
+    {
+        // Prepare
+        $course = factory(Course::class)->create();
+        $student = factory(Student::class)->create();
+        $otherStudent = factory(Student::class)->create();
+        $shift = factory(Shift::class)->create(['course_id' => $course->id]);
+        $otherShift = factory(Shift::class)->create(['course_id' => $course->id]);
+
+        $fromEnrollment = factory(Enrollment::class)->create(['student_id'=>$student->id,'course_id' => $course->id,'shift_id' => $shift->id]);
+        $toEnrollment = factory(Enrollment::class)->create(['student_id'=>null,'course_id' => $course->id,'shift_id' => $otherShift->id]);
+
+        $otherFromEnrollment = factory(Enrollment::class)->create(['student_id'=>$otherStudent->id,'course_id' => $course->id,'shift_id' => $otherShift->id]);
+        $otherToEnrollment = factory(Enrollment::class)->create(['student_id'=>null,'course_id' => $course->id,'shift_id' => $shift->id]);
+
+        $exchange = factory(Exchange::class)->create([
+            'from_enrollment_id' => $fromEnrollment->id,
+            'to_enrollment_id' => $toEnrollment->id,
+        ]);
+        $otherExchange =factory(Exchange::class)->create([
+            'from_enrollment_id' => $otherFromEnrollment->id,
+            'to_enrollment_id' => $otherToEnrollment->id,
+        ]);
+
+        $this->registryMock->shouldReceive('record')->twice();
+
+        // Execute
+        $actualReturn = Solver::SolveAutomicExchangesOfCourse($course);
+        // Assert
+        $this->assertNotEquals($shift->tag,$otherShift->tag);
+        $this->assertContains($exchange->id,$actualReturn);
+        $this->assertContains($otherExchange->id,$actualReturn);
+        $this->assertEquals(0, Exchange::count());
+        $actualFromEnrollment = Enrollment::find($fromEnrollment->id);
+        $actualOtherFromEnrollment = Enrollment::find($otherFromEnrollment->id);
+        $this->assertEquals($shift->id, $actualOtherFromEnrollment->shift_id);
+        $this->assertEquals($otherShift->id, $actualFromEnrollment->shift_id);
+    }
+
 
     public function testFindMatchingExchange()
     {

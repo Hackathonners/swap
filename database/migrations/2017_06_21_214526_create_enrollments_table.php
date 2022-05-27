@@ -13,7 +13,7 @@ class CreateEnrollmentsTable extends Migration
     {
         Schema::create('enrollments', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('student_id')->unsigned();
+            $table->integer('student_id')->unsigned()->nullable();
             $table->integer('course_id')->unsigned();
             $table->integer('shift_id')->unsigned()->nullable();
             $table->timestamps();
